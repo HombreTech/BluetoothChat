@@ -79,6 +79,11 @@ android {
         }
     }
 
+    buildFeatures {
+        viewBinding true
+        dataBinding true
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -91,6 +96,7 @@ android {
 
 dependencies {
 
+    implementation 'androidx.databinding:databinding-runtime:7.1.1'
     def final ROOM_VERSION = '2.4.2'
     def final LIFECYCLE_VERSION = '2.4.1'
     def final ESPRESSO_VERSION = '3.2.0-beta01'
