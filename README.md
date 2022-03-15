@@ -1,15 +1,11 @@
-I am building an RC car to operate far far away.
-
-LinPhone+BTC is what I want
-
+Based on Bluetooth Chat by glodanif (https://github.com/glodanif/BluetoothChat)
 
 # Bluetooth Chat
 
 Donations
 --------
-Just in case...
 
-BTC: 17Uqe6E1kswkmdkQCjTz5owQruHJwxPPsp
+BTC: bc1qtxyplvekfhcdz6xljwxv92323gksjwke3exuql
 
 License
 --------
