@@ -96,6 +96,7 @@ dependencies {
     def final ESPRESSO_VERSION = '3.2.0-beta01'
     def final COROUTINES_VERSION = '1.2.1'
     def final KOIN_VERSION = '2.2.2'
+    def final NAV_VERSION = '2.4.1'
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
@@ -129,6 +130,9 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$KOTLIN_VERSION"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$COROUTINES_VERSION"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$COROUTINES_VERSION"
+
+    implementation("androidx.navigation:navigation-fragment-ktx:$NAV_VERSION")
+    implementation("androidx.navigation:navigation-ui-ktx:$NAV_VERSION")
 
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0-alpha-1'
 
