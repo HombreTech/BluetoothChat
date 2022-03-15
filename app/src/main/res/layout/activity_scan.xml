@@ -128,7 +128,7 @@
                 app:layout_constraintTop_toTopOf="@+id/epb_progress"
                 tools:visibility="visible" />
 
-            <com.glodanif.bluetoothchat.ui.widget.ExpiringProgressBar
+            <tech.hombre.bluetoothchat.ui.widget.ExpiringProgressBar
                 android:id="@+id/epb_progress"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
