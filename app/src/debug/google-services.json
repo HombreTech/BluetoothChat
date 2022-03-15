@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "383393054416",
+    "project_id": "bluetooth-chat-1a11f",
+    "storage_bucket": "bluetooth-chat-1a11f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:383393054416:android:c1c8fb710d2b54540c28d5",
+        "android_client_info": {
+          "package_name": "tech.hombre.bluetoothchat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "383393054416-pi3m6vl3tovleac0k32qcbuq8jbvrttm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3jNE_3X1zJMYa3nAEV4WcRBX96RcCeMg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "383393054416-pi3m6vl3tovleac0k32qcbuq8jbvrttm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:383393054416:android:4a99458359d0ddeb0c28d5",
+        "android_client_info": {
+          "package_name": "tech.hombre.bluetoothchat.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "383393054416-pi3m6vl3tovleac0k32qcbuq8jbvrttm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3jNE_3X1zJMYa3nAEV4WcRBX96RcCeMg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "383393054416-pi3m6vl3tovleac0k32qcbuq8jbvrttm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
