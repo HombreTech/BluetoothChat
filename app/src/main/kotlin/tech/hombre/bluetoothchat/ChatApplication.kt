@@ -10,6 +10,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.ProcessLifecycleOwner
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import tech.hombre.bluetoothchat.data.model.BluetoothConnector
 import tech.hombre.bluetoothchat.data.model.ProfileManager
 import tech.hombre.bluetoothchat.data.model.UserPreferences
@@ -42,9 +43,7 @@ class ChatApplication : Application(), LifecycleObserver, ThemeHolder {
     override fun onCreate() {
         super.onCreate()
 
-        /*if (!BuildConfig.DEBUG) {
-            Fabric.with(this, Crashlytics())
-        }*/
+        if (!BuildConfig.DEBUG) FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true)
 
         startKoin {
             androidContext(this@ChatApplication)
