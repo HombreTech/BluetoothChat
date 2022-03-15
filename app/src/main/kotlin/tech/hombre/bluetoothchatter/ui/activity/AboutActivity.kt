@@ -22,11 +22,7 @@ class AboutActivity : SkeletonActivity() {
                 "${getString(R.string.about__app_uuid, getString(R.string.bl_app_uuid))}"
 
         findViewById<Button>(R.id.btn_github).setOnClickListener {
-            openLink("https://github.com/glodanif/BluetoothChat")
-        }
-
-        findViewById<Button>(R.id.btn_crowdin).setOnClickListener {
-            openLink("https://crowdin.com/project/bluetoothchat")
+            openLink("https://github.com/HombreTech/BluetoothChat")
         }
     }
 

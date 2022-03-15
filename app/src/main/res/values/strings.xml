@@ -172,10 +172,8 @@
     <string name="images__no_images">You haven\'t received any images yet</string>
 
     <string name="about__about">About</string>
-    <string name="about__description">Bluetooth Chatter is an open source project.  You can review source code, submit issue or fork the repo on GitHub</string>
+    <string name="about__description">Bluetooth Chatter is an open source project based on Bluetooth Chat by glodanif.\nYou can review source code, submit issue or fork the repo on GitHub</string>
     <string name="about__go_to_github">Go to GitHub</string>
-    <string name="about__localization">You can help to translate Bluetooth Chatter in more languages on Crowdin</string>
-    <string name="about__go_to_crowdin">Go to Crowdin</string>
     <string name="about__app_name">Name: %s</string>
     <string name="about__app_uuid">UUID: %s</string>
 
