@@ -1,9 +1,9 @@
-package tech.hombre.bluetoothchat.presenter
+package tech.hombre.bluetoothchatter.presenter
 
-import tech.hombre.bluetoothchat.data.entity.MessageFile
-import tech.hombre.bluetoothchat.data.model.MessagesStorage
-import tech.hombre.bluetoothchat.ui.presenter.ReceivedImagesPresenter
-import tech.hombre.bluetoothchat.ui.view.ReceivedImagesView
+import tech.hombre.bluetoothchatter.data.entity.MessageFile
+import tech.hombre.bluetoothchatter.data.model.MessagesStorage
+import tech.hombre.bluetoothchatter.ui.presenter.ReceivedImagesPresenter
+import tech.hombre.bluetoothchatter.ui.view.ReceivedImagesView
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.RelaxedMockK

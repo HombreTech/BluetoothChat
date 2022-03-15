@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:383393054416:android:c1c8fb710d2b54540c28d5",
+        "mobilesdk_app_id": "1:383393054416:android:763dc846a754f8fe0c28d5",
         "android_client_info": {
-          "package_name": "tech.hombre.bluetoothchat"
+          "package_name": "tech.hombre.bluetoothchatter"
         }
       },
       "oauth_client": [
@@ -36,9 +36,9 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:383393054416:android:4a99458359d0ddeb0c28d5",
+        "mobilesdk_app_id": "1:383393054416:android:1b8bfe1ac9440c840c28d5",
         "android_client_info": {
-          "package_name": "tech.hombre.bluetoothchat.dev"
+          "package_name": "tech.hombre.bluetoothchatter.dev"
         }
       },
       "oauth_client": [

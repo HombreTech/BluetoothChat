@@ -9,9 +9,9 @@
     <string name="general__restart">Reiniciar</string>
     <string name="general__yes">Sim</string>
     <string name="general__no">Não</string>
-    <string name="general__service_lost">O Bluetooth Chat parou, reinicie o serviço para poder usar o app</string>
+    <string name="general__service_lost">O Bluetooth Chatter parou, reinicie o serviço para poder usar o app</string>
     <string name="general__disconnect">Desconectar</string>
-    <string name="general__storage_permission">Bluetooth Chat permite que você compartilhe imagens, mas isso requer permissão <b>"STORAGE"</b> para funcionar corretamente</string>
+    <string name="general__storage_permission">Bluetooth Chatter permite que você compartilhe imagens, mas isso requer permissão <b>"STORAGE"</b> para funcionar corretamente</string>
     <string name="general__no_browser">Não foi possível encontrar um navegador da internet</string>
     <string name="general__time_format">MMM dd, aaaa</string>
     <string name="general__time_unknown">desconhecido</string>
@@ -65,7 +65,7 @@
     <string name="chat__connected_to_another"><![CDATA[Você está atualmente conectado a <b>%s</b>. Você pode se conectar a este dispositivo, mas a conexão atual será interrompida]]></string>
     <string name="chat__message_hint">Mensagem</string>
     <string name="chat__chat">Chat</string>
-    <string name="chat__too_big_image">Esta imagem é muito grande. O tamanho máximo de arquivo que você pode enviar via Bluetooth Chat é %s</string>
+    <string name="chat__too_big_image">Esta imagem é muito grande. O tamanho máximo de arquivo que você pode enviar via Bluetooth Chatter é %s</string>
     <string name="chat__removed_image">Imagem removida</string>
     <string name="chat__missing_image">Faltando imagem</string>
     <string name="chat__partner_canceled_image_transfer">Seu parceiro cancelou a transferência de imagem</string>
@@ -73,7 +73,7 @@
     <string name="chat__file_not_exist">Não foi possível encontrar este arquivo, por favor tente novamente</string>
     <string name="chat__sending_image">Enviando imagem</string>
     <string name="chat__receiving_images">Recebendo imagem</string>
-    <string name="chat__partner_unable_to_receive_images">Seu parceiro usa uma versão antiga do Bluetooth Chat que não é capaz de receber imagens.</string>
+    <string name="chat__partner_unable_to_receive_images">Seu parceiro usa uma versão antiga do Bluetooth Chatter que não é capaz de receber imagens.</string>
     <string name="chat__image_message">%s [Image]</string>
     <string name="chat__presharing">Você não está conectado a este dispositivo, por favor conecte-se e tente novamente.</string>
     <string name="chat__presharing_share">Compartilhar</string>
@@ -151,10 +151,8 @@
     <string name="images__received_images">Imagens recebidas</string>
     <string name="images__no_images">Você ainda não recebeu nenhuma imagem</string>
     <string name="about__about">Sobre</string>
-    <string name="about__description">Bluetooth Chat é um projeto de código aberto. Você pode ver o código fonte, relatar um problema ou fazer o backup no GitHub</string>
+    <string name="about__description">Bluetooth Chatter é um projeto de código aberto. Você pode ver o código fonte, relatar um problema ou fazer o backup no GitHub</string>
     <string name="about__go_to_github">Ir para GitHub</string>
-    <string name="about__localization">Você pode ajudar a traduzir o Bluetooth Chat em mais idiomas no Crowdin</string>
-    <string name="about__go_to_crowdin">Ir para Crowdin</string>
     <string name="about__app_name">Nome: %s</string>
     <string name="about__app_uuid">UUID: %s</string>
     <string name="rate_dialog__title">Avalie este app</string>

@@ -2,11 +2,11 @@
 
 <resources>
 
-    <string name="app_name" translatable="false">Bluetooth Chat</string>
-    <string name="main_title" translatable="false">Bluetooth Chat</string>
+    <string name="app_name" translatable="false">Bluetooth Chatter</string>
+    <string name="main_title" translatable="false">Bluetooth Chatter</string>
 
-    <string name="bl_app_name" translatable="false">BluetoothChat</string>
-    <string name="bl_app_uuid" translatable="false">220da3b2-41f5-11e7-a919-92ebcb67fe33</string>
+    <string name="bl_app_name" translatable="false">BluetoothChatter</string>
+    <string name="bl_app_uuid" translatable="false">aeee45d6-a468-11ec-b909-0242ac120002</string>
 
     <string name="general__ok">OK</string>
     <string name="general__cancel">Cancel</string>
@@ -16,9 +16,9 @@
     <string name="general__restart">Restart</string>
     <string name="general__yes">Yes</string>
     <string name="general__no">No</string>
-    <string name="general__service_lost">Bluetooth Chat service just has been stopped, restart the service to be able to use the app</string>
+    <string name="general__service_lost">Bluetooth Chatter service just has been stopped, restart the service to be able to use the app</string>
     <string name="general__disconnect">Disconnect</string>
-    <string name="general__storage_permission">Bluetooth Chat provides you with an ability to share images. This feature requires <b>\"STORAGE\"</b> permission to work correctly</string>
+    <string name="general__storage_permission">Bluetooth Chatter provides you with an ability to share images. This feature requires <b>\"STORAGE\"</b> permission to work correctly</string>
     <string name="general__no_browser">Unable to find browser application</string>
 
     <string name="general__time_format">MMM dd, yyyy</string>
@@ -78,7 +78,7 @@
     <string name="chat__connected_to_another"><![CDATA[You are currently connected to <b>%s</b>. You can connect to this device but current connection will be interrupted]]></string>
     <string name="chat__message_hint">Message</string>
     <string name="chat__chat">Chat</string>
-    <string name="chat__too_big_image">This image it too big. Max file size which you can send via Bluetooth Chat is %s</string>
+    <string name="chat__too_big_image">This image it too big. Max file size which you can send via Bluetooth Chatter is %s</string>
     <string name="chat__removed_image">Removed image</string>
     <string name="chat__missing_image">Missing image</string>
     <string name="chat__partner_canceled_image_transfer">Your partner has canceled image transfer</string>
@@ -86,7 +86,7 @@
     <string name="chat__file_not_exist">Unable to find this file, please try again</string>
     <string name="chat__sending_image">Sending image</string>
     <string name="chat__receiving_images">Receiving image</string>
-    <string name="chat__partner_unable_to_receive_images">Your partner uses an old version of Bluetooth Chat which is not able to receive images.</string>
+    <string name="chat__partner_unable_to_receive_images">Your partner uses an old version of Bluetooth Chatter which is not able to receive images.</string>
     <string name="chat__image_message">%s [Image]</string>
     <string name="chat__presharing">You are not connected to this device, please connect and try again.</string>
     <string name="chat__presharing_share">Share</string>
@@ -172,10 +172,8 @@
     <string name="images__no_images">You haven\'t received any images yet</string>
 
     <string name="about__about">About</string>
-    <string name="about__description">Bluetooth Chat is an open source project.  You can review source code, submit issue or fork the repo on GitHub</string>
+    <string name="about__description">Bluetooth Chatter is an open source project based on Bluetooth Chat by glodanif.\nYou can review source code, submit issue or fork the repo on GitHub</string>
     <string name="about__go_to_github">Go to GitHub</string>
-    <string name="about__localization">You can help to translate Bluetooth Chat in more languages on Crowdin</string>
-    <string name="about__go_to_crowdin">Go to Crowdin</string>
     <string name="about__app_name">Name: %s</string>
     <string name="about__app_uuid">UUID: %s</string>
 
@@ -199,9 +197,6 @@
     <string name="conversations__cd__partners_avatar">Partner\'s avatar</string>
     <string name="conversations__cd__connected_indicator">Connected indicator</string>
     <string name="conversations__cd__users_avatar">User\'s avatar</string>
-
-    <string name="button_positive">OK</string>
-    <string name="button_negative">Cancel</string>
 
     <string name="channel_alpha" translatable="false">A</string>
     <string name="channel_red" translatable="false">R</string>

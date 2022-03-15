@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="tech.hombre.bluetoothchat">
+    package="tech.hombre.bluetoothchatter">
 
     <uses-feature
         android:name="android.hardware.bluetooth"
@@ -11,13 +11,14 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
-        android:name="tech.hombre.bluetoothchat.ChatApplication"
+        android:name="tech.hombre.bluetoothchatter.ChatApplication"
         android:allowBackup="false"
         android:fullBackupContent="@xml/backup_descriptor"
         android:icon="@mipmap/ic_launcher"
@@ -28,10 +29,10 @@
         tools:replace="android:allowBackup">
 
         <activity
-            android:name=".ui.activity.SplashActivity"
+            android:name="tech.hombre.bluetoothchatter.ui.activity.SplashActivity"
+            android:exported="true"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"
-            android:exported="true">
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -49,64 +50,59 @@
         </activity>
 
         <activity
-            android:name=".ui.activity.ConversationsActivity"
+            android:name="tech.hombre.bluetoothchatter.ui.activity.ConversationsActivity"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".ui.activity.ScanActivity"
+            android:name="tech.hombre.bluetoothchatter.ui.activity.ScanActivity"
             android:label="@string/scan__scan"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".ui.activity.ChatActivity"
+            android:name="tech.hombre.bluetoothchatter.ui.activity.ChatActivity"
             android:label="@string/chat__chat"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateHidden" />
 
         <activity
-            android:name=".ui.activity.ProfileActivity"
+            android:name="tech.hombre.bluetoothchatter.ui.activity.ProfileActivity"
             android:label="@string/initial_setup__initial_setup"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" />
 
         <activity
-            android:name=".ui.activity.SettingsActivity"
+            android:name="tech.hombre.bluetoothchatter.ui.activity.SettingsActivity"
             android:label="@string/settings__title"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".ui.activity.ContactChooserActivity"
+            android:name="tech.hombre.bluetoothchatter.ui.activity.ContactChooserActivity"
             android:label="@string/contact_chooser__title"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".ui.activity.ImagePreviewActivity"
+            android:name="tech.hombre.bluetoothchatter.ui.activity.ImagePreviewActivity"
             android:label="@string/images__image"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".ui.activity.ReceivedImagesActivity"
+            android:name="tech.hombre.bluetoothchatter.ui.activity.ReceivedImagesActivity"
             android:label="@string/images__received_images"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".ui.activity.AboutActivity"
+            android:name="tech.hombre.bluetoothchatter.ui.activity.AboutActivity"
             android:label="@string/about__about"
             android:screenOrientation="portrait" />
 
-        <service android:name=".data.service.BluetoothConnectionService" />
-
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="b26de0978fcc0fa56349d97da37b554f54e1d034" />
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
         <provider
-            android:name=".data.file.GenericFileProvider"
+            android:name="tech.hombre.bluetoothchatter.data.file.GenericFileProvider"
             android:authorities="${applicationId}.provider"
             android:exported="false"
             android:grantUriPermissions="true">
@@ -115,5 +111,11 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
+
+        <meta-data
+            android:name="firebase_crashlytics_collection_enabled"
+            android:value="false" />
+
+        <service android:name="tech.hombre.bluetoothchatter.data.service.BluetoothConnectionService" />
     </application>
 </manifest>

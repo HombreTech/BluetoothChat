@@ -9,9 +9,9 @@
     <string name="general__restart">Рестарт</string>
     <string name="general__yes">Да</string>
     <string name="general__no">Нет</string>
-    <string name="general__service_lost">Bluetooth Chat сервис был остановлен, перезапустите сервис для корректной работы приложения</string>
+    <string name="general__service_lost">Bluetooth Chatter сервис был остановлен, перезапустите сервис для корректной работы приложения</string>
     <string name="general__disconnect">Отключиться</string>
-    <string name="general__storage_permission">Bluetooth Chat дает вам возможность делиться изображениями. Эта функция требует разришения <b>"ПАМЯТЬ"</b> для корректной работы</string>
+    <string name="general__storage_permission">Bluetooth Chatter дает вам возможность делиться изображениями. Эта функция требует разришения <b>"ПАМЯТЬ"</b> для корректной работы</string>
     <string name="general__no_browser">Не удается найти приложение браузера</string>
     <string name="general__time_format">dd MMM, yyyy</string>
     <string name="general__time_unknown">неизвестно</string>
@@ -157,10 +157,8 @@
     <string name="images__received_images">Полученные изображения</string>
     <string name="images__no_images">Вы еще не приняли ни одного изображения</string>
     <string name="about__about">О программе</string>
-    <string name="about__description">Bluetooth Chat является проектом с открытым исходным кодом.  Вы можно просмотреть исходный код, отправить сообщение об ошибке или форкнуть репозиторий на GitHub</string>
+    <string name="about__description">Bluetooth Chatter является проектом с открытым исходным кодом, основанным на Bluetooth Chat от glodanif.\nВы можно просмотреть исходный код, отправить сообщение об ошибке или форкнуть репозиторий на GitHub</string>
     <string name="about__go_to_github">Перейти на GitHub</string>
-    <string name="about__localization">Вы можете помочь перевести Bluetooth Chat на больше языков с помощью Crowdin</string>
-    <string name="about__go_to_crowdin">Перейти на Crowdin</string>
     <string name="about__app_name">Название: %s</string>
     <string name="about__app_uuid">UUID: %s</string>
     <string name="rate_dialog__title">Оцените приложение</string>

@@ -1,9 +1,9 @@
-package tech.hombre.bluetoothchat.presenter
+package tech.hombre.bluetoothchatter.presenter
 
-import tech.hombre.bluetoothchat.data.model.*
-import tech.hombre.bluetoothchat.ui.presenter.ChatPresenter
-import tech.hombre.bluetoothchat.ui.view.ChatView
-import tech.hombre.bluetoothchat.ui.viewmodel.converter.ChatMessageConverter
+import tech.hombre.bluetoothchatter.data.model.*
+import tech.hombre.bluetoothchatter.ui.presenter.ChatPresenter
+import tech.hombre.bluetoothchatter.ui.view.ChatView
+import tech.hombre.bluetoothchatter.ui.viewmodel.converter.ChatMessageConverter
 import io.mockk.MockKAnnotations
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.verify

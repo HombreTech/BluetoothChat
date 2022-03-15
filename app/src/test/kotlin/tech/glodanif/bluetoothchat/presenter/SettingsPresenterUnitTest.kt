@@ -1,10 +1,10 @@
-package tech.hombre.bluetoothchat.presenter
+package tech.hombre.bluetoothchatter.presenter
 
 import android.graphics.Color
-import tech.hombre.bluetoothchat.data.model.UserPreferences
-import tech.hombre.bluetoothchat.ui.presenter.SettingsPresenter
-import tech.hombre.bluetoothchat.ui.util.ThemeHolder
-import tech.hombre.bluetoothchat.ui.view.SettingsView
+import tech.hombre.bluetoothchatter.data.model.UserPreferences
+import tech.hombre.bluetoothchatter.ui.presenter.SettingsPresenter
+import tech.hombre.bluetoothchatter.ui.util.ThemeHolder
+import tech.hombre.bluetoothchatter.ui.view.SettingsView
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.RelaxedMockK

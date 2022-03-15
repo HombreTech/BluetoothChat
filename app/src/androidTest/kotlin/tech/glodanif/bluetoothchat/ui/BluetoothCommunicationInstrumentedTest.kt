@@ -1,4 +1,4 @@
-package tech.hombre.bluetoothchat.ui
+package tech.hombre.bluetoothchatter.ui
 
 import android.Manifest
 import android.app.Activity
@@ -10,10 +10,10 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.filters.LargeTest
 import androidx.test.runner.AndroidJUnit4
 import androidx.test.runner.permission.PermissionRequester
-import tech.hombre.bluetoothchat.R
-import tech.hombre.bluetoothchat.data.internal.AutoresponderProxy
-import tech.hombre.bluetoothchat.ui.UITestUtils.Companion.atPosition
-import tech.hombre.bluetoothchat.ui.UITestUtils.Companion.withToolbarSubTitle
+import tech.hombre.bluetoothchatter.R
+import tech.hombre.bluetoothchatter.data.internal.AutoresponderProxy
+import tech.hombre.bluetoothchatter.ui.UITestUtils.Companion.atPosition
+import tech.hombre.bluetoothchatter.ui.UITestUtils.Companion.withToolbarSubTitle
 import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.not
 import org.junit.Before

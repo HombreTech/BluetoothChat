@@ -1,17 +1,17 @@
-package tech.hombre.bluetoothchat.datasource
+package tech.hombre.bluetoothchatter.datasource
 
 import android.graphics.Color
 import androidx.test.InstrumentationRegistry
 import androidx.test.runner.AndroidJUnit4
-import tech.hombre.bluetoothchat.data.database.Database
-import tech.hombre.bluetoothchat.data.entity.ChatMessage
-import tech.hombre.bluetoothchat.data.entity.Conversation
-import tech.hombre.bluetoothchat.data.entity.ConversationWithMessages
-import tech.hombre.bluetoothchat.data.entity.SimpleChatMessage
-import tech.hombre.bluetoothchat.data.model.ConversationsStorage
-import tech.hombre.bluetoothchat.data.model.ConversationsStorageImpl
-import tech.hombre.bluetoothchat.data.model.MessagesStorage
-import tech.hombre.bluetoothchat.data.model.MessagesStorageImpl
+import tech.hombre.bluetoothchatter.data.database.Database
+import tech.hombre.bluetoothchatter.data.entity.ChatMessage
+import tech.hombre.bluetoothchatter.data.entity.Conversation
+import tech.hombre.bluetoothchatter.data.entity.ConversationWithMessages
+import tech.hombre.bluetoothchatter.data.entity.SimpleChatMessage
+import tech.hombre.bluetoothchatter.data.model.ConversationsStorage
+import tech.hombre.bluetoothchatter.data.model.ConversationsStorageImpl
+import tech.hombre.bluetoothchatter.data.model.MessagesStorage
+import tech.hombre.bluetoothchatter.data.model.MessagesStorageImpl
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.After
 import org.junit.Assert.*

@@ -1,4 +1,4 @@
-package tech.hombre.bluetoothchat.ui
+package tech.hombre.bluetoothchatter.ui
 
 import androidx.test.espresso.matcher.BoundedMatcher
 import androidx.recyclerview.widget.RecyclerView

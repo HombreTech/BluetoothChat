@@ -150,8 +150,6 @@
     <string name="about__about">关于</string>
     <string name="about__description">“蓝牙聊天”是一项开源项目。你可以在Github上查看源代码、发表反馈或者复制一份到你自己的代码库</string>
     <string name="about__go_to_github">前往GitHub</string>
-    <string name="about__localization">你可以在Crowdin上协助“蓝牙聊天”翻译到更多语言</string>
-    <string name="about__go_to_crowdin">前往Crowdin</string>
     <string name="about__app_name">名称: %s</string>
     <string name="about__app_uuid">通用唯一识别码：%s</string>
     <string name="rate_dialog__title">为本应用评分</string>

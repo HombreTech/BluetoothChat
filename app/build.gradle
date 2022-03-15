@@ -1,5 +1,5 @@
-def final VERSION_CODE = 38
-def final VERSION_NAME = '1.3.3'
+def final VERSION_CODE = 1
+def final VERSION_NAME = '1.0.0'
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
@@ -10,7 +10,7 @@ apply plugin: 'com.google.firebase.crashlytics'
 android {
 
     defaultConfig {
-        applicationId 'tech.hombre.bluetoothchat'
+        applicationId 'tech.hombre.bluetoothchatter'
         minSdkVersion 21
         targetSdkVersion 31
         compileSdkVersion 31
@@ -95,6 +95,7 @@ dependencies {
     def final LIFECYCLE_VERSION = '2.4.1'
     def final ESPRESSO_VERSION = '3.2.0-beta01'
     def final COROUTINES_VERSION = '1.2.1'
+    def final KOIN_VERSION = '2.2.2'
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
@@ -119,8 +120,8 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.github.jkwiecien:EasyImage:2.1.1'
 
-    implementation "io.insert-koin:koin-core:2.2.2"
-    implementation "io.insert-koin:koin-android:2.2.2"
+    implementation "io.insert-koin:koin-core:$KOIN_VERSION"
+    implementation "io.insert-koin:koin-android:$KOIN_VERSION"
 
     implementation 'com.google.firebase:firebase-crashlytics-ktx'
     implementation 'com.google.firebase:firebase-analytics-ktx'
@@ -134,7 +135,7 @@ dependencies {
     testImplementation "org.jetbrains.kotlin:kotlin-stdlib:$KOTLIN_VERSION"
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$KOTLIN_VERSION"
     testImplementation 'io.mockk:mockk:1.9.3'
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.13.2'
 
     androidTestImplementation 'androidx.annotation:annotation:1.3.0'
     androidTestImplementation "androidx.test.espresso:espresso-core:$ESPRESSO_VERSION"

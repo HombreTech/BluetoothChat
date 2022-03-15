@@ -9,9 +9,9 @@
     <string name="general__restart">Reiniciar</string>
     <string name="general__yes">Sí</string>
     <string name="general__no">No</string>
-    <string name="general__service_lost">El servicio Bluetooth Chat ha sido detenido, reinicia el servicio para poder usar la aplicación</string>
+    <string name="general__service_lost">El servicio Bluetooth Chatter ha sido detenido, reinicia el servicio para poder usar la aplicación</string>
     <string name="general__disconnect">Desconectar</string>
-    <string name="general__storage_permission">Bluetooth Chat te da la opción de compartir imágenes. Esta característica requiere permisos de <b>"Almacenamiento"</b> para funcionar correctamente</string>
+    <string name="general__storage_permission">Bluetooth Chatter te da la opción de compartir imágenes. Esta característica requiere permisos de <b>"Almacenamiento"</b> para funcionar correctamente</string>
     <string name="general__no_browser">No se ha encontrado ningún navegador</string>
     <string name="general__time_format">dd/MM/yyyy</string>
     <string name="general__time_unknown">desconocido</string>
@@ -65,7 +65,7 @@
     <string name="chat__connected_to_another"><![CDATA[Actualmente estás conectado a <b>%s</b>. Puedes conectarte a este dispositivo, pero se interrumpirá la conexión actual]]></string>
     <string name="chat__message_hint">Mensaje</string>
     <string name="chat__chat">Chat</string>
-    <string name="chat__too_big_image">Esta imagen es demasiado grande. El tamaño máximo de archivo que puedes enviar vía Bluetooth Chat es %s</string>
+    <string name="chat__too_big_image">Esta imagen es demasiado grande. El tamaño máximo de archivo que puedes enviar vía Bluetooth Chatter es %s</string>
     <string name="chat__removed_image">Imagen eliminada</string>
     <string name="chat__missing_image">Imagen no encontrada</string>
     <string name="chat__partner_canceled_image_transfer">Tu contacto canceló la transferencia de imagen</string>
@@ -151,10 +151,8 @@
     <string name="images__received_images">Imágenes recibidas</string>
     <string name="images__no_images">No has recibido imágenes aún</string>
     <string name="about__about">Sobre el programa</string>
-    <string name="about__description">Bluetooth Chat es un proyecto \"de código abierto\".  Puede revisar el código fuente, presentar problema (issue) o copiar (fork) el repositorio en una página de GitHub</string>
+    <string name="about__description">Bluetooth Chatter es un proyecto \"de código abierto\".  Puede revisar el código fuente, presentar problema (issue) o copiar (fork) el repositorio en una página de GitHub</string>
     <string name="about__go_to_github">Ir a GitHub</string>
-    <string name="about__localization">Puedes ayudar a traducir Bluetooth Chat en más idiomas en Crowdin</string>
-    <string name="about__go_to_crowdin">Ir a Crowdin</string>
     <string name="about__app_name">Nombre: %s</string>
     <string name="about__app_uuid">UUID: %s</string>
     <string name="rate_dialog__title">Califica esta aplicación</string>

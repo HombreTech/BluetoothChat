@@ -1,16 +1,16 @@
-package tech.hombre.bluetoothchat.datasource
+package tech.hombre.bluetoothchatter.datasource
 
 import android.Manifest
 import android.os.Environment
 import androidx.test.InstrumentationRegistry
 import androidx.test.runner.AndroidJUnit4
 import androidx.test.runner.permission.PermissionRequester
-import tech.hombre.bluetoothchat.R
-import tech.hombre.bluetoothchat.data.database.Database
-import tech.hombre.bluetoothchat.data.entity.ChatMessage
-import tech.hombre.bluetoothchat.data.model.MessagesStorage
-import tech.hombre.bluetoothchat.data.model.MessagesStorageImpl
-import tech.hombre.bluetoothchat.data.service.message.PayloadType
+import tech.hombre.bluetoothchatter.R
+import tech.hombre.bluetoothchatter.data.database.Database
+import tech.hombre.bluetoothchatter.data.entity.ChatMessage
+import tech.hombre.bluetoothchatter.data.model.MessagesStorage
+import tech.hombre.bluetoothchatter.data.model.MessagesStorageImpl
+import tech.hombre.bluetoothchatter.data.service.message.PayloadType
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.After
 import org.junit.Assert.*
