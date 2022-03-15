@@ -200,4 +200,16 @@
     <string name="conversations__cd__connected_indicator">Connected indicator</string>
     <string name="conversations__cd__users_avatar">User\'s avatar</string>
 
+    <string name="button_positive">OK</string>
+    <string name="button_negative">Cancel</string>
+
+    <string name="channel_alpha" translatable="false">A</string>
+    <string name="channel_red" translatable="false">R</string>
+    <string name="channel_green" translatable="false">G</string>
+    <string name="channel_blue" translatable="false">B</string>
+
+    <string name="channel_hue" translatable="false">H</string>
+    <string name="channel_saturation" translatable="false">S</string>
+    <string name="channel_value" translatable="false">V</string>
+
 </resources>
