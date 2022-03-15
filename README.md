@@ -1,6 +1,8 @@
-Based on Bluetooth Chat by glodanif (https://github.com/glodanif/BluetoothChat)
-
 # Bluetooth Chat
+
+1-to-1 chatting app over Bluetooth
+
+Based on Bluetooth Chat by glodanif (https://github.com/glodanif/BluetoothChat)
 
 Donations
 --------
