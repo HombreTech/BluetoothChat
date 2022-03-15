@@ -1,10 +1,10 @@
-package tech.hombre.bluetoothchat.datasource
+package tech.hombre.bluetoothchatter.datasource
 
 import android.graphics.Color
 import androidx.test.InstrumentationRegistry
 import androidx.test.runner.AndroidJUnit4
-import tech.hombre.bluetoothchat.data.model.ProfileManager
-import tech.hombre.bluetoothchat.data.model.ProfileManagerImpl
+import tech.hombre.bluetoothchatter.data.model.ProfileManager
+import tech.hombre.bluetoothchatter.data.model.ProfileManagerImpl
 import org.junit.After
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue

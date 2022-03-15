@@ -9,7 +9,7 @@
     tools:context=".ui.activity.ConversationsActivity"
     tools:showIn="@layout/activity_conversations">
 
-    <tech.hombre.bluetoothchat.ui.widget.ActionView
+    <tech.hombre.bluetoothchatter.ui.widget.ActionView
         android:id="@+id/av_actions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

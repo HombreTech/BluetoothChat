@@ -1,10 +1,10 @@
-package tech.hombre.bluetoothchat.presenter
+package tech.hombre.bluetoothchatter.presenter
 
-import tech.hombre.bluetoothchat.data.model.BluetoothScanner
-import tech.hombre.bluetoothchat.data.model.ProfileManager
-import tech.hombre.bluetoothchat.data.service.message.Contract
-import tech.hombre.bluetoothchat.ui.presenter.ProfilePresenter
-import tech.hombre.bluetoothchat.ui.view.ProfileView
+import tech.hombre.bluetoothchatter.data.model.BluetoothScanner
+import tech.hombre.bluetoothchatter.data.model.ProfileManager
+import tech.hombre.bluetoothchatter.data.service.message.Contract
+import tech.hombre.bluetoothchatter.ui.presenter.ProfilePresenter
+import tech.hombre.bluetoothchatter.ui.view.ProfileView
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.RelaxedMockK

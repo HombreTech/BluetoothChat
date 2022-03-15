@@ -8,7 +8,7 @@
     android:clipToPadding="false"
     tools:context=".ui.activity.ChatActivity">
 
-    <tech.hombre.bluetoothchat.ui.widget.ActionView
+    <tech.hombre.bluetoothchatter.ui.widget.ActionView
         android:id="@+id/av_actions"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -166,7 +166,7 @@
             app:stackFromEnd="true"
             tools:listitem="@layout/item_message_text_foreign" />
 
-        <tech.hombre.bluetoothchat.ui.widget.GoDownButton
+        <tech.hombre.bluetoothchatter.ui.widget.GoDownButton
             android:id="@+id/gdb_go_down"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

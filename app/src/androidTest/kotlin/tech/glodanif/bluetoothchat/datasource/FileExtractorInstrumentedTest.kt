@@ -1,11 +1,11 @@
-package tech.hombre.bluetoothchat.datasource
+package tech.hombre.bluetoothchatter.datasource
 
 import android.os.Environment
 import androidx.test.InstrumentationRegistry
 import androidx.test.runner.AndroidJUnit4
-import tech.hombre.bluetoothchat.R
-import tech.hombre.bluetoothchat.data.model.FileManager
-import tech.hombre.bluetoothchat.data.model.FileManagerImpl
+import tech.hombre.bluetoothchatter.R
+import tech.hombre.bluetoothchatter.data.model.FileManager
+import tech.hombre.bluetoothchatter.data.model.FileManagerImpl
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.After
 import org.junit.Assert.assertNotNull

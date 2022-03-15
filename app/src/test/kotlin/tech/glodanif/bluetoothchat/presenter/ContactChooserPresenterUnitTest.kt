@@ -1,11 +1,11 @@
-package tech.hombre.bluetoothchat.presenter
+package tech.hombre.bluetoothchatter.presenter
 
-import tech.hombre.bluetoothchat.data.entity.Conversation
-import tech.hombre.bluetoothchat.data.model.ConversationsStorage
-import tech.hombre.bluetoothchat.ui.presenter.ContactChooserPresenter
-import tech.hombre.bluetoothchat.ui.view.ContactChooserView
-import tech.hombre.bluetoothchat.ui.viewmodel.ContactViewModel
-import tech.hombre.bluetoothchat.ui.viewmodel.converter.ContactConverter
+import tech.hombre.bluetoothchatter.data.entity.Conversation
+import tech.hombre.bluetoothchatter.data.model.ConversationsStorage
+import tech.hombre.bluetoothchatter.ui.presenter.ContactChooserPresenter
+import tech.hombre.bluetoothchatter.ui.view.ContactChooserView
+import tech.hombre.bluetoothchatter.ui.viewmodel.ContactViewModel
+import tech.hombre.bluetoothchatter.ui.viewmodel.converter.ContactConverter
 import io.mockk.*
 import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.Dispatchers

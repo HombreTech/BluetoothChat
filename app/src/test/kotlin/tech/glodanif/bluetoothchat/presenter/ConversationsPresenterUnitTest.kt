@@ -1,14 +1,14 @@
-package tech.hombre.bluetoothchat.presenter
+package tech.hombre.bluetoothchatter.presenter
 
-import tech.hombre.bluetoothchat.data.entity.ConversationWithMessages
-import tech.hombre.bluetoothchat.data.model.BluetoothConnector
-import tech.hombre.bluetoothchat.data.model.ConversationsStorage
-import tech.hombre.bluetoothchat.data.model.MessagesStorage
-import tech.hombre.bluetoothchat.data.model.ProfileManager
-import tech.hombre.bluetoothchat.ui.presenter.ConversationsPresenter
-import tech.hombre.bluetoothchat.ui.view.ConversationsView
-import tech.hombre.bluetoothchat.ui.viewmodel.ConversationViewModel
-import tech.hombre.bluetoothchat.ui.viewmodel.converter.ConversationConverter
+import tech.hombre.bluetoothchatter.data.entity.ConversationWithMessages
+import tech.hombre.bluetoothchatter.data.model.BluetoothConnector
+import tech.hombre.bluetoothchatter.data.model.ConversationsStorage
+import tech.hombre.bluetoothchatter.data.model.MessagesStorage
+import tech.hombre.bluetoothchatter.data.model.ProfileManager
+import tech.hombre.bluetoothchatter.ui.presenter.ConversationsPresenter
+import tech.hombre.bluetoothchatter.ui.view.ConversationsView
+import tech.hombre.bluetoothchatter.ui.viewmodel.ConversationViewModel
+import tech.hombre.bluetoothchatter.ui.viewmodel.converter.ConversationConverter
 import io.mockk.*
 import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.Dispatchers

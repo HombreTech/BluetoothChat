@@ -14,7 +14,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@drawable/ic_add_black_24dp" />
+        app:srcCompat="@drawable/ic_add_black_24dp"
+        tools:ignore="ContentDescription" />
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -33,7 +34,6 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:fontFamily="@font/titillium_web_semibold"
-                android:maxWidth="150dp"
                 android:text="@string/main_title"
                 android:textColor="@android:color/white"
                 android:textSize="20sp" />
@@ -48,8 +48,8 @@
                 android:focusable="true"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingEnd="8dp"
-                android:paddingStart="8dp">
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp">
 
                 <ImageView
                     android:id="@+id/iv_avatar"

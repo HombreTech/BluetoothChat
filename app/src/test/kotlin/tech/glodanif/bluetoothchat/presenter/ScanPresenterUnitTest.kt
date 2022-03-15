@@ -1,11 +1,11 @@
-package tech.hombre.bluetoothchat.presenter
+package tech.hombre.bluetoothchatter.presenter
 
 import android.bluetooth.BluetoothClass
 import android.bluetooth.BluetoothDevice
 import android.net.Uri
-import tech.hombre.bluetoothchat.data.model.*
-import tech.hombre.bluetoothchat.ui.presenter.ScanPresenter
-import tech.hombre.bluetoothchat.ui.view.ScanView
+import tech.hombre.bluetoothchatter.data.model.*
+import tech.hombre.bluetoothchatter.ui.presenter.ScanPresenter
+import tech.hombre.bluetoothchatter.ui.view.ScanView
 import io.mockk.*
 import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.Dispatchers

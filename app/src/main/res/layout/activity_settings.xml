@@ -85,7 +85,7 @@
         android:textSize="14sp"
         android:textStyle="bold" />
 
-    <tech.hombre.bluetoothchat.ui.widget.SwitchPreference
+    <tech.hombre.bluetoothchatter.ui.widget.SwitchPreference
         android:id="@+id/sp_sound"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -102,7 +102,7 @@
         android:textSize="14sp"
         android:textStyle="bold" />
 
-    <tech.hombre.bluetoothchat.ui.widget.SwitchPreference
+    <tech.hombre.bluetoothchatter.ui.widget.SwitchPreference
         android:id="@+id/sp_class_filter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
