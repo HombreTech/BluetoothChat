@@ -41,6 +41,7 @@ import tech.hombre.bluetoothchatter.ui.view.ChatView
 import tech.hombre.bluetoothchatter.ui.view.NotificationView
 import tech.hombre.bluetoothchatter.ui.viewmodel.ChatMessageViewModel
 import tech.hombre.bluetoothchatter.ui.widget.ActionView
+import tech.hombre.bluetoothchatter.ui.widget.SendFilePopup
 import tech.hombre.bluetoothchatter.utils.getNotificationManager
 import tech.hombre.bluetoothchatter.utils.onEnd
 import tech.hombre.bluetoothchatter.utils.toReadableFileSize
@@ -71,6 +72,8 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat), 
             onEnd { binding.cvPresharingImageHolder.visibility = View.GONE }
         }
     }
+
+    private lateinit var sendFilePopup: SendFilePopup
 
     private val easyImage by lazy {
         EasyImage.Builder(requireContext())
@@ -110,14 +113,23 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat), 
             it.setSubtitleTextAppearance(requireContext(), R.style.ActionBar_SubTitleTextStyle)
         }
 
+        sendFilePopup = SendFilePopup(requireContext()).apply {
+            setOnOptionClickListener {
+                when (it) {
+                    SendFilePopup.Option.IMAGES ->
+                        presenter.performFilePicking()
+                }
+            }
+        }
+
         binding.etMessage.addTextChangedListener(textWatcher)
 
         binding.ibSend.setOnClickListener {
             presenter.sendMessage(binding.etMessage.text.toString().trim())
         }
 
-        binding.ibImage.setOnClickListener {
-            presenter.performFilePicking()
+        binding.ibSendFilePicker.setOnClickListener {
+            sendFilePopup.show(it)
         }
 
         binding.ibCancel.setOnClickListener {

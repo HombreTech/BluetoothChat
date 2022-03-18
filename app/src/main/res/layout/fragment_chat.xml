@@ -38,7 +38,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?android:colorBackground"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingHorizontal="8dp">
 
                 <EditText
                     android:id="@+id/et_message"
@@ -64,12 +65,12 @@
                     android:outAnimation="@anim/switcher_scale_out">
 
                     <ImageButton
-                        android:id="@+id/ib_image"
+                        android:id="@+id/ib_send_file_picker"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="?android:attr/selectableItemBackground"
                         android:contentDescription="@string/chat__cd__send_image_button"
-                        app:srcCompat="@drawable/ic_photo" />
+                        app:srcCompat="@drawable/ic_file" />
 
                     <ImageButton
                         android:id="@+id/ib_send"
