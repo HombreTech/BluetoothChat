@@ -7,7 +7,7 @@ import org.koin.dsl.module
 val applicationModule = module {
 
     factory { params ->
-        ChatPresenter(params[0], params[1], get(), get(), get(), get(), get(), get())
+        ChatPresenter(params[0], params[1], get(), get(), get(), get(), get(), getScope(localeScope).get())
     }
 
     factory { params ->

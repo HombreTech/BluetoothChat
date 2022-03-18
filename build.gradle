@@ -1,6 +1,7 @@
 buildscript {
 
     ext.KOTLIN_VERSION = '1.5.30'
+    ext.NAV_VERSION = '2.4.1'
 
     repositories {
         google()
@@ -12,6 +13,7 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$KOTLIN_VERSION"
         classpath 'com.google.gms:google-services:4.3.10'
         classpath 'com.google.firebase:firebase-crashlytics-gradle:2.8.1'
+        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:$NAV_VERSION")
     }
 }
 

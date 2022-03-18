@@ -364,7 +364,7 @@ class ConnectionController(private val application: tech.hombre.bluetoothchatter
         }
 
         val eventsStrategy = TransferEventStrategy()
-        val filesDirectory = File(Environment.getExternalStorageDirectory(), application.getString(R.string.app_name))
+        val filesDirectory = application.applicationContext.getExternalFilesDir(application.getString(R.string.app_name)) ?: application.filesDir
 
         dataTransferThread =
                 object : DataTransferThread(socket, type, transferEventsListener, filesDirectory, fileEventsListener, eventsStrategy) {

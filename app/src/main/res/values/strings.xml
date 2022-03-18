@@ -6,7 +6,7 @@
     <string name="main_title" translatable="false">Bluetooth Chatter</string>
 
     <string name="bl_app_name" translatable="false">BluetoothChatter</string>
-    <string name="bl_app_uuid" translatable="false">aeee45d6-a468-11ec-b909-0242ac120002</string>
+    <string name="bl_app_uuid" translatable="false">220da3b2-41f5-11e7-a919-92ebcb67fe33</string>
 
     <string name="general__ok">OK</string>
     <string name="general__cancel">Cancel</string>
