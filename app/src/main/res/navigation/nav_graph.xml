@@ -1,3 +1,171 @@
 <?xml version="1.0" encoding="utf-8"?>
-<navigation xmlns:android="http://schemas.android.com/apk/res/android">
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_graph"
+    app:startDestination="@id/conversationsFragment">
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="tech.hombre.bluetoothchatter.ui.activity.ChatFragment"
+        android:label="ChatFragment"
+        tools:layout="@layout/fragment_chat">
+        <argument
+            android:name="address"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="message"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="filepath"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_chatFragment_to_imagePreviewFragment"
+            app:destination="@id/imagePreviewFragment" />
+        <action
+            android:id="@+id/action_chatFragment_to_receivedImagesFragment"
+            app:destination="@id/receivedImagesFragment" />
+        <deepLink
+            android:id="@+id/deepLink2"
+            app:uri="bluetoothchatter://conversations/{address}" />
+        <action
+            android:id="@+id/action_chatFragment_to_scanFragment"
+            app:destination="@id/scanFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/aboutFragment"
+        android:name="tech.hombre.bluetoothchatter.ui.activity.AboutFragment"
+        android:label="AboutFragment"
+        tools:layout="@layout/fragment_about" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="tech.hombre.bluetoothchatter.ui.activity.ProfileFragment"
+        android:label="ProfileFragment"
+        tools:layout="@layout/fragment_profile">
+        <argument
+            android:name="editMode"
+            android:defaultValue="false"
+            app:argType="boolean" />
+        <action
+            android:id="@+id/action_profileFragment_to_conversationsFragment"
+            app:destination="@id/conversationsFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@+id/main_graph"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/conversationsFragment"
+        android:name="tech.hombre.bluetoothchatter.ui.activity.ConversationsFragment"
+        android:label="ConversationsFragment"
+        tools:layout="@layout/fragment_conversations">
+        <action
+            android:id="@+id/action_conversationsFragment_to_aboutFragment"
+            app:destination="@id/aboutFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_enter_anim"
+            app:popExitAnim="@anim/nav_default_exit_anim" />
+        <action
+            android:id="@+id/action_conversationsFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_conversationsFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_conversationsFragment_to_receivedImagesFragment"
+            app:destination="@id/receivedImagesFragment" />
+        <action
+            android:id="@+id/action_conversationsFragment_to_scanFragment"
+            app:destination="@id/scanFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_enter_anim"
+            app:popExitAnim="@anim/nav_default_exit_anim" />
+        <action
+            android:id="@+id/action_conversationsFragment_to_chatFragment"
+            app:destination="@id/chatFragment" />
+        <action
+            android:id="@+id/action_conversationsFragment_to_contactChooserFragment"
+            app:destination="@id/contactChooserFragment" />
+        <deepLink
+            android:id="@+id/deepLink3"
+            app:uri="bluetoothchatter://conversations" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="tech.hombre.bluetoothchatter.ui.activity.SettingsFragment"
+        android:label="SettingsFragment"
+        tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/receivedImagesFragment"
+        android:name="tech.hombre.bluetoothchatter.ui.activity.ReceivedImagesFragment"
+        android:label="ReceivedImagesFragment"
+        tools:layout="@layout/fragment_received_images">
+        <argument
+            android:name="address"
+            app:argType="string"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_receivedImagesFragment_to_imagePreviewFragment"
+            app:destination="@id/imagePreviewFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/scanFragment"
+        android:name="tech.hombre.bluetoothchatter.ui.activity.ScanFragment"
+        android:label="ScanFragment"
+        tools:layout="@layout/fragment_scan">
+
+        <action
+            android:id="@+id/action_scanFragment_to_conversationsFragment"
+            app:destination="@id/conversationsFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_enter_anim"
+            app:popExitAnim="@anim/nav_default_exit_anim" />
+        <deepLink
+            android:id="@+id/deepLink"
+            app:uri="bluetoothchatter://scan" />
+
+
+    </fragment>
+    <fragment
+        android:id="@+id/imagePreviewFragment"
+        android:name="tech.hombre.bluetoothchatter.ui.activity.ImagePreviewFragment"
+        android:label="ImagePreviewFragment"
+        tools:layout="@layout/fragment_image_preview">
+        <argument
+            android:name="messageId"
+            app:argType="long" />
+        <argument
+            android:name="imagePath"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="own"
+            app:argType="boolean" />
+    </fragment>
+    <fragment
+        android:id="@+id/contactChooserFragment"
+        android:name="tech.hombre.bluetoothchatter.ui.activity.ContactChooserFragment"
+        android:label="ContactChooserFragment"
+        tools:layout="@layout/fragment_contact_chooser">
+        <argument
+            android:name="message"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="filePath"
+            app:argType="string"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_contactChooserFragment_to_chatFragment"
+            app:destination="@id/chatFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@+id/chatFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 </navigation>

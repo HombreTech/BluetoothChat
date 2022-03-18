@@ -5,9 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".ui.activity.ConversationsActivity"
-    tools:showIn="@layout/activity_conversations">
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <tech.hombre.bluetoothchatter.ui.widget.ActionView
         android:id="@+id/av_actions"

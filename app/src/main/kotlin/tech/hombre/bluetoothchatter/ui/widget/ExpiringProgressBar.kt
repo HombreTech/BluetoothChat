@@ -37,7 +37,7 @@ class ExpiringProgressBar : View {
     }
 
     private val strokePaint: Paint = Paint().apply {
-        color = ContextCompat.getColor(context, R.color.colorPrimary)
+        color = ContextCompat.getColor(context, R.color.colorAccent)
         strokeWidth = strokeThickness
         isDither = true
         style = Paint.Style.STROKE

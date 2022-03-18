@@ -1,6 +1,5 @@
 package tech.hombre.bluetoothchatter.data.service
 
-import android.app.PendingIntent
 import android.app.Service
 import android.app.TaskStackBuilder
 import android.bluetooth.BluetoothDevice
@@ -8,8 +7,11 @@ import android.content.*
 import android.os.Binder
 import android.os.Build
 import android.os.IBinder
-import androidx.core.app.RemoteInput
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.RemoteInput
+import androidx.core.net.toUri
+import org.koin.android.ext.android.inject
+import org.koin.core.parameter.parametersOf
 import tech.hombre.bluetoothchatter.R
 import tech.hombre.bluetoothchatter.data.entity.ChatMessage
 import tech.hombre.bluetoothchatter.data.entity.Conversation
@@ -22,11 +24,8 @@ import tech.hombre.bluetoothchatter.data.service.message.Contract
 import tech.hombre.bluetoothchatter.data.service.message.Message
 import tech.hombre.bluetoothchatter.data.service.message.PayloadType
 import tech.hombre.bluetoothchatter.data.service.message.TransferringFile
-import tech.hombre.bluetoothchatter.ui.activity.ChatActivity
-import tech.hombre.bluetoothchatter.ui.activity.ConversationsActivity
+import tech.hombre.bluetoothchatter.ui.activity.MainActivity
 import tech.hombre.bluetoothchatter.ui.view.NotificationView
-import org.koin.android.ext.android.inject
-import org.koin.core.parameter.parametersOf
 import java.io.File
 
 class BluetoothConnectionService : Service(), ConnectionSubject {
@@ -52,22 +51,23 @@ class BluetoothConnectionService : Service(), ConnectionSubject {
                     controller.approveConnection()
 
                     val address = intent.getStringExtra(NotificationView.EXTRA_ADDRESS)
-                    val chatIntent = Intent(context, ChatActivity::class.java).apply {
-                        putExtra(ChatActivity.EXTRA_ADDRESS, address)
-                    }
-                    val conversationsIntent = Intent(context, ConversationsActivity::class.java)
+                    val chatIntent = Intent(
+                        Intent.ACTION_VIEW,
+                        "bluetoothchatter://conversations/$address".toUri(),
+                        context,
+                        MainActivity::class.java
+                    )
+                    val conversationsIntent = Intent(
+                        Intent.ACTION_VIEW,
+                        "bluetoothchatter://conversations".toUri(),
+                        context,
+                        MainActivity::class.java
+                    )
 
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        TaskStackBuilder.create(context)
-                                .addNextIntentWithParentStack(conversationsIntent)
-                                .addNextIntentWithParentStack(chatIntent)
-                                .startActivities()
-                    } else {
-                        val intents = arrayOf(conversationsIntent, chatIntent)
-                        val code = System.currentTimeMillis() / 1000
-                        PendingIntent.getActivities(context, code.toInt(), intents, PendingIntent.FLAG_ONE_SHOT)
-                                .send()
-                    }
+                    TaskStackBuilder.create(context)
+                        .addNextIntentWithParentStack(conversationsIntent)
+                        .addNextIntentWithParentStack(chatIntent)
+                        .startActivities()
 
                 } else {
                     controller.rejectConnection()

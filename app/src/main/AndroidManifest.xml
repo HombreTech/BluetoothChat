@@ -25,14 +25,13 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
+        android:theme="@style/AppTheme.MySplash"
         tools:replace="android:allowBackup">
 
         <activity
-            android:name="tech.hombre.bluetoothchatter.ui.activity.SplashActivity"
+            android:name="tech.hombre.bluetoothchatter.ui.activity.MainActivity"
             android:exported="true"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme">
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -48,54 +47,6 @@
                 <data android:mimeType="image/*" />
             </intent-filter>
         </activity>
-
-        <activity
-            android:name="tech.hombre.bluetoothchatter.ui.activity.ConversationsActivity"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name="tech.hombre.bluetoothchatter.ui.activity.ScanActivity"
-            android:label="@string/scan__scan"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name="tech.hombre.bluetoothchatter.ui.activity.ChatActivity"
-            android:label="@string/chat__chat"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
-
-        <activity
-            android:name="tech.hombre.bluetoothchatter.ui.activity.ProfileActivity"
-            android:label="@string/initial_setup__initial_setup"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"
-            android:windowSoftInputMode="stateHidden" />
-
-        <activity
-            android:name="tech.hombre.bluetoothchatter.ui.activity.SettingsActivity"
-            android:label="@string/settings__title"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name="tech.hombre.bluetoothchatter.ui.activity.ContactChooserActivity"
-            android:label="@string/contact_chooser__title"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name="tech.hombre.bluetoothchatter.ui.activity.ImagePreviewActivity"
-            android:label="@string/images__image"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name="tech.hombre.bluetoothchatter.ui.activity.ReceivedImagesActivity"
-            android:label="@string/images__received_images"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name="tech.hombre.bluetoothchatter.ui.activity.AboutActivity"
-            android:label="@string/about__about"
-            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="preloaded_fonts"
