@@ -5,7 +5,6 @@ import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothServerSocket
 import android.bluetooth.BluetoothSocket
 import android.graphics.BitmapFactory
-import android.os.Environment
 import androidx.core.app.NotificationCompat
 import androidx.core.app.Person
 import tech.hombre.bluetoothchatter.R
@@ -205,9 +204,9 @@ class ConnectionController(private val application: tech.hombre.bluetoothchatter
 
         val fileEventsListener = object : DataTransferThread.OnFileListener {
 
-            override fun onFileSendingStarted(file: TransferringFile) {
+            override fun onFileSendingStarted(file: TransferringFile, type: PayloadType) {
 
-                subject.handleFileSendingStarted(file.name, file.size)
+                subject.handleFileSendingStarted(file.name, file.size, type)
 
                 currentConversation?.let {
 
@@ -231,7 +230,7 @@ class ConnectionController(private val application: tech.hombre.bluetoothchatter
                 }
             }
 
-            override fun onFileSendingFinished(uid: Long, path: String) {
+            override fun onFileSendingFinished(uid: Long, path: String, type: PayloadType) {
 
                 contract.createFileEndMessage().let { message ->
                     dataTransferThread?.write(message.getDecodedMessage())
@@ -241,7 +240,7 @@ class ConnectionController(private val application: tech.hombre.bluetoothchatter
 
                     val message = ChatMessage(uid, socket.remoteDevice.address, Date(), true, "").apply {
                         seenHere = true
-                        messageType = PayloadType.IMAGE
+                        messageType = type
                         filePath = path
                     }
 
@@ -276,11 +275,11 @@ class ConnectionController(private val application: tech.hombre.bluetoothchatter
                 }
             }
 
-            override fun onFileReceivingStarted(file: TransferringFile) {
+            override fun onFileReceivingStarted(file: TransferringFile, type: PayloadType) {
 
                 launch {
 
-                    subject.handleFileReceivingStarted(file.size)
+                    subject.handleFileReceivingStarted(file.size, type)
 
                     currentConversation?.let {
 
@@ -305,13 +304,13 @@ class ConnectionController(private val application: tech.hombre.bluetoothchatter
                 }
             }
 
-            override fun onFileReceivingFinished(uid: Long, path: String) {
+            override fun onFileReceivingFinished(uid: Long, path: String, type: PayloadType) {
 
                 currentSocket?.remoteDevice?.let { device ->
 
                     val address = device.address
                     val message = ChatMessage(uid, address, Date(), false, "").apply {
-                        messageType = PayloadType.IMAGE
+                        messageType = type
                         filePath = path
                     }
 
@@ -425,7 +424,7 @@ class ConnectionController(private val application: tech.hombre.bluetoothchatter
         if (isConnected()) {
             contract.createFileStartMessage(file, type).let { message ->
                 dataTransferThread?.write(message.getDecodedMessage())
-                dataTransferThread?.writeFile(message.uid, file)
+                dataTransferThread?.writeFile(message.uid, file, type)
             }
         }
     }

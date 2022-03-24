@@ -4,9 +4,9 @@
     tools:context=".ui.activity.ConversationsFragment">
 
     <item
-        android:id="@+id/action_images"
+        android:id="@+id/action_files"
         android:orderInCategory="99"
-        android:title="@string/images__received_images"
+        android:title="@string/chat__received_files"
         app:showAsAction="never" />
 
     <item

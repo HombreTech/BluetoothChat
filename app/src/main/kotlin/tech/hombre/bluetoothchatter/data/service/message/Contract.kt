@@ -32,7 +32,7 @@ class Contract {
     fun createSuccessfulDeliveryMessage(id: Long) = Message(id, true, MessageType.DELIVERY)
 
     fun createFileStartMessage(file: File, type: PayloadType): Message {
-        val uid = if (partnerVersion >= 2) generateUniqueId() else 0L
+        val uid = generateUniqueId()
         return Message(uid, "${file.name.replace(DIVIDER, "")}$DIVIDER${file.length()}$DIVIDER${type.value}", false, MessageType.FILE_START)
     }
 
@@ -40,6 +40,7 @@ class Contract {
 
     fun isFeatureAvailable(feature: Feature) = when (feature) {
         Feature.IMAGE_SHARING -> partnerVersion >= 1
+        Feature.FILE_SHARING -> partnerVersion >= 1
     }
 
     enum class MessageType(val value: Int) {
@@ -61,7 +62,8 @@ class Contract {
     }
 
     enum class Feature {
-        IMAGE_SHARING;
+        IMAGE_SHARING,
+        FILE_SHARING;
     }
 
     companion object {

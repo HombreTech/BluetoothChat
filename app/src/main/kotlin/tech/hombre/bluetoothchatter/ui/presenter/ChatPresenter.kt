@@ -3,6 +3,7 @@ package tech.hombre.bluetoothchatter.ui.presenter
 import android.bluetooth.BluetoothDevice
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.OnLifecycleEvent
+import kotlinx.coroutines.*
 import tech.hombre.bluetoothchatter.data.entity.ChatMessage
 import tech.hombre.bluetoothchatter.data.entity.Conversation
 import tech.hombre.bluetoothchatter.data.model.*
@@ -11,24 +12,26 @@ import tech.hombre.bluetoothchatter.data.service.message.PayloadType
 import tech.hombre.bluetoothchatter.data.service.message.TransferringFile
 import tech.hombre.bluetoothchatter.ui.view.ChatView
 import tech.hombre.bluetoothchatter.ui.viewmodel.converter.ChatMessageConverter
-import kotlinx.coroutines.*
 import java.io.File
 
-class ChatPresenter(private val deviceAddress: String,
-                    private val view: ChatView,
-                    private val conversationsStorage: ConversationsStorage,
-                    private val messagesStorage: MessagesStorage,
-                    private val scanModel: BluetoothScanner,
-                    private val connectionModel: BluetoothConnector,
-                    private val preferences: UserPreferences,
-                    private val converter: ChatMessageConverter,
-                    private val uiContext: CoroutineDispatcher = Dispatchers.Main,
-                    private val bgContext: CoroutineDispatcher = Dispatchers.IO) : BasePresenter(uiContext) {
+class ChatPresenter(
+    private val deviceAddress: String,
+    private val view: ChatView,
+    private val conversationsStorage: ConversationsStorage,
+    private val messagesStorage: MessagesStorage,
+    private val scanModel: BluetoothScanner,
+    private val connectionModel: BluetoothConnector,
+    private val preferences: UserPreferences,
+    private val converter: ChatMessageConverter,
+    private val uiContext: CoroutineDispatcher = Dispatchers.Main,
+    private val bgContext: CoroutineDispatcher = Dispatchers.IO
+) : BasePresenter(uiContext) {
 
-    private val maxFileSize = 5_242_880
+    private val maxFileSize = 10_485_760
 
     private var fileToSend: File? = null
     private var filePresharing: File? = null
+    private var type = PayloadType.TEXT
 
     private val prepareListener = object : OnPrepareListener {
 
@@ -45,7 +48,9 @@ class ChatPresenter(private val deviceAddress: String,
             if (!connectionModel.isConnected()) {
                 fileToSend?.let {
                     filePresharing = fileToSend
-                    view.showPresharingImage(it.absolutePath)
+                    if (type == PayloadType.IMAGE) {
+                        view.showPresharingImage(it.absolutePath)
+                    } else view.showPresharingFile()
                 }
             } else {
 
@@ -56,9 +61,9 @@ class ChatPresenter(private val deviceAddress: String,
                 fileToSend?.let { file ->
 
                     if (file.length() > maxFileSize) {
-                        view.showImageTooBig(maxFileSize.toLong())
+                        view.showFileTooBig(maxFileSize.toLong())
                     } else {
-                        connectionModel.sendFile(file, PayloadType.IMAGE)
+                        connectionModel.sendFile(file, type)
                     }
                     fileToSend = null
                     filePresharing = null
@@ -91,7 +96,9 @@ class ChatPresenter(private val deviceAddress: String,
             view.hideActions()
 
             launch {
-                val conversation = withContext(bgContext) { conversationsStorage.getConversationByAddress(deviceAddress) }
+                val conversation = withContext(bgContext) {
+                    conversationsStorage.getConversationByAddress(deviceAddress)
+                }
                 if (conversation != null) {
                     view.showPartnerName(conversation.displayName, conversation.deviceName)
                 }
@@ -162,44 +169,54 @@ class ChatPresenter(private val deviceAddress: String,
 
     private val fileListener = object : OnFileListener {
 
-        override fun onFileSendingStarted(fileAddress: String?, fileSize: Long) {
-            view.showImageTransferLayout(fileAddress, fileSize, ChatView.FileTransferType.SENDING)
+        override fun onFileSendingStarted(fileAddress: String?, fileSize: Long, type: PayloadType) {
+            view.showFileTransferLayout(
+                fileAddress,
+                fileSize,
+                ChatView.FileTransferType.SENDING,
+                type
+            )
         }
 
         override fun onFileSendingProgress(sentBytes: Long, totalBytes: Long) {
-            view.updateImageTransferProgress(sentBytes, totalBytes)
+            view.updateFileTransferProgress(sentBytes, totalBytes)
         }
 
         override fun onFileSendingFinished() {
-            view.hideImageTransferLayout()
+            view.hideFileTransferLayout()
         }
 
         override fun onFileSendingFailed() {
-            view.hideImageTransferLayout()
-            view.showImageTransferFailure()
+            view.hideFileTransferLayout()
+            view.showFileTransferFailure()
         }
 
-        override fun onFileReceivingStarted(fileSize: Long) {
-            view.showImageTransferLayout(null, fileSize, ChatView.FileTransferType.RECEIVING)
+        override fun onFileReceivingStarted(fileSize: Long, type: PayloadType) {
+            view.showFileTransferLayout(
+                null,
+                fileSize,
+                ChatView.FileTransferType.RECEIVING,
+                type
+            )
         }
 
         override fun onFileReceivingProgress(sentBytes: Long, totalBytes: Long) {
-            view.updateImageTransferProgress(sentBytes, totalBytes)
+            view.updateFileTransferProgress(sentBytes, totalBytes)
         }
 
         override fun onFileReceivingFinished() {
-            view.hideImageTransferLayout()
+            view.hideFileTransferLayout()
         }
 
         override fun onFileReceivingFailed() {
-            view.hideImageTransferLayout()
-            view.showImageTransferFailure()
+            view.hideFileTransferLayout()
+            view.showFileTransferFailure()
         }
 
         override fun onFileTransferCanceled(byPartner: Boolean) {
-            view.hideImageTransferLayout()
+            view.hideFileTransferLayout()
             if (byPartner) {
-                view.showImageTransferCanceled()
+                view.showFileTransferCanceled()
             }
         }
     }
@@ -242,8 +259,10 @@ class ChatPresenter(private val deviceAddress: String,
         }
 
         launch {
-            val messagesDef = async(bgContext) { messagesStorage.getMessagesByDevice(deviceAddress) }
-            val conversationDef = async(bgContext) { conversationsStorage.getConversationByAddress(deviceAddress) }
+            val messagesDef =
+                async(bgContext) { messagesStorage.getMessagesByDevice(deviceAddress) }
+            val conversationDef =
+                async(bgContext) { conversationsStorage.getConversationByAddress(deviceAddress) }
             displayInfo(messagesDef.await(), conversationDef.await())
         }
     }
@@ -262,15 +281,19 @@ class ChatPresenter(private val deviceAddress: String,
 
         if (connectionModel.isConnected()) {
             if (file.length() > maxFileSize) {
-                view.showImageTooBig(maxFileSize.toLong())
+                view.showFileTooBig(maxFileSize.toLong())
             } else {
-                connectionModel.sendFile(file, PayloadType.IMAGE)
+                connectionModel.sendFile(file, type)
             }
             fileToSend = null
             filePresharing = null
         } else {
             filePresharing = fileToSend
-            view.showPresharingImage(file.absolutePath)
+            if (type == PayloadType.IMAGE) {
+                view.showPresharingImage(file.absolutePath)
+            } else {
+                view.showPresharingFile()
+            }
         }
     }
 
@@ -329,17 +352,26 @@ class ChatPresenter(private val deviceAddress: String,
         }
     }
 
-    fun performFilePicking() {
+    fun performImagePicking() {
 
         if (connectionModel.isFeatureAvailable(Contract.Feature.IMAGE_SHARING)) {
             view.openImagePicker()
         } else {
-            view.showReceiverUnableToReceiveImages()
+            view.showReceiverUnableToReceiveFiles()
         }
     }
 
-    fun sendFile(file: File) {
+    fun performFilePicking() {
 
+        if (connectionModel.isFeatureAvailable(Contract.Feature.FILE_SHARING)) {
+            view.openFilePicker()
+        } else {
+            view.showReceiverUnableToReceiveFiles()
+        }
+    }
+
+    fun sendFile(file: File, type: PayloadType) {
+        this.type = type
         if (!file.exists()) {
             view.showImageNotExist()
         } else if (!connectionModel.isConnectionPrepared()) {
@@ -347,7 +379,9 @@ class ChatPresenter(private val deviceAddress: String,
             connectionModel.addOnPrepareListener(prepareListener)
             connectionModel.prepare()
         } else if (!connectionModel.isConnected()) {
-            view.showPresharingImage(file.absolutePath)
+            if (type == PayloadType.IMAGE) {
+                view.showPresharingImage(file.absolutePath)
+            } else view.showPresharingFile()
             filePresharing = file
         } else {
             fileToSend = file
@@ -367,13 +401,15 @@ class ChatPresenter(private val deviceAddress: String,
         filePresharing?.let {
 
             if (!connectionModel.isConnected()) {
-                view.showPresharingImage(it.absolutePath)
+                if (type == PayloadType.IMAGE) {
+                    view.showPresharingImage(it.absolutePath)
+                } else view.showPresharingFile()
             } else if (!connectionModel.isFeatureAvailable(Contract.Feature.IMAGE_SHARING)) {
-                view.showReceiverUnableToReceiveImages()
+                view.showReceiverUnableToReceiveFiles()
             } else if (it.length() > maxFileSize) {
-                view.showImageTooBig(maxFileSize.toLong())
+                view.showFileTooBig(maxFileSize.toLong())
             } else {
-                connectionModel.sendFile(it, PayloadType.IMAGE)
+                connectionModel.sendFile(it, type)
                 fileToSend = null
                 filePresharing = null
             }
@@ -382,7 +418,7 @@ class ChatPresenter(private val deviceAddress: String,
 
     fun cancelFileTransfer() {
         connectionModel.cancelFileTransfer()
-        view.hideImageTransferLayout()
+        view.hideFileTransferLayout()
     }
 
     fun reconnect() {
@@ -428,9 +464,9 @@ class ChatPresenter(private val deviceAddress: String,
             if (file != null) {
                 val type = if (file.transferType == TransferringFile.TransferType.RECEIVING)
                     ChatView.FileTransferType.RECEIVING else ChatView.FileTransferType.SENDING
-                view.showImageTransferLayout(file.name, file.size, type)
+                view.showFileTransferLayout(file.name, file.size, type, this.type)
             } else {
-                view.hideImageTransferLayout()
+                view.hideFileTransferLayout()
             }
         }
 

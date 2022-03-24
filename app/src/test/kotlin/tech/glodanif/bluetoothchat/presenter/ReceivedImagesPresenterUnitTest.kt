@@ -33,7 +33,7 @@ class ReceivedImagesPresenterUnitTest {
     fun loading_empty() {
         coEvery { storage.getFileMessagesByDevice("") } returns ArrayList()
         presenter.loadImages()
-        verify { view.showNoImages() }
+        verify { view.showNoFiles() }
     }
 
     @Test
@@ -41,6 +41,6 @@ class ReceivedImagesPresenterUnitTest {
         val list = arrayListOf<MessageFile>(mockk())
         coEvery { storage.getFileMessagesByDevice("") } returns list
         presenter.loadImages()
-        verify { view.displayImages(list) }
+        verify { view.displayFiles(list) }
     }
 }
