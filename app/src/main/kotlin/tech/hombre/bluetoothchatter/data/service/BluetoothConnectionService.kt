@@ -216,8 +216,8 @@ class BluetoothConnectionService : Service(), ConnectionSubject {
         connectionListener?.onConnectionWithdrawn()
     }
 
-    override fun handleFileSendingStarted(fileAddress: String?, fileSize: Long) {
-        fileListener?.onFileSendingStarted(fileAddress, fileSize)
+    override fun handleFileSendingStarted(fileAddress: String?, fileSize: Long, type: PayloadType) {
+        fileListener?.onFileSendingStarted(fileAddress, fileSize, type)
     }
 
     override fun handleFileSendingProgress(sentBytes: Long, totalBytes: Long) {
@@ -232,8 +232,8 @@ class BluetoothConnectionService : Service(), ConnectionSubject {
         fileListener?.onFileSendingFailed()
     }
 
-    override fun handleFileReceivingStarted(fileSize: Long) {
-        fileListener?.onFileReceivingStarted(fileSize)
+    override fun handleFileReceivingStarted(fileSize: Long, type: PayloadType) {
+        fileListener?.onFileReceivingStarted(fileSize, type)
     }
 
     override fun handleFileReceivingProgress(sentBytes: Long, totalBytes: Long) {

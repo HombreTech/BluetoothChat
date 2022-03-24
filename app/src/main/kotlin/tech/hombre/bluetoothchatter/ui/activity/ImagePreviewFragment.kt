@@ -2,16 +2,13 @@ package tech.hombre.bluetoothchatter.ui.activity
 
 import android.app.AlertDialog
 import android.graphics.Bitmap
-import android.os.Build
 import android.os.Bundle
-import android.util.ArrayMap
 import android.view.*
 import androidx.core.view.ViewCompat
+import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.transition.Transition
 import androidx.transition.TransitionInflater
-import androidx.transition.TransitionManager
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import org.koin.android.ext.android.inject
@@ -21,7 +18,6 @@ import tech.hombre.bluetoothchatter.databinding.FragmentImagePreviewBinding
 import tech.hombre.bluetoothchatter.ui.presenter.ImagePreviewPresenter
 import tech.hombre.bluetoothchatter.ui.view.ImagePreviewView
 import java.io.File
-import java.lang.ref.WeakReference
 
 class ImagePreviewFragment :
     BaseFragment<FragmentImagePreviewBinding>(R.layout.fragment_image_preview), ImagePreviewView {
@@ -38,17 +34,13 @@ class ImagePreviewFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setHasOptionsMenu(true)
-        (requireActivity() as MainActivity).setSupportActionBar(binding.appBar.tbToolbar)
-        binding.appBar.tbToolbar.setTitleTextAppearance(
-            requireContext(),
-            R.style.ActionBar_TitleTextStyle
-        )
-        binding.appBar.tbToolbar.setSubtitleTextAppearance(
-            requireContext(),
-            R.style.ActionBar_SubTitleTextStyle
-        )
-
+        ViewCompat.setTransitionName(binding.imageView, messageId.toString())
+        if (!own) {
+            binding.btnDelete.setOnClickListener {
+                confirmFileRemoval()
+            }
+            binding.btnDelete.isVisible = true
+        }
         binding.imageView.minimumScale = .75f
         binding.imageView.maximumScale = 2f
 
@@ -57,7 +49,9 @@ class ImagePreviewFragment :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        sharedElementEnterTransition = TransitionInflater.from(requireContext()).inflateTransition(android.R.transition.move)
+        val set = TransitionInflater.from(requireContext())
+            .inflateTransition(R.transition.change_image_transition)
+        sharedElementEnterTransition = set
         postponeEnterTransition()
     }
 
@@ -67,12 +61,10 @@ class ImagePreviewFragment :
 
             override fun onSuccess() {
                 startPostponedEnterTransition()
-                //supportStartPostponedEnterTransition()
             }
 
             override fun onError(e: Exception?) {
                 startPostponedEnterTransition()
-               // supportStartPostponedEnterTransition()
             }
         }
 
@@ -84,12 +76,12 @@ class ImagePreviewFragment :
     }
 
     override fun showFileInfo(name: String, readableSize: String) {
-        binding.appBar.tbToolbar.title = name
-        binding.appBar.tbToolbar.subtitle = readableSize
+        binding.tvFilename.text = name
+        binding.tvFileSize.text = readableSize
     }
 
     override fun close() {
-        findNavController().navigateUp()
+        findNavController().popBackStack()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -97,17 +89,6 @@ class ImagePreviewFragment :
             inflater.inflate(R.menu.menu_image_preview, menu)
         }
         return super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
-        return when (item.itemId) {
-            R.id.action_remove -> {
-                confirmFileRemoval()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
     }
 
     private fun confirmFileRemoval() {

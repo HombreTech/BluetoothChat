@@ -12,7 +12,7 @@
         android:layout_width="220dp"
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
-        app:cardBackgroundColor="?android:colorBackground">
+        app:cardBackgroundColor="?android:windowBackground">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -69,13 +69,13 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginEnd="8dp"
-                    app:srcCompat="@drawable/ic_photo_black_24dp"
+                    app:srcCompat="@drawable/ic_file"
                     app:tint="?android:textColorPrimary" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/images__received_images"
+                    android:text="@string/chat__received_files"
                     android:textSize="16sp"
                     android:textStyle="bold" />
             </LinearLayout>

@@ -37,7 +37,7 @@
                 android:id="@+id/ll_text_sending_holder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?android:colorBackground"
+                android:background="?android:windowBackground"
                 android:orientation="horizontal"
                 android:paddingHorizontal="8dp">
 
@@ -87,7 +87,7 @@
                 android:id="@+id/ll_image_sending_holder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?android:colorBackground"
+                android:background="?android:windowBackground"
                 android:orientation="horizontal"
                 android:padding="8dp"
                 android:visibility="gone">

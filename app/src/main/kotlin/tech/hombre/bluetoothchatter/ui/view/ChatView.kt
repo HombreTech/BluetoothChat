@@ -1,6 +1,7 @@
 package tech.hombre.bluetoothchatter.ui.view
 
 import androidx.annotation.ColorInt
+import tech.hombre.bluetoothchatter.data.service.message.PayloadType
 import tech.hombre.bluetoothchatter.ui.viewmodel.ChatMessageViewModel
 
 interface ChatView {
@@ -21,7 +22,7 @@ interface ChatView {
     fun showNotConnectedToThisDevice(currentDevice: String)
     fun showNotValidMessage()
     fun showNotConnectedToSend()
-    fun showReceiverUnableToReceiveImages()
+    fun showReceiverUnableToReceiveFiles()
     fun showDeviceIsNotAvailable()
     fun showWainingForOpponent()
     fun hideActions()
@@ -37,14 +38,21 @@ interface ChatView {
     fun setBackgroundColor(@ColorInt color: Int)
 
     fun openImagePicker()
+    fun openFilePicker()
     fun showPresharingImage(path: String)
-    fun showImageTooBig(maxSize: Long)
+    fun showPresharingFile()
+    fun showFileTooBig(maxSize: Long)
     fun showImageNotExist()
-    fun showImageTransferLayout(fileAddress: String?, fileSize: Long, transferType: FileTransferType)
-    fun updateImageTransferProgress(transferredBytes: Long, totalBytes: Long)
-    fun hideImageTransferLayout()
-    fun showImageTransferCanceled()
-    fun showImageTransferFailure()
+    fun showFileTransferLayout(
+        fileAddress: String?,
+        fileSize: Long,
+        transferType: FileTransferType,
+        type: PayloadType
+    )
+    fun updateFileTransferProgress(transferredBytes: Long, totalBytes: Long)
+    fun hideFileTransferLayout()
+    fun showFileTransferCanceled()
+    fun showFileTransferFailure()
 
     enum class FileTransferType {
         SENDING,

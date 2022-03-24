@@ -17,7 +17,8 @@ import tech.hombre.bluetoothchatter.utils.getLayoutInflater
 class SendFilePopup(context: Context) : PopupWindow() {
 
     enum class Option {
-        IMAGES;
+        IMAGES,
+        FILES;
     }
 
     private val appearingAnimationDuration = 200L
@@ -42,6 +43,11 @@ class SendFilePopup(context: Context) : PopupWindow() {
         rootView.findViewById<View>(R.id.ll_images_button).setOnClickListener {
             dismiss()
             clickListener?.invoke(Option.IMAGES)
+        }
+
+        rootView.findViewById<View>(R.id.ll_files_button).setOnClickListener {
+            dismiss()
+            clickListener?.invoke(Option.FILES)
         }
 
         contentView = rootView

@@ -17,6 +17,8 @@ import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.content.FileProvider
+import androidx.core.view.doOnPreDraw
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -32,11 +34,14 @@ import pl.aprilapps.easyphotopicker.EasyImage
 import pl.aprilapps.easyphotopicker.MediaFile
 import pl.aprilapps.easyphotopicker.MediaSource
 import tech.hombre.bluetoothchatter.R
+import tech.hombre.bluetoothchatter.data.service.message.PayloadType
 import tech.hombre.bluetoothchatter.databinding.FragmentChatBinding
 import tech.hombre.bluetoothchatter.ui.adapter.ChatAdapter
 import tech.hombre.bluetoothchatter.ui.presenter.ChatPresenter
 import tech.hombre.bluetoothchatter.ui.util.ScrollAwareBehavior
 import tech.hombre.bluetoothchatter.ui.util.SimpleTextWatcher
+import tech.hombre.bluetoothchatter.ui.util.getFileType
+import tech.hombre.bluetoothchatter.ui.util.getPath
 import tech.hombre.bluetoothchatter.ui.view.ChatView
 import tech.hombre.bluetoothchatter.ui.view.NotificationView
 import tech.hombre.bluetoothchatter.ui.viewmodel.ChatMessageViewModel
@@ -102,6 +107,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat), 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        postponeEnterTransition()
         lifecycle.addObserver(presenter)
         setHasOptionsMenu(true)
         (requireActivity() as MainActivity).setSupportActionBar(binding.appBar.tbToolbar)
@@ -117,6 +123,8 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat), 
             setOnOptionClickListener {
                 when (it) {
                     SendFilePopup.Option.IMAGES ->
+                        presenter.performImagePicking()
+                    SendFilePopup.Option.FILES ->
                         presenter.performFilePicking()
                 }
             }
@@ -160,24 +168,51 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat), 
         params.behavior = scrollBehavior
         binding.gdbGoDown.requestLayout()
 
+        binding.rvChat.doOnPreDraw {
+            binding.rvChat.postDelayed({
+                startPostponedEnterTransition()
+            }, 100)
+        }
+
         chatAdapter = ChatAdapter().apply {
             imageClickListener = { view, message ->
-                val extras = FragmentNavigatorExtras(
-                    view to "imageView"
-                )
-                findNavController().navigate(
-                    ChatFragmentDirections.actionChatFragmentToImagePreviewFragment(
-                        messageId = message.uid,
-                        imagePath = message.imagePath,
-                        own = message.own
-                    ), navigatorExtras = extras
-                )
+                if (message.type == PayloadType.IMAGE) {
+                    val extras = FragmentNavigatorExtras(
+                        view to message.uid.toString()
+                    )
+                    findNavController().navigate(
+                        ChatFragmentDirections.actionChatFragmentToImagePreviewFragment(
+                            messageId = message.uid,
+                            imagePath = message.filePath,
+                            own = message.own
+                        ), navigatorExtras = extras
+                    )
+                } else {
+                    with(Intent(Intent.ACTION_VIEW)) {
+                        val uri = FileProvider.getUriForFile(
+                            context!!,
+                            requireContext().packageName + ".provider",
+                            File(message.filePath)
+                        )
+                        data = uri
+                        flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                        startActivity(
+                            Intent.createChooser(
+                                this,
+                                getString(R.string.files__open_chooser)
+                            )
+                        )
+                    }
+                }
             }
         }
 
         binding.rvChat.apply {
 
             adapter = chatAdapter
+            chatAdapter.stateRestorationPolicy =
+                RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+
             layoutManager = LinearLayoutManager(requireContext()).apply {
                 reverseLayout = true
             }
@@ -210,7 +245,8 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat), 
             } else if (fileToShare != null) {
                 //FIXME
                 Handler().postDelayed({
-                    presenter.sendFile(File(fileToShare))
+                    val file = File(fileToShare)
+                    presenter.sendFile(File(fileToShare), file.absolutePath.getFileType())
                 }, 1000)
             }
 
@@ -421,9 +457,9 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat), 
             .show()
     }
 
-    override fun showImageTooBig(maxSize: Long) = doIfStarted {
+    override fun showFileTooBig(maxSize: Long) = doIfStarted {
         AlertDialog.Builder(requireActivity())
-            .setMessage(getString(R.string.chat__too_big_image, maxSize.toReadableFileSize()))
+            .setMessage(getString(R.string.chat__too_big_file, maxSize.toReadableFileSize()))
             .setPositiveButton(getString(R.string.general__ok), null)
             .show()
     }
@@ -444,40 +480,62 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat), 
             .into(binding.ivPresharingImage)
     }
 
+    override fun showPresharingFile() {
+        binding.cvPresharingImageHolder.visibility = View.VISIBLE
+        binding.cvPresharingImageHolder.startAnimation(showAnimation)
+        binding.ivPresharingImage.setImageResource(R.drawable.ic_file_upload)
+    }
+
     override fun openImagePicker() {
         easyImage.openGallery(this)
     }
 
-    override fun showImageTransferLayout(
+    override fun openFilePicker() {
+        val fileIntent = Intent(Intent.ACTION_GET_CONTENT)
+        fileIntent.addCategory(Intent.CATEGORY_OPENABLE)
+        fileIntent.type = "*/*"
+        startActivityForResult(fileIntent, REQUEST_FILE)
+    }
+
+    override fun showFileTransferLayout(
         fileAddress: String?,
         fileSize: Long,
-        transferType: ChatView.FileTransferType
+        transferType: ChatView.FileTransferType,
+        type: PayloadType
     ) {
 
         binding.llTextSendingHolder.visibility = View.GONE
         binding.llImageSendingHolder.visibility = View.VISIBLE
 
-        binding.tvSendingImageLabel.text = getString(
-            if (transferType == ChatView.FileTransferType.SENDING)
-                R.string.chat__sending_image else R.string.chat__receiving_images
-        )
+        if (type == PayloadType.IMAGE) {
+            binding.tvSendingImageLabel.text = getString(
+                if (transferType == ChatView.FileTransferType.SENDING)
+                    R.string.chat__sending_image else R.string.chat__receiving_images
+            )
 
-        Picasso.get()
-            .load("file://$fileAddress")
-            .into(object : Target {
+            Picasso.get()
+                .load("file://$fileAddress")
+                .into(object : Target {
 
-                override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
-                    binding.ivTransferringImage.setImageResource(R.drawable.ic_photo)
-                }
+                    override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
+                        binding.ivTransferringImage.setImageResource(R.drawable.ic_photo)
+                    }
 
-                override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {
-                    binding.ivTransferringImage.setImageResource(R.drawable.ic_photo)
-                }
+                    override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {
+                        binding.ivTransferringImage.setImageResource(R.drawable.ic_photo)
+                    }
 
-                override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
-                    binding.ivTransferringImage.setImageBitmap(bitmap)
-                }
-            })
+                    override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
+                        binding.ivTransferringImage.setImageBitmap(bitmap)
+                    }
+                })
+        } else {
+            binding.tvSendingImageLabel.text = getString(
+                if (transferType == ChatView.FileTransferType.SENDING)
+                    R.string.chat__sending_file else R.string.chat__receiving_file
+            )
+            binding.ivTransferringImage.setImageResource(R.drawable.ic_file_upload)
+        }
 
         binding.tvFileSize.text = fileSize.toReadableFileSize()
         binding.tvFileSendingPercentage.text = "0%"
@@ -487,7 +545,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat), 
     }
 
     @SuppressLint("SetTextI18n")
-    override fun updateImageTransferProgress(transferredBytes: Long, totalBytes: Long) {
+    override fun updateFileTransferProgress(transferredBytes: Long, totalBytes: Long) {
 
         val percents = transferredBytes.toFloat() / totalBytes * 100
         binding.tvFileSendingPercentage.text = "${Math.round(percents)}%"
@@ -496,20 +554,20 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat), 
 
     }
 
-    override fun hideImageTransferLayout() {
+    override fun hideFileTransferLayout() {
         binding.llTextSendingHolder.visibility = View.VISIBLE
         binding.llImageSendingHolder.visibility = View.GONE
     }
 
-    override fun showImageTransferCanceled() {
+    override fun showFileTransferCanceled() {
         Toast.makeText(
             requireActivity(),
-            R.string.chat__partner_canceled_image_transfer,
+            R.string.chat__partner_canceled_file_transfer,
             Toast.LENGTH_LONG
         ).show()
     }
 
-    override fun showImageTransferFailure() {
+    override fun showFileTransferFailure() {
         Toast.makeText(
             requireActivity(),
             R.string.chat__problem_during_file_transfer,
@@ -517,9 +575,9 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat), 
         ).show()
     }
 
-    override fun showReceiverUnableToReceiveImages() = doIfStarted {
+    override fun showReceiverUnableToReceiveFiles() = doIfStarted {
         AlertDialog.Builder(requireActivity())
-            .setMessage(R.string.chat__partner_unable_to_receive_images)
+            .setMessage(R.string.chat__partner_unable_to_receive_files)
             .setPositiveButton(R.string.general__ok, null)
             .show()
     }
@@ -532,50 +590,60 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat), 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == REQUEST_ENABLE_BLUETOOTH) {
-            if (resultCode == Activity.RESULT_OK) {
-                presenter.onBluetoothEnabled()
-            } else {
-                presenter.onBluetoothEnablingFailed()
+        when (requestCode) {
+            REQUEST_ENABLE_BLUETOOTH -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    presenter.onBluetoothEnabled()
+                } else {
+                    presenter.onBluetoothEnablingFailed()
+                }
             }
-        } else {
+            REQUEST_FILE -> {
+                if (data != null && data.data != null) {
+                    val uri = data.data
+                    val path = requireContext().getPath(uri)
+                    presenter.sendFile(File(path), PayloadType.FILE)
+                }
+            }
+            else -> {
 
-            easyImage.handleActivityResult(
-                requestCode,
-                resultCode,
-                data,
-                requireActivity(),
-                object : DefaultCallback() {
+                easyImage.handleActivityResult(
+                    requestCode,
+                    resultCode,
+                    data,
+                    requireActivity(),
+                    object : DefaultCallback() {
 
-                    override fun onImagePickerError(error: Throwable, source: MediaSource) {
-                        Toast.makeText(
-                            requireActivity(),
-                            R.string.chat__unable_to_pick_image,
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
-
-                    override fun onCanceled(source: MediaSource) {
-
-                    }
-
-                    override fun onMediaFilesPicked(
-                        imageFiles: Array<MediaFile>,
-                        source: MediaSource
-                    ) {
-                        if (imageFiles.isNotEmpty()) {
-                            presenter.sendFile(imageFiles[0].file)
+                        override fun onImagePickerError(error: Throwable, source: MediaSource) {
+                            Toast.makeText(
+                                requireActivity(),
+                                R.string.chat__unable_to_pick_image,
+                                Toast.LENGTH_LONG
+                            ).show()
                         }
-                    }
-                })
+
+                        override fun onCanceled(source: MediaSource) {
+
+                        }
+
+                        override fun onMediaFilesPicked(
+                            imageFiles: Array<MediaFile>,
+                            source: MediaSource
+                        ) {
+                            if (imageFiles.isNotEmpty()) {
+                                presenter.sendFile(imageFiles[0].file, PayloadType.IMAGE)
+                            }
+                        }
+                    })
+            }
         }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.action_images -> {
+            R.id.action_files -> {
                 findNavController().navigate(
-                    ChatFragmentDirections.actionChatFragmentToReceivedImagesFragment(
+                    ChatFragmentDirections.actionChatFragmentToReceivedFilesFragment(
                         address = deviceAddress
                     )
                 )
@@ -592,6 +660,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat), 
     companion object {
 
         private const val REQUEST_ENABLE_BLUETOOTH = 101
+        private const val REQUEST_FILE = 201
 
     }
 }

@@ -24,7 +24,7 @@ class FileManagerImpl(private val context: Context) : FileManager {
         val file = File(application.applicationInfo.publicSourceDir)
 
         try {
-            val newFile = copyAndZip(file, directory, "BluetoothChat")
+            val newFile = copyAndZip(file, directory, "BluetoothChatter")
 
             return if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
                 try {

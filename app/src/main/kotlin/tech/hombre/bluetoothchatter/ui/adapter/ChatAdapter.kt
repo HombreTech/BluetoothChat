@@ -12,21 +12,24 @@ import android.widget.TextView
 import androidx.core.text.util.LinkifyCompat
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
+import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter
 import tech.hombre.bluetoothchatter.R
 import tech.hombre.bluetoothchatter.data.service.message.PayloadType
 import tech.hombre.bluetoothchatter.ui.util.ClickableMovementMethod
 import tech.hombre.bluetoothchatter.ui.viewmodel.ChatMessageViewModel
-import com.squareup.picasso.Picasso
-import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter
 import java.util.*
 
-class ChatAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(), StickyRecyclerHeadersAdapter<RecyclerView.ViewHolder> {
+class ChatAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
+    StickyRecyclerHeadersAdapter<RecyclerView.ViewHolder> {
 
     companion object {
         private const val OWN_TEXT_MESSAGE = 0
         private const val OWN_IMAGE_MESSAGE = 1
         private const val FOREIGN_TEXT_MESSAGE = 2
         private const val FOREIGN_IMAGE_MESSAGE = 3
+        private const val OWN_FILE_MESSAGE = 4
+        private const val FOREIGN_FILE_MESSAGE = 5
     }
 
     val picassoTag = Object()
@@ -39,48 +42,72 @@ class ChatAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(), StickyRecyc
 
         val message = messages[position]
 
-        if (holder is ImageMessageViewHolder) {
+        when (holder) {
+            is ImageMessageViewHolder -> {
 
-            if (!message.isImageAvailable) {
+                if (!message.isImageAvailable) {
 
-                holder.image.visibility = View.GONE
-                holder.missingLabel.visibility = View.VISIBLE
-                holder.missingLabel.setText(message.imageProblemText)
+                    holder.image.visibility = View.GONE
+                    holder.missingLabel.visibility = View.VISIBLE
+                    holder.missingLabel.setText(message.imageProblemText)
 
-            } else {
+                } else {
 
-                holder.image.visibility = View.VISIBLE
-                holder.missingLabel.visibility = View.GONE
+                    holder.image.visibility = View.VISIBLE
+                    holder.missingLabel.visibility = View.GONE
 
-                ViewCompat.setTransitionName(holder.image, message.uid.toString())
+                    ViewCompat.setTransitionName(holder.image, message.uid.toString())
 
-                val size = message.imageSize
-                holder.image.layoutParams = FrameLayout.LayoutParams(size.width, size.height)
-                holder.image.setOnClickListener {
-                    imageClickListener?.invoke(holder.image, message)
-                }
+                    val size = message.imageSize
+                    holder.image.layoutParams = FrameLayout.LayoutParams(size.width, size.height)
+                    holder.image.setOnClickListener {
+                        imageClickListener?.invoke(holder.image, message)
+                    }
 
-                Picasso.get()
-                        .load(message.imageUri)
+                    Picasso.get()
+                        .load(message.fileUri)
                         .config(Bitmap.Config.RGB_565)
                         .error(R.color.background_image)
                         .placeholder(R.color.background_image)
                         .tag(picassoTag)
                         .resize(size.width, size.height)
                         .into(holder.image)
+                }
+
+                holder.date.text = message.time
+
             }
+            is FileMessageViewHolder -> {
+                if (!message.isImageAvailable) {
+                    holder.image.visibility = View.GONE
+                    holder.missingLabel.visibility = View.VISIBLE
+                    holder.missingLabel.setText(message.imageProblemText)
+                } else {
+                    holder.image.visibility = View.VISIBLE
+                    holder.missingLabel.visibility = View.GONE
+                    holder.label.text = StringBuilder()
+                        .append(message.filePath?.substringAfterLast("/"))
+                        .appendLine()
+                        .append(message.fileSize.getFileSize())
 
-            holder.date.text = message.time
+                    holder.date.text = message.time
+                    holder.itemView.setOnClickListener {
+                        imageClickListener?.invoke(holder.image, message)
+                    }
+                }
+            }
+            is TextMessageViewHolder -> {
 
-        } else if (holder is TextMessageViewHolder) {
+                val spannableMessage = SpannableString(message.text)
+                LinkifyCompat.addLinks(
+                    spannableMessage,
+                    Linkify.WEB_URLS or Linkify.PHONE_NUMBERS or Linkify.EMAIL_ADDRESSES
+                )
 
-            val spannableMessage = SpannableString(message.text)
-            LinkifyCompat.addLinks(spannableMessage,
-                    Linkify.WEB_URLS or Linkify.PHONE_NUMBERS or Linkify.EMAIL_ADDRESSES)
-
-            holder.text.movementMethod = ClickableMovementMethod
-            holder.text.setText(spannableMessage, TextView.BufferType.SPANNABLE)
-            holder.date.text = message.time
+                holder.text.movementMethod = ClickableMovementMethod
+                holder.text.setText(spannableMessage, TextView.BufferType.SPANNABLE)
+                holder.date.text = message.time
+            }
         }
     }
 
@@ -93,11 +120,13 @@ class ChatAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(), StickyRecyc
         return if (messages[position].own) {
             when (message.type) {
                 PayloadType.IMAGE -> OWN_IMAGE_MESSAGE
+                PayloadType.FILE -> OWN_FILE_MESSAGE
                 else -> OWN_TEXT_MESSAGE
             }
         } else {
             when (message.type) {
                 PayloadType.IMAGE -> FOREIGN_IMAGE_MESSAGE
+                PayloadType.FILE -> FOREIGN_FILE_MESSAGE
                 else -> FOREIGN_TEXT_MESSAGE
             }
         }
@@ -110,12 +139,15 @@ class ChatAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(), StickyRecyc
             OWN_IMAGE_MESSAGE -> R.layout.item_message_image_own
             FOREIGN_TEXT_MESSAGE -> R.layout.item_message_text_foreign
             FOREIGN_IMAGE_MESSAGE -> R.layout.item_message_image_foreign
+            OWN_FILE_MESSAGE -> R.layout.item_message_file_own
+            FOREIGN_FILE_MESSAGE -> R.layout.item_message_file_foreign
             else -> 0
         }
         val view = LayoutInflater.from(parent.context).inflate(layoutId, parent, false)
 
         return when (viewType) {
             OWN_IMAGE_MESSAGE, FOREIGN_IMAGE_MESSAGE -> ImageMessageViewHolder(view)
+            OWN_FILE_MESSAGE, FOREIGN_FILE_MESSAGE -> FileMessageViewHolder(view)
             else -> TextMessageViewHolder(view)
         }
     }
@@ -123,7 +155,8 @@ class ChatAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(), StickyRecyc
     override fun getHeaderId(position: Int) = messages[position].dayOfYearRaw
 
     override fun onCreateHeaderViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_date_divider, parent, false)
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.item_date_divider, parent, false)
         return DateDividerViewHolder(view)
     }
 
@@ -144,5 +177,12 @@ class ChatAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(), StickyRecyc
         val date: TextView = itemView.findViewById(R.id.tv_date)
         val image: ImageView = itemView.findViewById(R.id.iv_image)
         val missingLabel: TextView = itemView.findViewById(R.id.tv_missing_file)
+    }
+
+    class FileMessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val date: TextView = itemView.findViewById(R.id.tv_date)
+        val image: ImageView = itemView.findViewById(R.id.iv_image)
+        val missingLabel: TextView = itemView.findViewById(R.id.tv_missing_file)
+        val label: TextView = itemView.findViewById(R.id.tv_label_file)
     }
 }

@@ -31,8 +31,8 @@ class FileExtractorInstrumentedTest {
 
         val directory = context.externalCacheDir
                 ?: File(Environment.getExternalStorageDirectory(), context.getString(R.string.app_name))
-        apkFile = File(directory, "BluetoothChat.apk")
-        zipFile = File(directory, "BluetoothChat.zip")
+        apkFile = File(directory, "BluetoothChatter.apk")
+        zipFile = File(directory, "BluetoothChatter.zip")
 
         apkFile.delete()
         zipFile.delete()
@@ -48,7 +48,7 @@ class FileExtractorInstrumentedTest {
     fun apkExtraction() = runBlocking {
         val uri = extractor.extractApkFile()
         assertNotNull(uri)
-        assertTrue(uri?.lastPathSegment == "BluetoothChat.zip")
+        assertTrue(uri?.lastPathSegment == "BluetoothChatter.zip")
         assertTrue(apkFile.exists())
         assertTrue(zipFile.exists())
         assertTrue(apkFile.length() > 2_097_152)

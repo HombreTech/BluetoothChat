@@ -4,8 +4,10 @@ import android.content.Context
 import tech.hombre.bluetoothchatter.R
 import tech.hombre.bluetoothchatter.data.entity.ChatMessage
 import tech.hombre.bluetoothchatter.ui.viewmodel.ChatMessageViewModel
+import tech.hombre.bluetoothchatter.utils.FileSize
 import tech.hombre.bluetoothchatter.utils.Size
 import tech.hombre.bluetoothchatter.utils.getDisplayMetrics
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -21,10 +23,12 @@ class ChatMessageConverter(context: Context) {
         val isImageAvailable = message.filePath != null && message.fileExists
         val problemString = when {
             isImageAvailable -> -1
-            message.filePath == null -> R.string.chat__removed_image
-            !message.fileExists -> R.string.chat__missing_image
+            message.filePath == null -> R.string.chat__removed_file
+            !message.fileExists -> R.string.chat__missing_file
             else -> -1
         }
+
+        val fileSize = if (isImageAvailable) File(message.filePath).length() else 0
 
         val info = message.fileInfo
         val actualSize = info?.split("x")
@@ -49,6 +53,7 @@ class ChatMessageConverter(context: Context) {
                 isImageAvailable,
                 problemString,
                 Size(width, height),
+                FileSize(fileSize),
                 message.filePath,
                 "file://${message.filePath}"
         )

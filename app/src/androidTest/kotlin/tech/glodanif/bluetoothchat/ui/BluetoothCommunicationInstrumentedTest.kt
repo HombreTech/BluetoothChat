@@ -96,7 +96,7 @@ class BluetoothCommunicationInstrumentedTest {
         onView(withId(R.id.et_message)).perform(typeText(AutoresponderProxy.COMMAND_SEND_FILE_AND_CANCEL))
         onView(withId(R.id.ib_send)).perform(click())
         Thread.sleep(textMessageDelay * 2)
-        onView(withText(R.string.chat__partner_canceled_image_transfer))
+        onView(withText(R.string.chat__partner_canceled_file_transfer))
                 .inRoot(withDecorView(not(`is`(context.window.decorView)))).check(matches(isDisplayed()))
         onView(withText(R.string.chat__receiving_images)).check(matches(not(isDisplayed())))
         onView(withId(R.id.rv_chat))

@@ -16,9 +16,9 @@ class ReceivedImagesPresenter(private val address: String,
     fun loadImages() = launch {
         val messages = withContext(bgContext) { model.getFileMessagesByDevice(address) }
         if (messages.isNotEmpty()) {
-            view.displayImages(messages)
+            view.displayFiles(messages)
         } else {
-            view.showNoImages()
+            view.showNoFiles()
         }
     }
 }

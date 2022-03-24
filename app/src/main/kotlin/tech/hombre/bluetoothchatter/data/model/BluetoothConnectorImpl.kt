@@ -193,10 +193,10 @@ class BluetoothConnectorImpl(private val context: Context) : BluetoothConnector 
 
     private val fileListenerInner = object : OnFileListener {
 
-        override fun onFileSendingStarted(fileAddress: String?, fileSize: Long) {
+        override fun onFileSendingStarted(fileAddress: String?, fileSize: Long, type: PayloadType) {
             proxy?.onFileSendingStarted(fileAddress, fileSize)
             synchronized(monitor) {
-                fileListeners.forEach { it.onFileSendingStarted(fileAddress, fileSize) }
+                fileListeners.forEach { it.onFileSendingStarted(fileAddress, fileSize, type) }
             }
         }
 
@@ -221,10 +221,10 @@ class BluetoothConnectorImpl(private val context: Context) : BluetoothConnector 
             }
         }
 
-        override fun onFileReceivingStarted(fileSize: Long) {
+        override fun onFileReceivingStarted(fileSize: Long, type: PayloadType) {
             proxy?.onFileReceivingStarted(fileSize)
             synchronized(monitor) {
-                fileListeners.forEach { it.onFileReceivingStarted(fileSize) }
+                fileListeners.forEach { it.onFileReceivingStarted(fileSize, type) }
             }
         }
 

@@ -216,9 +216,9 @@ fun String.isNumber() =
             false
         }
 
-inline fun <T : Any, V : Any> safeLet(p1: T?, p2: V?, block: (T, V) -> Unit) {
-    if (p1 != null && p2 != null) {
-        block(p1, p2)
+inline fun <T : Any, V : Any, K : Any> safeLet(p1: T?, p2: V?, p3: K?, block: (T, V, K) -> Unit) {
+    if (p1 != null && p2 != null && p3 != null) {
+        block(p1, p2, p3)
     }
 }
 
