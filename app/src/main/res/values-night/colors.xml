@@ -6,6 +6,9 @@
     <color name="colorAccent">#009AC3</color>
     <color name="colorAccentLight">#00A9D6</color>
 
+    <color name="background_image">#535353</color>
+    <color name="background_chat_default">#272727</color>
+
     <color name="text_color">#444</color>
     <color name="text_dark">#fff</color>
     <color name="text_light">#ddd</color>

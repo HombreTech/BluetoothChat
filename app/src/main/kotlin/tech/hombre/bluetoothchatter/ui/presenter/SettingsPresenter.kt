@@ -1,5 +1,6 @@
 package tech.hombre.bluetoothchatter.ui.presenter
 
+import android.content.Context
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.app.AppCompatDelegate.NightMode
@@ -22,9 +23,9 @@ class SettingsPresenter(private val view: SettingsView,
     @NightMode
     private var changedNightMode: Int = AppCompatDelegate.MODE_NIGHT_NO
 
-    fun loadPreferences() = launch {
+    fun loadPreferences(context: Context) = launch {
 
-        val color = withContext(bgContext) { preferences.getChatBackgroundColor() }
+        val color = withContext(bgContext) { preferences.getChatBackgroundColor(context) }
         val nightMode = withContext(bgContext) { preferences.getNightMode() }
         val sound = withContext(bgContext) { preferences.isSoundEnabled() }
         val classification = withContext(bgContext) { preferences.isClassificationEnabled() }
@@ -38,8 +39,8 @@ class SettingsPresenter(private val view: SettingsView,
         view.displayDiscoverySetting(classification)
     }
 
-    fun prepareColorPicker() {
-        view.displayColorPicker(preferences.getChatBackgroundColor())
+    fun prepareColorPicker(context: Context) {
+        view.displayColorPicker(preferences.getChatBackgroundColor(context))
     }
 
     fun prepareNightModePicker() {

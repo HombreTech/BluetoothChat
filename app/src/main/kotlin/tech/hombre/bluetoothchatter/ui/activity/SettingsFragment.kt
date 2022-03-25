@@ -41,14 +41,14 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>(R.layout.fragment
         binding.spClassFilter.listener = { presenter.onNewClassificationPreference(it) }
 
         binding.rlChatBgColorButton.setOnClickListener {
-            presenter.prepareColorPicker()
+            presenter.prepareColorPicker(requireContext())
         }
 
         binding.llNightModeButton.setOnClickListener {
             presenter.prepareNightModePicker()
         }
 
-        presenter.loadPreferences()
+        presenter.loadPreferences(requireContext())
     }
 
     override fun displayNotificationSetting(sound: Boolean) {

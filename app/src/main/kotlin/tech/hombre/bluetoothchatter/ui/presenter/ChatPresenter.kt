@@ -1,6 +1,7 @@
 package tech.hombre.bluetoothchatter.ui.presenter
 
 import android.bluetooth.BluetoothDevice
+import android.content.Context
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.OnLifecycleEvent
 import kotlinx.coroutines.*
@@ -230,8 +231,8 @@ class ChatPresenter(
         }
     }
 
-    fun onViewCreated() = launch {
-        val color = withContext(bgContext) { preferences.getChatBackgroundColor() }
+    fun onViewCreated(context: Context) = launch {
+        val color = withContext(bgContext) { preferences.getChatBackgroundColor(context) }
         view.setBackgroundColor(color)
     }
 

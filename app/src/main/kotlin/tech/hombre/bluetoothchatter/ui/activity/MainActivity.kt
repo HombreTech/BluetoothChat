@@ -20,10 +20,9 @@ import tech.hombre.bluetoothchatter.utils.getAsNavHostFragmentFor
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         val nightMode = (application as ThemeHolder).getNightMode()
         AppCompatDelegate.setDefaultNightMode(nightMode)
-        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
-        super.onCreate(savedInstanceState)
 
         installSplashScreen()
 
