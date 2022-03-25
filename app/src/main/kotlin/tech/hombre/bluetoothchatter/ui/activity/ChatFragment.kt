@@ -174,7 +174,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat), 
             }, 100)
         }
 
-        chatAdapter = ChatAdapter().apply {
+        chatAdapter = ChatAdapter(isAlwaysSelectable = true).apply {
             imageClickListener = { view, message ->
                 if (message.type == PayloadType.IMAGE) {
                     val extras = FragmentNavigatorExtras(

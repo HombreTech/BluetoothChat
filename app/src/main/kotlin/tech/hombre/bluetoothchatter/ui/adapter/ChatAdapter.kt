@@ -20,7 +20,7 @@ import tech.hombre.bluetoothchatter.ui.util.ClickableMovementMethod
 import tech.hombre.bluetoothchatter.ui.viewmodel.ChatMessageViewModel
 import java.util.*
 
-class ChatAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
+class ChatAdapter(private val isAlwaysSelectable: Boolean) : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
     StickyRecyclerHeadersAdapter<RecyclerView.ViewHolder> {
 
     companion object {
@@ -37,6 +37,10 @@ class ChatAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
     var messages = LinkedList<ChatMessageViewModel>()
 
     var imageClickListener: ((view: ImageView, message: ChatMessageViewModel) -> Unit)? = null
+
+    private var isSelectableMode = isAlwaysSelectable
+
+    private val selectedItemPositions = mutableSetOf<Int>()
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
@@ -61,7 +65,15 @@ class ChatAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
                     val size = message.imageSize
                     holder.image.layoutParams = FrameLayout.LayoutParams(size.width, size.height)
                     holder.image.setOnClickListener {
-                        imageClickListener?.invoke(holder.image, message)
+                        if (!isSelectableMode && !isAlwaysSelectable) {
+                            imageClickListener?.invoke(holder.image, message)
+                        }
+                        else {
+                            if (isSelectedItem(position)) removeSelectedItem(position)
+                            else addSelectedItem(position)
+
+                            onBindViewHolder(holder, position)
+                        }
                     }
 
                     Picasso.get()
@@ -92,7 +104,15 @@ class ChatAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
 
                     holder.date.text = message.time
                     holder.itemView.setOnClickListener {
-                        imageClickListener?.invoke(holder.image, message)
+                        if (!isSelectableMode && !isAlwaysSelectable) {
+                            imageClickListener?.invoke(holder.image, message)
+                        }
+                        else {
+                            if (isSelectedItem(position)) removeSelectedItem(position)
+                            else addSelectedItem(position)
+
+                            onBindViewHolder(holder, position)
+                        }
                     }
                 }
             }
@@ -108,6 +128,14 @@ class ChatAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
                 holder.text.setText(spannableMessage, TextView.BufferType.SPANNABLE)
                 holder.date.text = message.time
             }
+        }
+
+        holder.itemView.setOnLongClickListener {
+            if (isSelectedItem(position)) removeSelectedItem(position)
+            else addSelectedItem(position)
+
+            onBindViewHolder(holder, position)
+            true
         }
     }
 
@@ -162,6 +190,24 @@ class ChatAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
 
     override fun onBindHeaderViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         (holder as DateDividerViewHolder).date.text = messages[position].dayOfYear
+    }
+
+    fun getSelectedItemPositions() = selectedItemPositions.toSet()
+
+    private fun isSelectedItem(position: Int): Boolean = (selectedItemPositions.contains(position))
+
+    private fun addSelectedItem(position: Int){
+        if(selectedItemPositions.isEmpty() && !isAlwaysSelectable){
+            isSelectableMode = true
+        }
+        selectedItemPositions.add(position)
+    }
+
+    private fun removeSelectedItem(position: Int){
+        selectedItemPositions.remove(position)
+        if(selectedItemPositions.isEmpty() && !isAlwaysSelectable){
+            isSelectableMode = false
+        }
     }
 
     class DateDividerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

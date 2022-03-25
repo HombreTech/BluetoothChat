@@ -5,26 +5,24 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginTop="4dp"
-    android:layout_marginBottom="4dp">
+    android:layout_marginEnd="5dp"
+    android:layout_marginBottom="4dp"
+    android:minWidth="128dp">
 
     <FrameLayout
         android:id="@+id/tv_text"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="5dp"
-        android:layout_weight="1"
-        android:background="@drawable/rounded_rectangle"
-        android:minWidth="128dp"
-        android:paddingStart="8dp"
+        android:background="@drawable/inner_message"
+        android:paddingStart="16dp"
         android:paddingTop="8dp"
-        android:paddingEnd="53dp"
+        android:paddingEnd="64dp"
         android:paddingBottom="8dp"
+        android:textColor="@color/text_text_message"
+        android:textIsSelectable="true"
         app:layout_constrainedWidth="true"
-        app:layout_constraintEnd_toStartOf="@+id/marginSpacer_beforeMessage"
-        app:layout_constraintHorizontal_bias="1"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
@@ -40,36 +38,10 @@
             android:id="@+id/iv_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="8dp"
             android:contentDescription="@string/chat__cd__received_image"
             android:scaleType="centerCrop"
             tools:src="@tools:sample/backgrounds/scenic" />
-
     </FrameLayout>
-
-    <Space
-        android:id="@+id/marginSpacer_beforeMessage"
-        android:layout_width="10dp"
-        android:layout_height="10dp"
-        android:layout_marginStart="5dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <ImageView
-        android:id="@+id/message_tail"
-        android:layout_width="14dp"
-        android:layout_height="13dp"
-        android:layout_marginStart="3dp"
-        android:src="@drawable/tail_2"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/tv_text" />
-
-    <ImageView
-        android:layout_width="10dp"
-        android:layout_height="10dp"
-        android:src="@drawable/message_square"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@id/tv_text" />
 
     <TextView
         android:id="@+id/tv_date"
@@ -79,10 +51,10 @@
         android:layout_marginBottom="3dp"
         android:fontFamily="sans-serif-light"
         android:maxLines="1"
-        tools:text="14:42"
+        android:text="14:42"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/tv_text" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
