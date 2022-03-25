@@ -233,7 +233,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat), 
             })
         }
 
-        presenter.onViewCreated()
+        presenter.onViewCreated(requireContext())
 
         if ((!args.message.isNullOrEmpty() || !args.filepath.isNullOrEmpty()) && !args.address.isNullOrEmpty()) {
 
