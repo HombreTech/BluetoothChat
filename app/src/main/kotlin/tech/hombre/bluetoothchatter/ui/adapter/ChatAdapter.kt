@@ -18,9 +18,10 @@ import tech.hombre.bluetoothchatter.R
 import tech.hombre.bluetoothchatter.data.service.message.PayloadType
 import tech.hombre.bluetoothchatter.ui.util.ClickableMovementMethod
 import tech.hombre.bluetoothchatter.ui.viewmodel.ChatMessageViewModel
+import tech.hombre.bluetoothchatter.utils.setViewBackgroundWithoutResettingPadding
 import java.util.*
 
-class ChatAdapter(private val isAlwaysSelectable: Boolean) : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
+class ChatAdapter(private val isAlwaysSelectable: Boolean = false) : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
     StickyRecyclerHeadersAdapter<RecyclerView.ViewHolder> {
 
     companion object {
@@ -38,6 +39,8 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean) : RecyclerView.Adapte
 
     var imageClickListener: ((view: ImageView, message: ChatMessageViewModel) -> Unit)? = null
 
+    var messageSelectionListener: ((selectedItemPositions: Set<Int>, isSelectableMode: Boolean) -> Unit)? = null
+
     private var isSelectableMode = isAlwaysSelectable
 
     private val selectedItemPositions = mutableSetOf<Int>()
@@ -48,6 +51,8 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean) : RecyclerView.Adapte
 
         when (holder) {
             is ImageMessageViewHolder -> {
+
+                holder.container.setViewBackgroundWithoutResettingPadding(getBackground(message.own, position))
 
                 if (!message.isImageAvailable) {
 
@@ -90,6 +95,9 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean) : RecyclerView.Adapte
 
             }
             is FileMessageViewHolder -> {
+
+                holder.container.setViewBackgroundWithoutResettingPadding(getBackground(message.own, position))
+
                 if (!message.isImageAvailable) {
                     holder.image.visibility = View.GONE
                     holder.missingLabel.visibility = View.VISIBLE
@@ -118,6 +126,8 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean) : RecyclerView.Adapte
             }
             is TextMessageViewHolder -> {
 
+                holder.text.setViewBackgroundWithoutResettingPadding(getBackground(message.own, position))
+
                 val spannableMessage = SpannableString(message.text)
                 LinkifyCompat.addLinks(
                     spannableMessage,
@@ -136,6 +146,23 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean) : RecyclerView.Adapte
 
             onBindViewHolder(holder, position)
             true
+        }
+    }
+
+    private fun getBackground(own: Boolean, position: Int): Int {
+        return when {
+            own -> {
+                if (isSelectedItem(position))
+                    R.drawable.out_message_checked
+                else
+                    R.drawable.out_message
+            }
+            else -> {
+                if (isSelectedItem(position))
+                    R.drawable.inner_message_checked
+                else
+                    R.drawable.inner_message
+            }
         }
     }
 
@@ -192,15 +219,16 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean) : RecyclerView.Adapte
         (holder as DateDividerViewHolder).date.text = messages[position].dayOfYear
     }
 
-    fun getSelectedItemPositions() = selectedItemPositions.toSet()
+    private fun getSelectedItemPositions() = selectedItemPositions.toSet()
 
     private fun isSelectedItem(position: Int): Boolean = (selectedItemPositions.contains(position))
 
-    private fun addSelectedItem(position: Int){
+    private fun addSelectedItem(position: Int) {
         if(selectedItemPositions.isEmpty() && !isAlwaysSelectable){
             isSelectableMode = true
         }
         selectedItemPositions.add(position)
+        messageSelectionListener?.invoke(getSelectedItemPositions(), isSelectableMode)
     }
 
     private fun removeSelectedItem(position: Int){
@@ -208,6 +236,7 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean) : RecyclerView.Adapte
         if(selectedItemPositions.isEmpty() && !isAlwaysSelectable){
             isSelectableMode = false
         }
+        messageSelectionListener?.invoke(getSelectedItemPositions(), isSelectableMode)
     }
 
     class DateDividerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -223,6 +252,7 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean) : RecyclerView.Adapte
         val date: TextView = itemView.findViewById(R.id.tv_date)
         val image: ImageView = itemView.findViewById(R.id.iv_image)
         val missingLabel: TextView = itemView.findViewById(R.id.tv_missing_file)
+        val container: FrameLayout = itemView.findViewById(R.id.container)
     }
 
     class FileMessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -230,5 +260,6 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean) : RecyclerView.Adapte
         val image: ImageView = itemView.findViewById(R.id.iv_image)
         val missingLabel: TextView = itemView.findViewById(R.id.tv_missing_file)
         val label: TextView = itemView.findViewById(R.id.tv_label_file)
+        val container: FrameLayout = itemView.findViewById(R.id.container)
     }
 }
