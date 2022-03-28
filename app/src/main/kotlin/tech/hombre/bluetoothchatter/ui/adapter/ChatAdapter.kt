@@ -219,7 +219,7 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean = false) : RecyclerVie
         (holder as DateDividerViewHolder).date.text = messages[position].dayOfYear
     }
 
-    private fun getSelectedItemPositions() = selectedItemPositions.toSet()
+    fun getSelectedItemPositions() = selectedItemPositions
 
     private fun isSelectedItem(position: Int): Boolean = (selectedItemPositions.contains(position))
 
@@ -237,6 +237,16 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean = false) : RecyclerVie
             isSelectableMode = false
         }
         messageSelectionListener?.invoke(getSelectedItemPositions(), isSelectableMode)
+    }
+
+    fun resetSelections() {
+        val oldSelections = selectedItemPositions.toList()
+        selectedItemPositions.clear()
+        isSelectableMode = false
+        oldSelections.forEach {
+            notifyItemChanged(it)
+        }
+        messageSelectionListener?.invoke(emptySet(), isSelectableMode)
     }
 
     class DateDividerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

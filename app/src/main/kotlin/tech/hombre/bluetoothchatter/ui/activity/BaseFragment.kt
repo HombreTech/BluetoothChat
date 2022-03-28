@@ -44,7 +44,6 @@ open class BaseFragment<ViewBinding : ViewDataBinding>(@LayoutRes val layoutResI
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         backPressedCallback = requireActivity().onBackPressedDispatcher.addCallback(this) {
-            backPressedCallback.remove()
             onBackPressed()
         }
     }
