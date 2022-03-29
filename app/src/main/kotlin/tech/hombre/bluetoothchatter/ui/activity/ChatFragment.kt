@@ -681,6 +681,16 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat), 
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        chatAdapter.stopAudio()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        chatAdapter.pauseAudio()
+    }
+
     companion object {
 
         private const val REQUEST_ENABLE_BLUETOOTH = 101

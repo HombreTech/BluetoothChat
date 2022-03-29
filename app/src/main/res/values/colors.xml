@@ -17,4 +17,12 @@
     <color name="background_own_message">#22009688</color>
     <color name="background_avatar_default">#008756</color>
     <color name="background_chat_default">#01627C</color>
+
+    <!-- Audio player colors -->
+    <color name="playerTimingBackground">#8D009AC3</color>
+    <color name="playerViewBackground">#00009AC3</color>
+    <color name="playerPlayPauseBackgroundColor">#009AC3</color>
+    <color name="playerSeekBarProgressColor">#232323</color>
+    <color name="playerProgressTimeColor">#333333</color>
+    <color name="playerVisualizationNotPlayedColor">#727171</color>
 </resources>
