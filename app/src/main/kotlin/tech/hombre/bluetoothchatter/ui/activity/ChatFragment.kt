@@ -213,7 +213,8 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat), 
                     val menuViewBinding = MenuItemChatSelectionBinding.bind(item.actionView)
                     menuViewBinding.root.text = selectedItems.size.toString()
                     menuViewBinding.root.setOnClickListener {
-
+                        chatAdapter.resetSelections()
+                        presenter.removeMessages(chatAdapter.messages, selectedItems, deviceAddress)
                     }
                 }
                 item.isVisible = isSelectionMode
@@ -361,6 +362,13 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat), 
     override fun showMessagesHistory(messages: List<ChatMessageViewModel>) {
         chatAdapter.messages = LinkedList(messages)
         chatAdapter.notifyDataSetChanged()
+    }
+
+    override fun updateHistoryRemoved(messagesRemoved: Set<Int>) {
+        messagesRemoved.forEach { position ->
+            chatAdapter.messages.removeAt(position)
+            chatAdapter.notifyItemRemoved(position)
+        }
     }
 
     override fun showReceivedMessage(message: ChatMessageViewModel) {

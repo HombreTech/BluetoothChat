@@ -12,8 +12,10 @@ import tech.hombre.bluetoothchatter.data.service.message.Contract
 import tech.hombre.bluetoothchatter.data.service.message.PayloadType
 import tech.hombre.bluetoothchatter.data.service.message.TransferringFile
 import tech.hombre.bluetoothchatter.ui.view.ChatView
+import tech.hombre.bluetoothchatter.ui.viewmodel.ChatMessageViewModel
 import tech.hombre.bluetoothchatter.ui.viewmodel.converter.ChatMessageConverter
 import java.io.File
+import java.util.*
 
 class ChatPresenter(
     private val deviceAddress: String,
@@ -491,6 +493,23 @@ class ChatPresenter(
                 view.showConnectionRequest(conversation.displayName, conversation.deviceName)
             } else {
                 view.showStatusConnected()
+            }
+        }
+    }
+
+    fun removeMessages(
+        messages: LinkedList<ChatMessageViewModel>,
+        selectedItems: Set<Int>,
+        deviceAddress: String
+    ) {
+        launch(bgContext) {
+            val messagesToRemove = messages.filterIndexed { index, _ -> index in selectedItems }
+            messagesStorage.removeMessagesByAddressAndId(
+                deviceAddress,
+                messagesToRemove.map { it.uid }.toList()
+            )
+            withContext(uiContext) {
+                view.updateHistoryRemoved(selectedItems)
             }
         }
     }

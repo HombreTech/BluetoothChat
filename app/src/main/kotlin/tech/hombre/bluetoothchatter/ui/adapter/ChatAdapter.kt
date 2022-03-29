@@ -69,6 +69,16 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean = false) : RecyclerVie
 
                     val size = message.imageSize
                     holder.image.layoutParams = FrameLayout.LayoutParams(size.width, size.height)
+                    holder.itemView.setOnClickListener {
+                        if (!isSelectableMode && !isAlwaysSelectable) {
+                            return@setOnClickListener
+                        } else {
+                            if (isSelectedItem(position)) removeSelectedItem(position)
+                            else addSelectedItem(position)
+
+                            onBindViewHolder(holder, position)
+                        }
+                    }
                     holder.image.setOnClickListener {
                         if (!isSelectableMode && !isAlwaysSelectable) {
                             imageClickListener?.invoke(holder.image, message)
@@ -80,7 +90,9 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean = false) : RecyclerVie
                             onBindViewHolder(holder, position)
                         }
                     }
-
+                    holder.image.setOnLongClickListener {
+                      holder.itemView.performLongClick()
+                    }
                     Picasso.get()
                         .load(message.fileUri)
                         .config(Bitmap.Config.RGB_565)
@@ -137,6 +149,18 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean = false) : RecyclerVie
                 holder.text.movementMethod = ClickableMovementMethod
                 holder.text.setText(spannableMessage, TextView.BufferType.SPANNABLE)
                 holder.date.text = message.time
+
+                holder.text.setOnClickListener {
+                    if (!isSelectableMode && !isAlwaysSelectable) {
+                        return@setOnClickListener
+                    }
+                    else {
+                        if (isSelectedItem(position)) removeSelectedItem(position)
+                        else addSelectedItem(position)
+
+                        onBindViewHolder(holder, position)
+                    }
+                }
             }
         }
 
@@ -219,7 +243,7 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean = false) : RecyclerVie
         (holder as DateDividerViewHolder).date.text = messages[position].dayOfYear
     }
 
-    fun getSelectedItemPositions() = selectedItemPositions
+    fun getSelectedItemPositions() = selectedItemPositions.toSet()
 
     private fun isSelectedItem(position: Int): Boolean = (selectedItemPositions.contains(position))
 
