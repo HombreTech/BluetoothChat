@@ -75,6 +75,10 @@ fun getTimestampString(): String {
 
 fun String.getFileType(): PayloadType {
     val imageTypes = listOf("jpeg", "jpg", "png", "gif", "bmp")
-    val extension = MimeTypeMap.getFileExtensionFromUrl(this)
-    return if (extension in imageTypes) PayloadType.IMAGE else PayloadType.FILE
+    val audioTypes = listOf("mp3", "aac", "wav", "m4a")
+    return when (substringAfterLast(".")) {
+        in imageTypes -> PayloadType.IMAGE
+        in audioTypes -> PayloadType.AUDIO
+        else -> PayloadType.FILE
+    }
 }

@@ -626,7 +626,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat), 
                 if (data != null && data.data != null) {
                     val uri = data.data
                     val path = requireContext().getPath(uri)
-                    presenter.sendFile(File(path), PayloadType.FILE)
+                    presenter.sendFile(File(path), path.getFileType())
                 }
             }
             else -> {
