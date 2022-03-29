@@ -21,13 +21,21 @@ class ConversationConverter(private val context: Context) {
 
         val lastMessageText = when {
             lastMessage?.messageType == PayloadType.IMAGE ->
-                context.getString(R.string.chat__image_message, "\uD83D\uDCCE")
+                context.getString(R.string.chat__image_message, "\uD83D\uDDBC")
+            lastMessage?.messageType == PayloadType.FILE ->
+                context.getString(R.string.chat__image_file, "\uD83D\uDCCE")
+            lastMessage?.messageType == PayloadType.AUDIO ->
+                context.getString(R.string.chat__image_audio, "\uD83C\uDFA7")
             !lastMessage?.text.isNullOrEmpty() ->
                 lastMessage?.text
             else -> null
         }
 
-        val lastActivity = if (!lastMessage?.text.isNullOrEmpty() || lastMessage?.messageType == PayloadType.IMAGE) {
+        val lastActivity = if (!lastMessage?.text.isNullOrEmpty()
+            || lastMessage?.messageType == PayloadType.IMAGE
+            || lastMessage?.messageType == PayloadType.FILE
+            || lastMessage?.messageType == PayloadType.AUDIO
+        ) {
             lastMessage?.date?.getRelativeTime(context)
         } else {
             null
