@@ -23,7 +23,8 @@ import tech.hombre.bluetoothchatter.ui.viewmodel.ChatMessageViewModel
 import tech.hombre.bluetoothchatter.utils.setViewBackgroundWithoutResettingPadding
 import java.util.*
 
-class ChatAdapter(private val isAlwaysSelectable: Boolean = false) : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
+class ChatAdapter(private val isAlwaysSelectable: Boolean = false) :
+    RecyclerView.Adapter<RecyclerView.ViewHolder>(),
     StickyRecyclerHeadersAdapter<RecyclerView.ViewHolder> {
 
     companion object {
@@ -43,7 +44,8 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean = false) : RecyclerVie
 
     var imageClickListener: ((view: ImageView, message: ChatMessageViewModel) -> Unit)? = null
 
-    var messageSelectionListener: ((selectedItemPositions: Set<Int>, isSelectableMode: Boolean) -> Unit)? = null
+    var messageSelectionListener: ((selectedItemPositions: Set<Int>, isSelectableMode: Boolean) -> Unit)? =
+        null
 
     private var isSelectableMode = isAlwaysSelectable
 
@@ -58,7 +60,12 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean = false) : RecyclerVie
         when (holder) {
             is ImageMessageViewHolder -> {
 
-                holder.container.setViewBackgroundWithoutResettingPadding(getBackground(message.own, position))
+                holder.container.setViewBackgroundWithoutResettingPadding(
+                    getBackground(
+                        message.own,
+                        position
+                    )
+                )
 
                 if (!message.isImageAvailable) {
 
@@ -88,8 +95,7 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean = false) : RecyclerVie
                     holder.image.setOnClickListener {
                         if (!isSelectableMode && !isAlwaysSelectable) {
                             imageClickListener?.invoke(holder.image, message)
-                        }
-                        else {
+                        } else {
                             if (isSelectedItem(position)) removeSelectedItem(position)
                             else addSelectedItem(position)
 
@@ -97,7 +103,7 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean = false) : RecyclerVie
                         }
                     }
                     holder.image.setOnLongClickListener {
-                      holder.itemView.performLongClick()
+                        holder.itemView.performLongClick()
                     }
                     Picasso.get()
                         .load(message.fileUri)
@@ -114,7 +120,12 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean = false) : RecyclerVie
             }
             is FileMessageViewHolder -> {
 
-                holder.container.setViewBackgroundWithoutResettingPadding(getBackground(message.own, position))
+                holder.container.setViewBackgroundWithoutResettingPadding(
+                    getBackground(
+                        message.own,
+                        position
+                    )
+                )
 
                 if (!message.isImageAvailable) {
                     holder.image.visibility = View.GONE
@@ -132,8 +143,7 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean = false) : RecyclerVie
                     holder.itemView.setOnClickListener {
                         if (!isSelectableMode && !isAlwaysSelectable) {
                             imageClickListener?.invoke(holder.image, message)
-                        }
-                        else {
+                        } else {
                             if (isSelectedItem(position)) removeSelectedItem(position)
                             else addSelectedItem(position)
 
@@ -144,14 +154,21 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean = false) : RecyclerVie
             }
             is AudioMessageViewHolder -> {
 
-                holder.container.setViewBackgroundWithoutResettingPadding(getBackground(message.own, position))
+                holder.container.setViewBackgroundWithoutResettingPadding(
+                    getBackground(
+                        message.own,
+                        position
+                    )
+                )
 
                 if (!message.isImageAvailable) {
                     holder.playerView.visibility = View.GONE
                     holder.missingLabel.visibility = View.VISIBLE
                     holder.missingLabel.setText(message.imageProblemText)
                 } else {
-                    if (holder.playerView.mediaPlayer != null){
+                    if (holder.playerView.mediaPlayer != null &&
+                        holder.playerView.progressBar.progress > 0
+                    ) {
                         holder.playerView.imgPlay.performClick()
                     } else {
                         holder.playerView.setAudio(message.filePath)
@@ -177,7 +194,12 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean = false) : RecyclerVie
             }
             is TextMessageViewHolder -> {
 
-                holder.text.setViewBackgroundWithoutResettingPadding(getBackground(message.own, position))
+                holder.text.setViewBackgroundWithoutResettingPadding(
+                    getBackground(
+                        message.own,
+                        position
+                    )
+                )
 
                 val spannableMessage = SpannableString(message.text)
                 LinkifyCompat.addLinks(
@@ -192,8 +214,7 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean = false) : RecyclerVie
                 holder.text.setOnClickListener {
                     if (!isSelectableMode && !isAlwaysSelectable) {
                         return@setOnClickListener
-                    }
-                    else {
+                    } else {
                         if (isSelectedItem(position)) removeSelectedItem(position)
                         else addSelectedItem(position)
 
@@ -292,16 +313,16 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean = false) : RecyclerVie
     private fun isSelectedItem(position: Int): Boolean = (selectedItemPositions.contains(position))
 
     private fun addSelectedItem(position: Int) {
-        if(selectedItemPositions.isEmpty() && !isAlwaysSelectable){
+        if (selectedItemPositions.isEmpty() && !isAlwaysSelectable) {
             isSelectableMode = true
         }
         selectedItemPositions.add(position)
         messageSelectionListener?.invoke(getSelectedItemPositions(), isSelectableMode)
     }
 
-    private fun removeSelectedItem(position: Int){
+    private fun removeSelectedItem(position: Int) {
         selectedItemPositions.remove(position)
-        if(selectedItemPositions.isEmpty() && !isAlwaysSelectable){
+        if (selectedItemPositions.isEmpty() && !isAlwaysSelectable) {
             isSelectableMode = false
         }
         messageSelectionListener?.invoke(getSelectedItemPositions(), isSelectableMode)
