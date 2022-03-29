@@ -681,14 +681,23 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat), 
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDetach() {
+        super.onDetach()
+        println("onDetach")
         chatAdapter.stopAudio()
     }
 
     override fun onStop() {
         super.onStop()
-        chatAdapter.pauseAudio()
+        if (presenter.isPlayerPauseOnMinimize()) {
+            chatAdapter.pauseAudio()
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        println("onDestroyView")
+        chatAdapter.stopAudio()
     }
 
     companion object {

@@ -167,6 +167,8 @@
     <string name="settings__night_mode_system">System</string>
     <string name="settings__sound">Sound</string>
     <string name="settings__classification">Show only phones or computers</string>
+    <string name="settings__player">Audio player</string>
+    <string name="settings__pause_on_hide">Stop playback when minimizing app</string>
 
     <string name="images__image">Image</string>
     <string name="images__remove">Remove</string>

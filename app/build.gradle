@@ -141,8 +141,6 @@ dependencies {
     implementation("androidx.navigation:navigation-fragment-ktx:$NAV_VERSION")
     implementation("androidx.navigation:navigation-ui-ktx:$NAV_VERSION")
 
-    implementation "com.github.JagarYousef:ChatVoicePlayer:1.1.0"
-
     //debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0-alpha-1'
 
     testImplementation "org.jetbrains.kotlin:kotlin-stdlib:$KOTLIN_VERSION"

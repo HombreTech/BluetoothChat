@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatDelegate.NightMode
 interface UserPreferences {
     fun isSoundEnabled(): Boolean
     fun isClassificationEnabled(): Boolean
+    fun isPlayerPauseOnMinimizeEnabled(): Boolean
     @ColorInt
     fun getChatBackgroundColor(context: Context): Int
     @NightMode
@@ -15,4 +16,5 @@ interface UserPreferences {
     fun saveNewSoundPreference(enabled: Boolean)
     fun saveNewClassificationPreference(enabled: Boolean)
     fun saveNightMode(@NightMode mode: Int)
+    fun saveNewPausePlayerPreference(paused: Boolean)
 }

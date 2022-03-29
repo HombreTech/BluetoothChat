@@ -10,4 +10,5 @@ interface SettingsView {
     fun displayNightModeSettings(@NightMode nightMode: Int)
     fun displayColorPicker(@ColorInt color: Int)
     fun displayNightModePicker(@NightMode nightMode: Int)
+    fun displayPausePlayerOnHide(paused: Boolean)
 }

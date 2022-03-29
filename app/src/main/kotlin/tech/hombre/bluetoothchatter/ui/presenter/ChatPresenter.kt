@@ -513,4 +513,6 @@ class ChatPresenter(
             }
         }
     }
+
+    fun isPlayerPauseOnMinimize() = preferences.isPlayerPauseOnMinimizeEnabled()
 }

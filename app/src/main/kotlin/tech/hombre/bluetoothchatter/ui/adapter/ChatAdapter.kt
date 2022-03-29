@@ -14,12 +14,12 @@ import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter
-import me.jagar.chatvoiceplayerlibrary.VoicePlayerView
 import tech.hombre.bluetoothchatter.R
 import tech.hombre.bluetoothchatter.data.service.message.PayloadType
 import tech.hombre.bluetoothchatter.ui.util.ClickableMovementMethod
 import tech.hombre.bluetoothchatter.ui.view.AudioPlayerView
 import tech.hombre.bluetoothchatter.ui.viewmodel.ChatMessageViewModel
+import tech.hombre.bluetoothchatter.ui.widget.voiceplayerview.VoicePlayerView
 import tech.hombre.bluetoothchatter.utils.setViewBackgroundWithoutResettingPadding
 import java.util.*
 
@@ -51,7 +51,7 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean = false) :
 
     private val selectedItemPositions = mutableSetOf<Int>()
 
-    private lateinit var audioPlayerListener: AudioPlayerView
+    private var audioPlayerListener: AudioPlayerView? = null
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
@@ -171,7 +171,22 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean = false) :
                     ) {
                         holder.playerView.imgPlay.performClick()
                     } else {
+                        println("setAudio")
                         holder.playerView.setAudio(message.filePath)
+                        holder.playerView.onPlayClick = {
+                            println("playerView setImgPlayClickListener")
+                            audioPlayerListener = object : AudioPlayerView {
+                                override fun pauseAudio() {
+                                    println("pauseAudio")
+                                    holder.playerView.onPause()
+                                }
+
+                                override fun stopAudio() {
+                                    println("stopAudio")
+                                    holder.playerView.onStop()
+                                }
+                            }
+                        }
                     }
                     holder.playerView.visibility = View.VISIBLE
                     holder.missingLabel.visibility = View.GONE
@@ -181,15 +196,6 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean = false) :
 
                     }
 
-                    audioPlayerListener = object : AudioPlayerView {
-                        override fun pauseAudio() {
-                            holder.playerView.onPause()
-                        }
-
-                        override fun stopAudio() {
-                            holder.playerView.onStop()
-                        }
-                    }
                 }
             }
             is TextMessageViewHolder -> {
@@ -339,11 +345,11 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean = false) :
     }
 
     fun stopAudio() {
-        audioPlayerListener.stopAudio()
+        audioPlayerListener?.stopAudio()
     }
 
     fun pauseAudio() {
-        audioPlayerListener.pauseAudio()
+        audioPlayerListener?.pauseAudio()
     }
 
     class DateDividerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

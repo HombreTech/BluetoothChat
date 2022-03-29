@@ -40,6 +40,8 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>(R.layout.fragment
 
         binding.spClassFilter.listener = { presenter.onNewClassificationPreference(it) }
 
+        binding.spPausePlayerOnHide.listener = { presenter.onNewPausePlayerPreference(it) }
+
         binding.rlChatBgColorButton.setOnClickListener {
             presenter.prepareColorPicker(requireContext())
         }
@@ -101,6 +103,10 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>(R.layout.fragment
             setNegativeButton(R.string.general__cancel, null)
             setTitle(R.string.settings__night_mode)
         }.show()
+    }
+
+    override fun displayPausePlayerOnHide(paused: Boolean) {
+        binding.spPausePlayerOnHide.setChecked(paused)
     }
 
     private val colorSelectListener = object : ColorSelectListener {
