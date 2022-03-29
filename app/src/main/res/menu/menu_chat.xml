@@ -4,6 +4,15 @@
     tools:context=".ui.activity.ConversationsFragment">
 
     <item
+        android:id="@+id/action_delete"
+        android:icon="@drawable/ic_delete"
+        android:orderInCategory="98"
+        android:title="@string/conversations__remove"
+        android:visible="false"
+        app:actionLayout="@layout/menu_item_chat_selection"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/action_files"
         android:orderInCategory="99"
         android:title="@string/chat__received_files"

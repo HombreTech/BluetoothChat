@@ -36,6 +36,7 @@ import pl.aprilapps.easyphotopicker.MediaSource
 import tech.hombre.bluetoothchatter.R
 import tech.hombre.bluetoothchatter.data.service.message.PayloadType
 import tech.hombre.bluetoothchatter.databinding.FragmentChatBinding
+import tech.hombre.bluetoothchatter.databinding.MenuItemChatSelectionBinding
 import tech.hombre.bluetoothchatter.ui.adapter.ChatAdapter
 import tech.hombre.bluetoothchatter.ui.presenter.ChatPresenter
 import tech.hombre.bluetoothchatter.ui.util.ScrollAwareBehavior
@@ -68,6 +69,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat), 
 
     private lateinit var scrollBehavior: ScrollAwareBehavior
     private lateinit var chatAdapter: ChatAdapter
+    private lateinit var optionsMenu: Menu
 
     private val showAnimation by lazy {
         AnimationUtils.loadAnimation(requireContext(), R.anim.anime_fade_slide_in)
@@ -205,6 +207,18 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat), 
                     }
                 }
             }
+            messageSelectionListener = { selectedItems: Set<Int>, isSelectionMode: Boolean ->
+                val item = optionsMenu.findItem(R.id.action_delete)
+                if (isSelectionMode) {
+                    val menuViewBinding = MenuItemChatSelectionBinding.bind(item.actionView)
+                    menuViewBinding.root.text = selectedItems.size.toString()
+                    menuViewBinding.root.setOnClickListener {
+                        chatAdapter.resetSelections()
+                        presenter.removeMessages(chatAdapter.messages, selectedItems, deviceAddress)
+                    }
+                }
+                item.isVisible = isSelectionMode
+            }
         }
 
         binding.rvChat.apply {
@@ -254,7 +268,9 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat), 
     }
 
     override fun onBackPressed() {
-        findNavController().navigateUp()
+        if (chatAdapter.getSelectedItemPositions().isNotEmpty()) {
+            chatAdapter.resetSelections()
+        } else findNavController().navigateUp()
     }
 
     override fun setBackgroundColor(color: Int) {
@@ -346,6 +362,13 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat), 
     override fun showMessagesHistory(messages: List<ChatMessageViewModel>) {
         chatAdapter.messages = LinkedList(messages)
         chatAdapter.notifyDataSetChanged()
+    }
+
+    override fun updateHistoryRemoved(messagesRemoved: Set<Int>) {
+        messagesRemoved.forEach { position ->
+            chatAdapter.messages.removeAt(position)
+            chatAdapter.notifyItemRemoved(position)
+        }
     }
 
     override fun showReceivedMessage(message: ChatMessageViewModel) {
@@ -583,8 +606,9 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat), 
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_chat, menu)
-        return super.onCreateOptionsMenu(menu, inflater)
+        optionsMenu = menu
+        inflater.inflate(R.menu.menu_chat, optionsMenu)
+        return super.onCreateOptionsMenu(optionsMenu, inflater)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

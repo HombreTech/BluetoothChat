@@ -18,9 +18,10 @@ import tech.hombre.bluetoothchatter.R
 import tech.hombre.bluetoothchatter.data.service.message.PayloadType
 import tech.hombre.bluetoothchatter.ui.util.ClickableMovementMethod
 import tech.hombre.bluetoothchatter.ui.viewmodel.ChatMessageViewModel
+import tech.hombre.bluetoothchatter.utils.setViewBackgroundWithoutResettingPadding
 import java.util.*
 
-class ChatAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
+class ChatAdapter(private val isAlwaysSelectable: Boolean = false) : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
     StickyRecyclerHeadersAdapter<RecyclerView.ViewHolder> {
 
     companion object {
@@ -38,12 +39,20 @@ class ChatAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
 
     var imageClickListener: ((view: ImageView, message: ChatMessageViewModel) -> Unit)? = null
 
+    var messageSelectionListener: ((selectedItemPositions: Set<Int>, isSelectableMode: Boolean) -> Unit)? = null
+
+    private var isSelectableMode = isAlwaysSelectable
+
+    private val selectedItemPositions = mutableSetOf<Int>()
+
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
         val message = messages[position]
 
         when (holder) {
             is ImageMessageViewHolder -> {
+
+                holder.container.setViewBackgroundWithoutResettingPadding(getBackground(message.own, position))
 
                 if (!message.isImageAvailable) {
 
@@ -60,10 +69,30 @@ class ChatAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
 
                     val size = message.imageSize
                     holder.image.layoutParams = FrameLayout.LayoutParams(size.width, size.height)
-                    holder.image.setOnClickListener {
-                        imageClickListener?.invoke(holder.image, message)
-                    }
+                    holder.itemView.setOnClickListener {
+                        if (!isSelectableMode && !isAlwaysSelectable) {
+                            return@setOnClickListener
+                        } else {
+                            if (isSelectedItem(position)) removeSelectedItem(position)
+                            else addSelectedItem(position)
 
+                            onBindViewHolder(holder, position)
+                        }
+                    }
+                    holder.image.setOnClickListener {
+                        if (!isSelectableMode && !isAlwaysSelectable) {
+                            imageClickListener?.invoke(holder.image, message)
+                        }
+                        else {
+                            if (isSelectedItem(position)) removeSelectedItem(position)
+                            else addSelectedItem(position)
+
+                            onBindViewHolder(holder, position)
+                        }
+                    }
+                    holder.image.setOnLongClickListener {
+                      holder.itemView.performLongClick()
+                    }
                     Picasso.get()
                         .load(message.fileUri)
                         .config(Bitmap.Config.RGB_565)
@@ -78,6 +107,9 @@ class ChatAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
 
             }
             is FileMessageViewHolder -> {
+
+                holder.container.setViewBackgroundWithoutResettingPadding(getBackground(message.own, position))
+
                 if (!message.isImageAvailable) {
                     holder.image.visibility = View.GONE
                     holder.missingLabel.visibility = View.VISIBLE
@@ -92,11 +124,21 @@ class ChatAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
 
                     holder.date.text = message.time
                     holder.itemView.setOnClickListener {
-                        imageClickListener?.invoke(holder.image, message)
+                        if (!isSelectableMode && !isAlwaysSelectable) {
+                            imageClickListener?.invoke(holder.image, message)
+                        }
+                        else {
+                            if (isSelectedItem(position)) removeSelectedItem(position)
+                            else addSelectedItem(position)
+
+                            onBindViewHolder(holder, position)
+                        }
                     }
                 }
             }
             is TextMessageViewHolder -> {
+
+                holder.text.setViewBackgroundWithoutResettingPadding(getBackground(message.own, position))
 
                 val spannableMessage = SpannableString(message.text)
                 LinkifyCompat.addLinks(
@@ -107,6 +149,43 @@ class ChatAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
                 holder.text.movementMethod = ClickableMovementMethod
                 holder.text.setText(spannableMessage, TextView.BufferType.SPANNABLE)
                 holder.date.text = message.time
+
+                holder.text.setOnClickListener {
+                    if (!isSelectableMode && !isAlwaysSelectable) {
+                        return@setOnClickListener
+                    }
+                    else {
+                        if (isSelectedItem(position)) removeSelectedItem(position)
+                        else addSelectedItem(position)
+
+                        onBindViewHolder(holder, position)
+                    }
+                }
+            }
+        }
+
+        holder.itemView.setOnLongClickListener {
+            if (isSelectedItem(position)) removeSelectedItem(position)
+            else addSelectedItem(position)
+
+            onBindViewHolder(holder, position)
+            true
+        }
+    }
+
+    private fun getBackground(own: Boolean, position: Int): Int {
+        return when {
+            own -> {
+                if (isSelectedItem(position))
+                    R.drawable.out_message_checked
+                else
+                    R.drawable.out_message
+            }
+            else -> {
+                if (isSelectedItem(position))
+                    R.drawable.inner_message_checked
+                else
+                    R.drawable.inner_message
             }
         }
     }
@@ -164,6 +243,36 @@ class ChatAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
         (holder as DateDividerViewHolder).date.text = messages[position].dayOfYear
     }
 
+    fun getSelectedItemPositions() = selectedItemPositions.toSet()
+
+    private fun isSelectedItem(position: Int): Boolean = (selectedItemPositions.contains(position))
+
+    private fun addSelectedItem(position: Int) {
+        if(selectedItemPositions.isEmpty() && !isAlwaysSelectable){
+            isSelectableMode = true
+        }
+        selectedItemPositions.add(position)
+        messageSelectionListener?.invoke(getSelectedItemPositions(), isSelectableMode)
+    }
+
+    private fun removeSelectedItem(position: Int){
+        selectedItemPositions.remove(position)
+        if(selectedItemPositions.isEmpty() && !isAlwaysSelectable){
+            isSelectableMode = false
+        }
+        messageSelectionListener?.invoke(getSelectedItemPositions(), isSelectableMode)
+    }
+
+    fun resetSelections() {
+        val oldSelections = selectedItemPositions.toList()
+        selectedItemPositions.clear()
+        isSelectableMode = false
+        oldSelections.forEach {
+            notifyItemChanged(it)
+        }
+        messageSelectionListener?.invoke(emptySet(), isSelectableMode)
+    }
+
     class DateDividerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val date: TextView = itemView.findViewById(R.id.tv_date)
     }
@@ -177,6 +286,7 @@ class ChatAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
         val date: TextView = itemView.findViewById(R.id.tv_date)
         val image: ImageView = itemView.findViewById(R.id.iv_image)
         val missingLabel: TextView = itemView.findViewById(R.id.tv_missing_file)
+        val container: FrameLayout = itemView.findViewById(R.id.container)
     }
 
     class FileMessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -184,5 +294,6 @@ class ChatAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
         val image: ImageView = itemView.findViewById(R.id.iv_image)
         val missingLabel: TextView = itemView.findViewById(R.id.tv_missing_file)
         val label: TextView = itemView.findViewById(R.id.tv_label_file)
+        val container: FrameLayout = itemView.findViewById(R.id.container)
     }
 }

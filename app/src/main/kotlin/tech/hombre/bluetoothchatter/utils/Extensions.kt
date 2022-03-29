@@ -21,6 +21,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
 import android.view.animation.Animation
+import androidx.annotation.DrawableRes
+import androidx.core.view.ViewCompat
 import com.amulyakhare.textdrawable.TextDrawable
 import tech.hombre.bluetoothchatter.R
 import java.lang.Exception
@@ -237,4 +239,13 @@ inline fun <reified T : Any> AppCompatActivity.argument(key: String, defaultValu
         return@lazy it[key] as? T ?: defaultValue
     }
     return@lazy defaultValue
+}
+
+fun View.setViewBackgroundWithoutResettingPadding(@DrawableRes backgroundResId: Int) {
+    val paddingBottom = this.paddingBottom
+    val paddingStart = ViewCompat.getPaddingStart(this)
+    val paddingEnd = ViewCompat.getPaddingEnd(this)
+    val paddingTop = this.paddingTop
+    setBackgroundResource(backgroundResId)
+    ViewCompat.setPaddingRelative(this, paddingStart, paddingTop, paddingEnd, paddingBottom)
 }

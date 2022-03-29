@@ -38,6 +38,9 @@ interface MessagesDao {
     @Query("DELETE FROM message WHERE deviceAddress = :address")
     fun deleteAllByDeviceAddress(address: String)
 
+    @Query("DELETE FROM message WHERE deviceAddress = :address AND uid in (:messagesId)")
+    fun deleteByDeviceAddressAndId(address: String, messagesId: List<Long>)
+
     @Query("UPDATE message SET fileInfo = null, filePath = null WHERE uid = :messageId")
     fun removeFileInfo(messageId: Long)
 
