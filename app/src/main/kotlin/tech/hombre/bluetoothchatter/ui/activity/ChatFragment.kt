@@ -1,11 +1,13 @@
 package tech.hombre.bluetoothchatter.ui.activity
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.bluetooth.BluetoothAdapter
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -17,6 +19,7 @@ import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.view.doOnPreDraw
 import androidx.navigation.fragment.FragmentNavigatorExtras
@@ -49,6 +52,7 @@ import tech.hombre.bluetoothchatter.ui.viewmodel.ChatMessageViewModel
 import tech.hombre.bluetoothchatter.ui.widget.ActionView
 import tech.hombre.bluetoothchatter.ui.widget.SendFilePopup
 import tech.hombre.bluetoothchatter.utils.getNotificationManager
+import tech.hombre.bluetoothchatter.utils.navigateWithResult
 import tech.hombre.bluetoothchatter.utils.onEnd
 import tech.hombre.bluetoothchatter.utils.toReadableFileSize
 import java.io.File
@@ -91,6 +95,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat), 
 
     private var disconnectedDialog: AlertDialog? = null
     private var lostConnectionDialog: AlertDialog? = null
+    private lateinit var recorderPermissionDialog: AlertDialog
 
     private val textWatcher = object : SimpleTextWatcher() {
 
@@ -128,6 +133,8 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat), 
                         presenter.performImagePicking()
                     SendFilePopup.Option.FILES ->
                         presenter.performFilePicking()
+                    SendFilePopup.Option.VOICE ->
+                        presenter.performVoiceRecorder()
                 }
             }
         }
@@ -263,8 +270,19 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat), 
                     presenter.sendFile(File(fileToShare), file.absolutePath.getFileType())
                 }, 1000)
             }
-
         }
+
+        recorderPermissionDialog = AlertDialog.Builder(requireContext())
+            .setView(R.layout.dialog_recorder_permission)
+            .setPositiveButton(R.string.general__ok) { _, _ ->
+                requestPermissions(
+                    arrayOf(Manifest.permission.RECORD_AUDIO),
+                    REQUEST_RECORDER_PERMISSION
+                )
+            }
+            .setNegativeButton(R.string.general__exit) { dialog, _ -> dialog.dismiss() }
+            .setCancelable(false)
+            .create()
     }
 
     override fun onBackPressed() {
@@ -520,6 +538,24 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat), 
         startActivityForResult(fileIntent, REQUEST_FILE)
     }
 
+    override fun openVoiceRecorder() {
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.RECORD_AUDIO
+            ) != PackageManager.PERMISSION_GRANTED && !recorderPermissionDialog.isShowing
+        ) {
+            recorderPermissionDialog.show()
+        } else {
+            navigateWithResult(
+                ChatFragmentDirections.actionChatFragmentToAudioRecorderDialog(),
+                action = {
+                    val filePath = it.getString(AudioRecorderFragment.EXTRA_FILE_PATH)
+                    println(filePath)
+                }
+            )
+        }
+    }
+
     override fun showFileTransferLayout(
         fileAddress: String?,
         fileSize: Long,
@@ -629,6 +665,9 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat), 
                     presenter.sendFile(File(path), path.getFileType())
                 }
             }
+            REQUEST_RECORDER_PERMISSION -> {
+                findNavController().navigate(ChatFragmentDirections.actionChatFragmentToAudioRecorderDialog())
+            }
             else -> {
 
                 easyImage.handleActivityResult(
@@ -704,6 +743,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat), 
 
         private const val REQUEST_ENABLE_BLUETOOTH = 101
         private const val REQUEST_FILE = 201
+        private const val REQUEST_RECORDER_PERMISSION = 301
 
     }
 }

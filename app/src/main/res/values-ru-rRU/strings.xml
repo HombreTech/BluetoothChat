@@ -3,7 +3,7 @@
 <resources>
     <string name="general__ok">ОК</string>
     <string name="general__cancel">Отмена</string>
-    <string name="general__exit">Выйти</string>
+    <string name="general__exit">Закрыть</string>
     <string name="general__try_again">Попробовать еще</string>
     <string name="general__start_chat">Начать чат</string>
     <string name="general__restart">Рестарт</string>

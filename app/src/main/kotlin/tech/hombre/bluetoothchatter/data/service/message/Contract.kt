@@ -41,6 +41,7 @@ class Contract {
     fun isFeatureAvailable(feature: Feature) = when (feature) {
         Feature.IMAGE_SHARING -> partnerVersion >= 1
         Feature.FILE_SHARING -> partnerVersion >= 1
+        Feature.VOICE_RECORDING -> partnerVersion >= 1
     }
 
     enum class MessageType(val value: Int) {
@@ -63,7 +64,8 @@ class Contract {
 
     enum class Feature {
         IMAGE_SHARING,
-        FILE_SHARING;
+        FILE_SHARING,
+        VOICE_RECORDING;
     }
 
     companion object {
