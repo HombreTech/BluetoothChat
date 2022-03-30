@@ -82,3 +82,11 @@ fun String.getFileType(): PayloadType {
         else -> PayloadType.FILE
     }
 }
+
+fun Context.getRecorderFilePath(): String {
+    val mFolder = File("${externalCacheDir}/Records")
+    if (!mFolder.exists()) {
+        mFolder.mkdirs()
+    }
+    return "${mFolder.absolutePath}/${getTimestampString()}.m4a"
+}
