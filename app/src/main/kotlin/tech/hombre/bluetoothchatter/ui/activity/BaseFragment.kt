@@ -49,6 +49,7 @@ open class BaseFragment<ViewBinding : ViewDataBinding>(@LayoutRes val layoutResI
     }
 
     open fun onBackPressed() {
+        backPressedCallback.remove()
         requireActivity().onBackPressed()
     }
 

@@ -7,6 +7,12 @@
     <color name="colorAccentLight">#00A9D6</color>
     <color name="colorSplashBackground">#006D8A</color>
 
+    <color name="transparent">#00000000</color>
+    <color name="white">#ffffff</color>
+    <color name="pink">#fe485a</color>
+    <color name="lightPink">#ef818c</color>
+    <color name="gray">#7C7C7C</color>
+
     <color name="text_color">#444</color>
     <color name="text_dark">#444</color>
     <color name="text_light">#bbb</color>
@@ -17,4 +23,12 @@
     <color name="background_own_message">#22009688</color>
     <color name="background_avatar_default">#008756</color>
     <color name="background_chat_default">#01627C</color>
+
+    <!-- Audio player colors -->
+    <color name="playerTimingBackground">#8D009AC3</color>
+    <color name="playerViewBackground">#00009AC3</color>
+    <color name="playerPlayPauseBackgroundColor">#009AC3</color>
+    <color name="playerSeekBarProgressColor">#232323</color>
+    <color name="playerProgressTimeColor">#333333</color>
+    <color name="playerVisualizationNotPlayedColor">#727171</color>
 </resources>

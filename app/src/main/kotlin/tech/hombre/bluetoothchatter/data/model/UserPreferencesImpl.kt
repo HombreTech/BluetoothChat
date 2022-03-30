@@ -13,6 +13,7 @@ class UserPreferencesImpl(private val context: Context) : UserPreferences {
     private val keyAppearanceChatBgColor = "notifications_chat_bg_color"
     private val keyAppearanceNightMode = "appearance_night_mode"
     private val keyDiscoveryClassification = "discovery_classification"
+    private val keyPlayerPauseOnMinimize = "player_pause_on_minimize"
 
     private val preferences
             by lazy { context.getSharedPreferences(keyPreferencesName, Context.MODE_PRIVATE) }
@@ -22,6 +23,9 @@ class UserPreferencesImpl(private val context: Context) : UserPreferences {
 
     override fun isClassificationEnabled() =
             preferences.getBoolean(keyDiscoveryClassification, true)
+
+    override fun isPlayerPauseOnMinimizeEnabled() =
+        preferences.getBoolean(keyPlayerPauseOnMinimize, true)
 
     override fun getChatBackgroundColor(context: Context) =
             preferences.getInt(keyAppearanceChatBgColor, ContextCompat.getColor(context, R.color.background_chat_default))
@@ -51,5 +55,11 @@ class UserPreferencesImpl(private val context: Context) : UserPreferences {
         preferences.edit()
                 .putInt(keyAppearanceNightMode, mode)
                 .apply()
+    }
+
+    override fun saveNewPausePlayerPreference(paused: Boolean) {
+        preferences.edit()
+            .putBoolean(keyPlayerPauseOnMinimize, paused)
+            .apply()
     }
 }

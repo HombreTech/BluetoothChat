@@ -114,5 +114,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:preferenceText="@string/settings__classification" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="@string/settings__player"
+            android:textColor="@color/colorAccent"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <tech.hombre.bluetoothchatter.ui.widget.SwitchPreference
+            android:id="@+id/sp_pause_player_on_hide"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:preferenceText="@string/settings__pause_on_hide" />
     </LinearLayout>
 </layout>

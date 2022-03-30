@@ -40,6 +40,7 @@ interface ChatView {
 
     fun openImagePicker()
     fun openFilePicker()
+    fun openVoiceRecorder()
     fun showPresharingImage(path: String)
     fun showPresharingFile()
     fun showFileTooBig(maxSize: Long)

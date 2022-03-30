@@ -29,6 +29,7 @@ class SettingsPresenter(private val view: SettingsView,
         val nightMode = withContext(bgContext) { preferences.getNightMode() }
         val sound = withContext(bgContext) { preferences.isSoundEnabled() }
         val classification = withContext(bgContext) { preferences.isClassificationEnabled() }
+        val playerPauseOnMinimize = withContext(bgContext) { preferences.isPlayerPauseOnMinimizeEnabled() }
 
         initialNightMode = nightMode
         changedNightMode = nightMode
@@ -37,6 +38,7 @@ class SettingsPresenter(private val view: SettingsView,
         view.displayNightModeSettings(nightMode)
         view.displayNotificationSetting(sound)
         view.displayDiscoverySetting(classification)
+        view.displayPausePlayerOnHide(playerPauseOnMinimize)
     }
 
     fun prepareColorPicker(context: Context) {
@@ -69,6 +71,10 @@ class SettingsPresenter(private val view: SettingsView,
 
     fun onNewClassificationPreference(enabled: Boolean) = launch(bgContext) {
         preferences.saveNewClassificationPreference(enabled)
+    }
+
+    fun onNewPausePlayerPreference(paused: Boolean) = launch(bgContext) {
+        preferences.saveNewPausePlayerPreference(paused)
     }
 
     fun isNightModeChanged() = initialNightMode != changedNightMode

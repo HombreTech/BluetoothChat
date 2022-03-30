@@ -35,6 +35,9 @@
         <action
             android:id="@+id/action_chatFragment_to_scanFragment"
             app:destination="@id/scanFragment" />
+        <action
+            android:id="@+id/action_chatFragment_to_audioRecorderDialog"
+            app:destination="@id/audioRecorderDialog" />
     </fragment>
     <fragment
         android:id="@+id/aboutFragment"
@@ -168,4 +171,9 @@
             app:popUpTo="@+id/chatFragment"
             app:popUpToInclusive="true" />
     </fragment>
+    <dialog
+        android:id="@+id/audioRecorderDialog"
+        android:name="tech.hombre.bluetoothchatter.ui.activity.AudioRecorderFragment"
+        android:label="AudioRecorderDialog"
+        tools:layout="@layout/fragment_audio_recorder" />
 </navigation>

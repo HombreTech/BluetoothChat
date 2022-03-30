@@ -47,7 +47,11 @@ class ChatApplication : Application(), LifecycleObserver, ThemeHolder {
             modules(
                 listOf(
                     applicationModule,
-                    bluetoothConnectionModule, databaseModule, localStorageModule, viewModule
+                    bluetoothConnectionModule,
+                    databaseModule,
+                    localStorageModule,
+                    recorderModule,
+                    viewModule,
                 )
             )
         }

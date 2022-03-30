@@ -18,7 +18,8 @@ class SendFilePopup(context: Context) : PopupWindow() {
 
     enum class Option {
         IMAGES,
-        FILES;
+        FILES,
+        VOICE;
     }
 
     private val appearingAnimationDuration = 200L
@@ -48,6 +49,11 @@ class SendFilePopup(context: Context) : PopupWindow() {
         rootView.findViewById<View>(R.id.ll_files_button).setOnClickListener {
             dismiss()
             clickListener?.invoke(Option.FILES)
+        }
+
+        rootView.findViewById<View>(R.id.ll_voice_button).setOnClickListener {
+            dismiss()
+            clickListener?.invoke(Option.VOICE)
         }
 
         contentView = rootView

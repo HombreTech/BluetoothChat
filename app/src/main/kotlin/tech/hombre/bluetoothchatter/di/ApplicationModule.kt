@@ -39,6 +39,10 @@ val applicationModule = module {
     }
 
     factory { params ->
+        AudioRecorderPresenter(params[0], get())
+    }
+
+    factory { params ->
         ConnectionController(params[0], params[1], get(), get(), get(), get(), get(), get())
     }
 }

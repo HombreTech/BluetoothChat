@@ -373,6 +373,10 @@ class ChatPresenter(
         }
     }
 
+    fun performVoiceRecorder() {
+        view.openVoiceRecorder()
+    }
+
     fun sendFile(file: File, type: PayloadType) {
         this.type = type
         if (!file.exists()) {
@@ -513,4 +517,6 @@ class ChatPresenter(
             }
         }
     }
+
+    fun isPlayerPauseOnMinimize() = preferences.isPlayerPauseOnMinimizeEnabled()
 }
