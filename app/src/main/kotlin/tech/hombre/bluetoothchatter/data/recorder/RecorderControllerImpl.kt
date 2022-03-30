@@ -5,9 +5,13 @@ import android.media.MediaRecorder
 import android.os.Build
 import kotlinx.coroutines.*
 import tech.hombre.bluetoothchatter.ui.util.getRecorderFilePath
+import java.io.File
 import java.io.IOException
 
-class RecorderControllerImpl(private val context: Context):  RecorderController {
+class RecorderControllerImpl(
+    private val context: Context,
+    private val uiContext: CoroutineDispatcher = Dispatchers.Main,
+) : RecorderController {
 
     private val scope = CoroutineScope(Job())
 
@@ -17,7 +21,7 @@ class RecorderControllerImpl(private val context: Context):  RecorderController 
 
     private var listener: RecorderControllerInterface? = null
 
-    fun init(listener: RecorderControllerInterface) {
+    override fun init(listener: RecorderControllerInterface) {
         this.listener = listener
     }
 
@@ -52,9 +56,17 @@ class RecorderControllerImpl(private val context: Context):  RecorderController 
         }
     }
 
-    override fun stopRecording() {
-        listener?.onRecordingStopped(filepath)
+    override fun stopRecording(isCanceled: Boolean) {
+        recorder?.apply {
+            stop()
+            release()
+        }
         stopDurationTimer()
+        if (isCanceled) {
+            File(filepath).delete()
+        } else {
+            listener?.onRecordingStopped(filepath)
+        }
     }
 
     private val timerJob = scope.launch(Dispatchers.IO) {
@@ -62,7 +74,9 @@ class RecorderControllerImpl(private val context: Context):  RecorderController 
         while (isActive) {
             scope.launch {
                 duration += TIMER_PERIOD_DURATION
-                listener?.onRecordingDurationUpdate(duration)
+                withContext(uiContext) {
+                    listener?.onRecordingDurationUpdate(duration)
+                }
             }
             delay(TIMER_PERIOD_DURATION)
         }
