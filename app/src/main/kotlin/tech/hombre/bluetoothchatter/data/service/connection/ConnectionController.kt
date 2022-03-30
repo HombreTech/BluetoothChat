@@ -56,9 +56,6 @@ class ConnectionController(private val application: tech.hombre.bluetoothchatter
     private var contract = Contract()
 
     private var justRepliedFromNotification = false
-    private val imageText: String by lazy {
-        application.getString(R.string.chat__image_message, "\uD83D\uDCCE")
-    }
     private val me: Person by lazy {
         Person.Builder().setName(application.getString(R.string.notification__me)).build()
     }
@@ -251,7 +248,7 @@ class ConnectionController(private val application: tech.hombre.bluetoothchatter
                         message.fileExists = true
 
                         messagesStorage.insertMessage(message)
-                        shallowHistory.add(NotificationCompat.MessagingStyle.Message(imageText, message.date.time, me))
+                        shallowHistory.add(NotificationCompat.MessagingStyle.Message(getTextByType(message.messageType), message.date.time, me))
 
                         launch(uiContext) {
 
@@ -316,11 +313,11 @@ class ConnectionController(private val application: tech.hombre.bluetoothchatter
 
                     val partner = Person.Builder().setName(currentConversation?.displayName
                             ?: "?").build()
-                    shallowHistory.add(NotificationCompat.MessagingStyle.Message(imageText, message.date.time, partner))
+                    shallowHistory.add(NotificationCompat.MessagingStyle.Message(getTextByType(message.messageType), message.date.time, partner))
                     if (!subject.isAnybodyListeningForMessages() || application.currentChat == null || !application.currentChat.equals(address)) {
                         //FIXME: Fixes not appearing notification
                         view.dismissMessageNotification()
-                        view.showNewMessageNotification(imageText, currentConversation?.displayName,
+                        view.showNewMessageNotification(getTextByType(message.messageType), currentConversation?.displayName,
                                 device.name, address, shallowHistory, preferences.isSoundEnabled())
                     } else {
                         message.seenHere = true
@@ -613,6 +610,20 @@ class ConnectionController(private val application: tech.hombre.bluetoothchatter
         options.inJustDecodeBounds = true
         BitmapFactory.decodeFile(path, options)
         return Size(options.outWidth, options.outHeight)
+    }
+
+    private fun getTextByType(messageType: PayloadType?): String {
+        return when(messageType) {
+            PayloadType.IMAGE ->
+                application.getString(R.string.chat__image_message, "\uD83D\uDDBC")
+            PayloadType.FILE ->
+                application.getString(R.string.chat__image_file, "\uD83D\uDCCE")
+            PayloadType.AUDIO ->
+                application.getString(R.string.chat__image_audio, "\uD83C\uDFA7")
+            else -> {
+                application.getString(R.string.chat__image_file, "\uD83D\uDCCE")
+            }
+        }
     }
 
     private inner class AcceptJob : Thread() {
