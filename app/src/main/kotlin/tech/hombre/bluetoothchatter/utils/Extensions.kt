@@ -249,3 +249,11 @@ fun View.setViewBackgroundWithoutResettingPadding(@DrawableRes backgroundResId: 
     setBackgroundResource(backgroundResId)
     ViewCompat.setPaddingRelative(this, paddingStart, paddingTop, paddingEnd, paddingBottom)
 }
+
+fun Long.convertMsToHMmSs(): String {
+    val seconds = this / 1000
+    val s = seconds % 60
+    val m = seconds / 60 % 60
+    val h = seconds / (60 * 60) % 24
+    return String.format("%02d:%02d:%02d", h, m, s)
+}

@@ -550,7 +550,9 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat), 
                 ChatFragmentDirections.actionChatFragmentToAudioRecorderDialog(),
                 action = {
                     val filePath = it.getString(AudioRecorderFragment.EXTRA_FILE_PATH)
-                    println(filePath)
+                    filePath?.let {
+                        presenter.sendFile(File(it), PayloadType.AUDIO)
+                    }
                 }
             )
         }
@@ -722,7 +724,6 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat), 
 
     override fun onDetach() {
         super.onDetach()
-        println("onDetach")
         chatAdapter.stopAudio()
     }
 
@@ -735,7 +736,6 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat), 
 
     override fun onDestroyView() {
         super.onDestroyView()
-        println("onDestroyView")
         chatAdapter.stopAudio()
     }
 

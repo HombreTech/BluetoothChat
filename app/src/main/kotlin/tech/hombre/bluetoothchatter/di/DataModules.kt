@@ -33,7 +33,7 @@ val localStorageModule = module {
 }
 
 val recorderModule = module {
-    factory { RecorderControllerImpl(androidContext()) }
+    factory { RecorderControllerImpl(androidContext()) as RecorderController }
 }
 
 const val localeScope = "locale_scope"

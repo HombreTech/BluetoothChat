@@ -171,7 +171,6 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean = false) :
                     ) {
                         holder.playerView.imgPlay.performClick()
                     } else {
-                        println("setAudio")
                         holder.playerView.setAudio(message.filePath)
                         holder.playerView.onPlayClick = {
                             println("playerView setImgPlayClickListener")
