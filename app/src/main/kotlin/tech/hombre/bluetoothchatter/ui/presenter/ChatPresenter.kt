@@ -508,12 +508,13 @@ class ChatPresenter(
     ) {
         launch(bgContext) {
             val messagesToRemove = messages.filterIndexed { index, _ -> index in selectedItems }
+            val uids = messagesToRemove.map { it.uid }
             messagesStorage.removeMessagesByAddressAndId(
                 deviceAddress,
-                messagesToRemove.map { it.uid }.toList()
+                uids.toList()
             )
             withContext(uiContext) {
-                view.updateHistoryRemoved(selectedItems)
+                view.updateHistoryRemoved(uids)
             }
         }
     }

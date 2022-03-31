@@ -6,9 +6,12 @@
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="?android:windowBackground"
         tools:context=".ui.activity.ConversationsFragment">
 
-        <include layout="@layout/content_main" android:id="@+id/contentMain"/>
+        <include
+            android:id="@+id/contentMain"
+            layout="@layout/content_main" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_new_conversation"

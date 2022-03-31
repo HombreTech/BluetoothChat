@@ -7,7 +7,7 @@ import tech.hombre.bluetoothchatter.ui.viewmodel.ChatMessageViewModel
 interface ChatView {
 
     fun showMessagesHistory(messages: List<ChatMessageViewModel>)
-    fun updateHistoryRemoved(messagesRemoved: Set<Int>)
+    fun updateHistoryRemoved(messagesRemoved: List<Long>)
     fun showReceivedMessage(message: ChatMessageViewModel)
     fun showSentMessage(message: ChatMessageViewModel)
     fun showSendingMessageFailure()

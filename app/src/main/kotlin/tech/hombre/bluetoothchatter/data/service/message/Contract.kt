@@ -70,8 +70,8 @@ class Contract {
 
     companion object {
 
-        const val DIVIDER = "#"
-        const val MESSAGE_CONTRACT_VERSION = 2
+        const val DIVIDER = "¯"
+        const val MESSAGE_CONTRACT_VERSION = 1
 
         fun generateUniqueId() = System.nanoTime()
     }

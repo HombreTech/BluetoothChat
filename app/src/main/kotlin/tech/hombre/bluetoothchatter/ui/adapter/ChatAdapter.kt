@@ -54,7 +54,6 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean = false) :
     private var audioPlayerListener: AudioPlayerView? = null
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-
         val message = messages[position]
 
         when (holder) {
@@ -173,15 +172,12 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean = false) :
                     } else {
                         holder.playerView.setAudio(message.filePath)
                         holder.playerView.onPlayClick = {
-                            println("playerView setImgPlayClickListener")
                             audioPlayerListener = object : AudioPlayerView {
                                 override fun pauseAudio() {
-                                    println("pauseAudio")
                                     holder.playerView.onPause()
                                 }
 
                                 override fun stopAudio() {
-                                    println("stopAudio")
                                     holder.playerView.onStop()
                                 }
                             }
@@ -189,12 +185,18 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean = false) :
                     }
                     holder.playerView.visibility = View.VISIBLE
                     holder.missingLabel.visibility = View.GONE
-
                     holder.date.text = message.time
+
                     holder.itemView.setOnClickListener {
+                        if (!isSelectableMode && !isAlwaysSelectable) {
+                            return@setOnClickListener
+                        } else {
+                            if (isSelectedItem(position)) removeSelectedItem(position)
+                            else addSelectedItem(position)
 
+                            onBindViewHolder(holder, position)
+                        }
                     }
-
                 }
             }
             is TextMessageViewHolder -> {
@@ -230,10 +232,11 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean = false) :
         }
 
         holder.itemView.setOnLongClickListener {
-            if (isSelectedItem(position)) removeSelectedItem(position)
-            else addSelectedItem(position)
+            val pos = holder.bindingAdapterPosition
+            if (isSelectedItem(pos)) removeSelectedItem(pos)
+            else addSelectedItem(pos)
 
-            onBindViewHolder(holder, position)
+            onBindViewHolder(holder, pos)
             true
         }
     }

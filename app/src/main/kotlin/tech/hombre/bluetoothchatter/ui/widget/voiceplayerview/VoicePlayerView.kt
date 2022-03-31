@@ -6,6 +6,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.GradientDrawable
+import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri
@@ -197,22 +198,29 @@ class VoicePlayerView : LinearLayout {
         mediaPlayer = MediaPlayer()
         if (path != null) {
             try {
-                mediaPlayer!!.setDataSource(path)
-                mediaPlayer!!.setAudioStreamType(AudioManager.STREAM_MUSIC)
-                mediaPlayer!!.prepare()
-                mediaPlayer!!.setVolume(10f, 10f)
-                //START and PAUSE are in other listeners
-                mediaPlayer!!.setOnPreparedListener { mp ->
-                    seekBar!!.max = mp.duration
-                    if (seekbarV!!.visibility == VISIBLE) {
-                        seekbarV!!.max = mp.duration
+                mediaPlayer!!.apply {
+                    setDataSource(path)
+                    setAudioAttributes(
+                        AudioAttributes.Builder()
+                            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                            .setUsage(AudioAttributes.USAGE_MEDIA)
+                            .build()
+                    )
+                   prepare()
+                   setVolume(10f, 10f)
+                    //START and PAUSE are in other listeners
+                    setOnPreparedListener { mp ->
+                        seekBar!!.max = mp.duration
+                        if (seekbarV!!.visibility == VISIBLE) {
+                            seekbarV!!.max = mp.duration
+                        }
+                        txtProcess!!.text =
+                            "00:00:00/" + convertSecondsToHMmSs((mp.duration / 1000).toLong())
                     }
-                    txtProcess!!.text =
-                        "00:00:00/" + convertSecondsToHMmSs((mp.duration / 1000).toLong())
-                }
-                mediaPlayer!!.setOnCompletionListener {
-                    imgPause!!.visibility = GONE
-                    imgPlay!!.visibility = VISIBLE
+                    setOnCompletionListener {
+                        imgPause!!.visibility = GONE
+                        imgPlay!!.visibility = VISIBLE
+                    }
                 }
             } catch (e: IOException) {
                 e.printStackTrace()

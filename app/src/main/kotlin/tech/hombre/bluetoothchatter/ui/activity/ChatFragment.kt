@@ -382,11 +382,9 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat), 
         chatAdapter.notifyDataSetChanged()
     }
 
-    override fun updateHistoryRemoved(messagesRemoved: Set<Int>) {
-        messagesRemoved.forEach { position ->
-            chatAdapter.messages.removeAt(position)
-            chatAdapter.notifyItemRemoved(position)
-        }
+    override fun updateHistoryRemoved(messagesRemoved: List<Long>) {
+        chatAdapter.messages.removeAll { it.uid in messagesRemoved}
+        chatAdapter.notifyDataSetChanged()
     }
 
     override fun showReceivedMessage(message: ChatMessageViewModel) {

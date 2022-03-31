@@ -153,6 +153,8 @@ abstract class DataTransferThread(private val socket: BluetoothSocket,
 
         thread {
 
+            sleep(1000)
+
             val fileStream = FileInputStream(file)
             BufferedInputStream(fileStream).use {
 
