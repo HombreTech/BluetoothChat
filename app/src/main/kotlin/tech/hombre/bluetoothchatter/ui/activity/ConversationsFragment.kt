@@ -110,10 +110,14 @@ class ConversationsFragment :
                 val imageUri = it.getParcelable(Intent.EXTRA_STREAM) as Uri?
                 fileToShare = imageUri?.getFilePath(requireContext())
             }
-            findNavController().navigate(ConversationsFragmentDirections.actionConversationsFragmentToContactChooserFragment(
-                message = textToShare,
-                filePath = fileToShare
-            ))
+            if (textToShare != null || fileToShare != null) {
+                findNavController().navigate(
+                    ConversationsFragmentDirections.actionConversationsFragmentToContactChooserFragment(
+                        message = textToShare,
+                        filePath = fileToShare
+                    )
+                )
+            }
         }
 
         storagePermissionDialog = AlertDialog.Builder(requireContext())

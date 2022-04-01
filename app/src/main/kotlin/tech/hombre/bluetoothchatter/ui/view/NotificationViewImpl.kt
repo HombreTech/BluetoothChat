@@ -25,16 +25,17 @@ class NotificationViewImpl(private val context: Context) : NotificationView {
 
     override fun getForegroundNotification(message: String): Notification {
 
-        val notificationIntent = Intent(
-            Intent.ACTION_VIEW,
-            "bluetoothchatter://conversations".toUri(),
-            context,
-            MainActivity::class.java
-        ).apply {
+        val intent = context.packageManager.getLaunchIntentForPackage(context.packageName)
+
+        val notificationIntent = intent?.apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
 
-        val pendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0)
+        val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+        } else {
+            PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        }
 
         val stopIntent = Intent(context, BluetoothConnectionService::class.java).apply {
             action = BluetoothConnectionService.ACTION_STOP
