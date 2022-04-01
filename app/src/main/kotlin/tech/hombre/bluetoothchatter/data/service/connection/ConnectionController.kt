@@ -62,7 +62,8 @@ class ConnectionController(
     private val me: Person by lazy {
         Person.Builder().setName(application.getString(R.string.notification__me)).build()
     }
-    private val shallowHistory = LimitedQueue<NotificationCompat.MessagingStyle.Message>(4)
+    private val shallowHistory =
+        LimitedQueue<Pair<Long, NotificationCompat.MessagingStyle.Message>>(4)
 
     var onNewForegroundMessage: ((String) -> Unit)? = null
 
@@ -261,13 +262,6 @@ class ConnectionController(
                         message.fileExists = true
 
                         messagesStorage.insertMessage(message)
-                        shallowHistory.add(
-                            NotificationCompat.MessagingStyle.Message(
-                                getTextByType(
-                                    message.messageType
-                                ), message.date.time, me
-                            )
-                        )
 
                         launch(uiContext) {
 
@@ -341,10 +335,13 @@ class ConnectionController(
                             ?: "?"
                     ).build()
                     shallowHistory.add(
-                        NotificationCompat.MessagingStyle.Message(
-                            getTextByType(
-                                message.messageType
-                            ), message.date.time, partner
+                        Pair(
+                            message.uid,
+                            NotificationCompat.MessagingStyle.Message(
+                                getTextByType(
+                                    message.messageType
+                                ), message.date.time, partner
+                            )
                         )
                     )
                     if (!subject.isAnybodyListeningForMessages() || application.currentChat == null || !application.currentChat.equals(
@@ -354,13 +351,18 @@ class ConnectionController(
                         //FIXME: Fixes not appearing notification
                         view.dismissMessageNotification()
                         view.showNewMessageNotification(
-                            getTextByType(message.messageType), currentConversation?.displayName,
-                            device.name, address, shallowHistory, preferences.isSoundEnabled()
+                            getTextByType(message.messageType),
+                            currentConversation?.displayName,
+                            device.name,
+                            address,
+                            shallowHistory.map { it.second },
+                            preferences.isSoundEnabled()
                         )
                     } else {
                         message.seenHere = true
                         val seenReport = contract.createSeenMessage(uid)
                         sendMessage(seenReport)
+                        shallowHistory.removeAll { uid == it.first }
                     }
 
                     launch(bgContext) {
@@ -464,6 +466,10 @@ class ConnectionController(
             }
         }
 
+        if (message.type == Contract.MessageType.SEEING) {
+            shallowHistory.removeAll { message.uid == it.first }
+        }
+
         if (message.type == Contract.MessageType.CONNECTION_RESPONSE) {
             if (message.flag) {
                 connectionState = ConnectionState.CONNECTED
@@ -523,21 +529,18 @@ class ConnectionController(
             launch(bgContext) {
 
                 messagesStorage.insertMessage(sentMessage)
-                shallowHistory.add(
-                    NotificationCompat.MessagingStyle.Message(
-                        sentMessage.text,
-                        sentMessage.date.time,
-                        me
-                    )
-                )
 
                 if ((!subject.isAnybodyListeningForMessages() || application.currentChat == null || !application.currentChat.equals(
                         device.address
                     )) && justRepliedFromNotification
                 ) {
                     view.showNewMessageNotification(
-                        message.body, currentConversation?.displayName,
-                        device.name, device.address, shallowHistory, preferences.isSoundEnabled()
+                        message.body,
+                        currentConversation?.displayName,
+                        device.name,
+                        device.address,
+                        shallowHistory.map { it.second },
+                        preferences.isSoundEnabled()
                     )
                     justRepliedFromNotification = false
                 }
@@ -614,8 +617,11 @@ class ConnectionController(
 
         val partner = Person.Builder().setName(currentConversation?.displayName ?: "?").build()
         shallowHistory.add(
-            NotificationCompat.MessagingStyle.Message(
-                receivedMessage.text, receivedMessage.date.time, partner
+            Pair(
+                receivedMessage.uid,
+                NotificationCompat.MessagingStyle.Message(
+                    receivedMessage.text, receivedMessage.date.time, partner
+                )
             )
         )
         if (!subject.isAnybodyListeningForMessages() || application.currentChat == null || !application.currentChat.equals(
@@ -623,13 +629,18 @@ class ConnectionController(
             )
         ) {
             view.showNewMessageNotification(
-                text, currentConversation?.displayName,
-                device.name, device.address, shallowHistory, preferences.isSoundEnabled()
+                text,
+                currentConversation?.displayName,
+                device.name,
+                device.address,
+                shallowHistory.map { it.second },
+                preferences.isSoundEnabled()
             )
         } else {
             receivedMessage.seenHere = true
             val seenReport = contract.createSeenMessage(uid)
             sendMessage(seenReport)
+            shallowHistory.removeAll { uid == it.first }
         }
 
         launch(bgContext) {
