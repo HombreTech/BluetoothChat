@@ -156,7 +156,7 @@
     <string name="images__image">Imagen</string>
     <string name="images__remove">Eliminar</string>
     <string name="images__removal_confirmation">¿Deseas eliminar esta imagen?</string>
-    <string name="images__no_images">No has recibido imágenes aún</string>
+    <string name="images__no_files">No has recibido archivos aún</string>
     <string name="files__file">Archivos</string>
     <string name="files__open_chooser">Elija una aplicación para abrir con:</string>
     <string name="files__voice">Mensaje de voz</string>

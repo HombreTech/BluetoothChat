@@ -162,7 +162,7 @@
     <string name="images__image">Изображение</string>
     <string name="images__remove">Удалить</string>
     <string name="images__removal_confirmation">Вы уверенны что хотите удалить это изображение?</string>
-    <string name="images__no_images">Вы еще не приняли ни одного изображения</string>
+    <string name="images__no_files">Вы еще не приняли ни одного файла</string>
     <string name="files__file">Файл</string>
     <string name="files__open_chooser">Выберите приложения для открытия:</string>
     <string name="files__voice">Голосовое сообщение</string>

@@ -31,7 +31,7 @@
             android:layout_gravity="center"
             android:layout_marginBottom="12dp"
             android:gravity="center"
-            android:text="@string/images__no_images"
+            android:text="@string/images__no_files"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@id/rv_files"
             app:layout_constraintEnd_toEndOf="parent"

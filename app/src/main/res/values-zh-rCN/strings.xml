@@ -153,7 +153,7 @@
     <string name="images__image">图片</string>
     <string name="images__remove">删除</string>
     <string name="images__removal_confirmation">您确实要删除此图像？</string>
-    <string name="images__no_images">你尚未接收任何图片</string>
+    <string name="images__no_files">您还没有收到任何文件</string>
     <string name="files__file">文件</string>
     <string name="files__open_chooser">选择要打开的应用程序</string>
     <string name="files__voice">语音信息</string>

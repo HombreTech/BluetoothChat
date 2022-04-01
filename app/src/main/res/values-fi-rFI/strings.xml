@@ -156,7 +156,7 @@
     <string name="images__image">Image</string>
     <string name="images__remove">Remove</string>
     <string name="images__removal_confirmation">Do you really want to remove this image?</string>
-    <string name="images__no_images">You haven\'t received any images yet</string>
+    <string name="images__no_files">You haven\'t received any files yet</string>
     <string name="files__file">File</string>
     <string name="files__open_chooser">Choose an application to open with:</string>
     <string name="files__voice">Voice message</string>
