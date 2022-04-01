@@ -25,7 +25,7 @@ class UserPreferencesImpl(private val context: Context) : UserPreferences {
             preferences.getBoolean(keyDiscoveryClassification, true)
 
     override fun isPlayerPauseOnMinimizeEnabled() =
-        preferences.getBoolean(keyPlayerPauseOnMinimize, true)
+        preferences.getBoolean(keyPlayerPauseOnMinimize, false)
 
     override fun getChatBackgroundColor(context: Context) =
             preferences.getInt(keyAppearanceChatBgColor, ContextCompat.getColor(context, R.color.background_chat_default))
