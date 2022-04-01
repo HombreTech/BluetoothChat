@@ -67,11 +67,7 @@
         tools:layout="@layout/fragment_conversations">
         <action
             android:id="@+id/action_conversationsFragment_to_aboutFragment"
-            app:destination="@id/aboutFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_enter_anim"
-            app:popExitAnim="@anim/nav_default_exit_anim" />
+            app:destination="@id/aboutFragment"/>
         <action
             android:id="@+id/action_conversationsFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
@@ -83,11 +79,7 @@
             app:destination="@id/receivedFilesFragment" />
         <action
             android:id="@+id/action_conversationsFragment_to_scanFragment"
-            app:destination="@id/scanFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_enter_anim"
-            app:popExitAnim="@anim/nav_default_exit_anim" />
+            app:destination="@id/scanFragment"/>
         <action
             android:id="@+id/action_conversationsFragment_to_chatFragment"
             app:destination="@id/chatFragment" />
@@ -124,11 +116,7 @@
 
         <action
             android:id="@+id/action_scanFragment_to_conversationsFragment"
-            app:destination="@id/conversationsFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_enter_anim"
-            app:popExitAnim="@anim/nav_default_exit_anim" />
+            app:destination="@id/conversationsFragment" />
         <deepLink
             android:id="@+id/deepLink"
             app:uri="bluetoothchatter://scan" />

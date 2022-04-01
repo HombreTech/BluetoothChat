@@ -37,6 +37,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(R.layout.fragment_p
         super.onViewCreated(view, savedInstanceState)
 
         lifecycle.addObserver(presenter)
+        (requireActivity() as MainActivity).setSupportActionBar(binding.appBar.tbToolbar)
         (requireActivity() as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(editMode)
         (requireActivity() as MainActivity).supportActionBar?.setDisplayShowHomeEnabled(editMode)
 

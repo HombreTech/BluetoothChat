@@ -40,7 +40,11 @@ class ReceivedFilesFragment :
         super.onViewCreated(view, savedInstanceState)
         postponeEnterTransition()
 
+        (requireActivity() as MainActivity).setSupportActionBar(binding.appBar.tbToolbar)
+        (requireActivity() as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        (requireActivity() as MainActivity).supportActionBar?.setDisplayShowHomeEnabled(true)
         binding.appBar.tbToolbar.title = getString(R.string.chat__received_files)
+
         binding.rvFiles.layoutManager = GridLayoutManager(requireContext(), calculateNoOfColumns())
         binding.rvFiles.adapter = filesAdapter
 

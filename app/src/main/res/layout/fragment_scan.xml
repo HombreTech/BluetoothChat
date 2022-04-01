@@ -9,6 +9,10 @@
         android:background="?android:windowBackground"
         tools:context=".ui.activity.ScanFragment">
 
+        <include
+            android:id="@+id/appBar"
+            layout="@layout/appbar" />
+
         <FrameLayout
             android:id="@+id/fl_container"
             android:layout_width="0dp"
@@ -16,7 +20,7 @@
             app:layout_constraintBottom_toTopOf="@+id/textView3"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/appBar">
 
             <FrameLayout
                 android:id="@+id/fl_progress"

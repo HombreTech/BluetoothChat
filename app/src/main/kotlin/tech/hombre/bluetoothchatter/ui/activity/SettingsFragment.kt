@@ -29,6 +29,9 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>(R.layout.fragment
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        (requireActivity() as MainActivity).setSupportActionBar(binding.appBar.tbToolbar)
+        (requireActivity() as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        (requireActivity() as MainActivity).supportActionBar?.setDisplayShowHomeEnabled(true)
         binding.appBar.tbToolbar.title = getString(R.string.settings__title)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

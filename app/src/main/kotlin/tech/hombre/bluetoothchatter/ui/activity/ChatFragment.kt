@@ -125,6 +125,8 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat), 
             it.setTitleTextAppearance(requireContext(), R.style.ActionBar_TitleTextStyle)
             it.setSubtitleTextAppearance(requireContext(), R.style.ActionBar_SubTitleTextStyle)
         }
+        (requireActivity() as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        (requireActivity() as MainActivity).supportActionBar?.setDisplayShowHomeEnabled(true)
 
         sendFilePopup = SendFilePopup(requireContext()).apply {
             setOnOptionClickListener {

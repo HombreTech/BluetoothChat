@@ -12,6 +12,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <include
+                android:id="@+id/appBar"
+                layout="@layout/appbar" />
+
             <View
                 android:id="@+id/view"
                 android:layout_width="match_parent"
@@ -19,7 +23,7 @@
                 android:background="@color/colorPrimary"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@id/appBar" />
 
             <ImageView
                 android:id="@+id/imageView"
@@ -30,7 +34,7 @@
                 android:layout_marginBottom="16dp"
                 app:layout_constraintBottom_toBottomOf="@+id/view"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/appBar"
                 app:srcCompat="@mipmap/ic_launcher" />
 
             <TextView

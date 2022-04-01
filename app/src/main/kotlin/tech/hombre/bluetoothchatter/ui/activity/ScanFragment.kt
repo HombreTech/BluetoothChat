@@ -41,6 +41,11 @@ class ScanFragment : BaseFragment<FragmentScanBinding>(R.layout.fragment_scan), 
         super.onViewCreated(view, savedInstanceState)
         lifecycle.addObserver(presenter)
 
+        (requireActivity() as MainActivity).setSupportActionBar(binding.appBar.tbToolbar)
+        binding.appBar.tbToolbar.title = getString(R.string.scan__scan)
+        (requireActivity() as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        (requireActivity() as MainActivity).supportActionBar?.setDisplayShowHomeEnabled(true)
+
         binding.rvPairedDevices.layoutManager = LinearLayoutManager(requireContext())
         binding.rvPairedDevices.adapter = devicesAdapter
 

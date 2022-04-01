@@ -13,6 +13,11 @@ class AboutFragment : BaseFragment<FragmentAboutBinding>(R.layout.fragment_about
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        (requireActivity() as MainActivity).setSupportActionBar(binding.appBar.tbToolbar)
+        (requireActivity() as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        (requireActivity() as MainActivity).supportActionBar?.setDisplayShowHomeEnabled(true)
+        binding.appBar.tbToolbar.title = getString(R.string.about__about)
+
         binding.tvVersion.text =
             "v${tech.hombre.bluetoothchatter.BuildConfig.VERSION_NAME} / ${tech.hombre.bluetoothchatter.BuildConfig.VERSION_CODE}"
         binding.tvAppCredentials.text =
