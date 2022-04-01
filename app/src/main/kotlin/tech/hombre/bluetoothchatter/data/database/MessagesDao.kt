@@ -14,13 +14,13 @@ interface MessagesDao {
     @Query("SELECT * FROM message WHERE deviceAddress = :address ORDER BY date DESC")
     fun getMessagesByDevice(address: String): List<ChatMessage>
 
-    @Query("SELECT uid, filePath, own, messageType FROM message WHERE deviceAddress = :address AND (messageType = 1 OR messageType = 2) AND own = 0 AND filePath IS NOT NULL ORDER BY date DESC")
+    @Query("SELECT uid, filePath, own, messageType FROM message WHERE deviceAddress = :address AND (messageType = 1 OR messageType = 2 OR messageType = 3) AND own = 0 AND filePath IS NOT NULL ORDER BY date DESC")
     fun getFileMessagesByDevice(address: String): List<MessageFile>
 
     @Query("SELECT uid, filePath, own, messageType FROM message WHERE uid = :uid")
     fun getFileMessageById(uid: Long): MessageFile?
 
-    @Query("SELECT uid, filePath, own, messageType FROM message WHERE (messageType = 1 OR messageType = 2) AND own = 0 AND filePath IS NOT NULL ORDER BY date DESC")
+    @Query("SELECT uid, filePath, own, messageType FROM message WHERE (messageType = 1 OR messageType = 2 OR messageType = 3) AND own = 0 AND filePath IS NOT NULL ORDER BY date DESC")
     fun getAllFilesMessages(): List<MessageFile>
 
     @Insert
