@@ -641,6 +641,21 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat), 
             .show()
     }
 
+    override fun onMessageDelivered(id: Long) {
+        chatAdapter.setMessageAsDelivered(id)
+        presenter.setMessageAsDelivered(id)
+    }
+
+    override fun onMessageNotDelivered(id: Long) {
+        chatAdapter.setMessageAsNotDelivered(id)
+        presenter.setMessageAsNotDelivered(id)
+    }
+
+    override fun onMessageSeen(id: Long) {
+        chatAdapter.setMessageAsSeen(id)
+        presenter.setMessageAsSeen(id)
+    }
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         optionsMenu = menu
         inflater.inflate(R.menu.menu_chat, optionsMenu)

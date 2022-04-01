@@ -87,15 +87,14 @@
         android:text="14:42"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/check" />
+        app:layout_constraintEnd_toStartOf="@+id/state" />
 
     <ImageView
-        android:id="@+id/check"
+        android:id="@+id/state"
         android:layout_width="15dp"
         android:layout_height="15dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="4dp"
-        android:src="@drawable/ic_check"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

@@ -116,6 +116,15 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean = false) :
 
                 holder.date.text = message.time
 
+                if (message.own) {
+                    holder.state.setImageResource(
+                        getMessageStateDrawableId(
+                            message.delivered,
+                            message.seenThere
+                        )
+                    )
+                }
+
             }
             is FileMessageViewHolder -> {
 
@@ -149,6 +158,15 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean = false) :
                             onBindViewHolder(holder, position)
                         }
                     }
+                }
+
+                if (message.own) {
+                    holder.state.setImageResource(
+                        getMessageStateDrawableId(
+                            message.delivered,
+                            message.seenThere
+                        )
+                    )
                 }
             }
             is AudioMessageViewHolder -> {
@@ -198,6 +216,15 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean = false) :
                         }
                     }
                 }
+
+                if (message.own) {
+                    holder.state.setImageResource(
+                        getMessageStateDrawableId(
+                            message.delivered,
+                            message.seenThere
+                        )
+                    )
+                }
             }
             is TextMessageViewHolder -> {
 
@@ -228,6 +255,15 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean = false) :
                         onBindViewHolder(holder, position)
                     }
                 }
+
+                if (message.own) {
+                    holder.state.setImageResource(
+                        getMessageStateDrawableId(
+                            message.delivered,
+                            message.seenThere
+                        )
+                    )
+                }
             }
         }
 
@@ -255,6 +291,15 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean = false) :
                 else
                     R.drawable.inner_message
             }
+        }
+    }
+
+    private fun getMessageStateDrawableId(isDelivered: Boolean, isSeen: Boolean): Int {
+        return when {
+            isSeen -> R.drawable.ic_check_double
+            !isSeen && isDelivered -> R.drawable.ic_check
+            isDelivered -> R.drawable.ic_check
+            else -> R.drawable.ic_error
         }
     }
 
@@ -354,6 +399,24 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean = false) :
         audioPlayerListener?.pauseAudio()
     }
 
+    fun setMessageAsDelivered(id: Long) {
+        val position = messages.indexOfFirst { it.uid == id }
+        messages.lastOrNull { it.uid == id }?.delivered = true
+        notifyItemChanged(position, 0)
+    }
+
+    fun setMessageAsNotDelivered(id: Long) {
+        val position = messages.indexOfFirst { it.uid == id }
+        messages.lastOrNull { it.uid == id }?.delivered = false
+        notifyItemChanged(position, 0)
+    }
+
+    fun setMessageAsSeen(id: Long) {
+        val position = messages.indexOfFirst { it.uid == id }
+        messages.lastOrNull { it.uid == id }?.seenThere = true
+        notifyItemChanged(position, 0)
+    }
+
     class DateDividerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val date: TextView = itemView.findViewById(R.id.tv_date)
     }
@@ -361,6 +424,7 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean = false) :
     class TextMessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val date: TextView = itemView.findViewById(R.id.tv_date)
         val text: TextView = itemView.findViewById(R.id.tv_text)
+        val state: ImageView = itemView.findViewById(R.id.state)
     }
 
     class ImageMessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -368,6 +432,7 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean = false) :
         val image: ImageView = itemView.findViewById(R.id.iv_image)
         val missingLabel: TextView = itemView.findViewById(R.id.tv_missing_file)
         val container: FrameLayout = itemView.findViewById(R.id.container)
+        val state: ImageView = itemView.findViewById(R.id.state)
     }
 
     class FileMessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -376,6 +441,7 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean = false) :
         val missingLabel: TextView = itemView.findViewById(R.id.tv_missing_file)
         val label: TextView = itemView.findViewById(R.id.tv_label_file)
         val container: FrameLayout = itemView.findViewById(R.id.container)
+        val state: ImageView = itemView.findViewById(R.id.state)
     }
 
     class AudioMessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -383,5 +449,6 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean = false) :
         val missingLabel: TextView = itemView.findViewById(R.id.tv_missing_file)
         val playerView: VoicePlayerView = itemView.findViewById(R.id.audioPlayerView)
         val container: FrameLayout = itemView.findViewById(R.id.container)
+        val state: ImageView = itemView.findViewById(R.id.state)
     }
 }

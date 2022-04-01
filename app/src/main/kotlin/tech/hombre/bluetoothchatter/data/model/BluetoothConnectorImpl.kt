@@ -41,7 +41,9 @@ class BluetoothConnectorImpl(private val context: Context) : BluetoothConnector 
                 setFileListener(fileListenerInner)
             }
 
-            proxy = if (tech.hombre.bluetoothchatter.BuildConfig.AUTORESPONDER) AutoresponderProxy(service) else EmptyProxy()
+            proxy = if (tech.hombre.bluetoothchatter.BuildConfig.AUTORESPONDER) AutoresponderProxy(
+                service
+            ) else EmptyProxy()
 
             bound = true
             isPreparing = false
@@ -392,4 +394,9 @@ class BluetoothConnectorImpl(private val context: Context) : BluetoothConnector 
     override fun isFeatureAvailable(feature: Contract.Feature) =
             service?.getCurrentContract()?.isFeatureAvailable(feature) ?: true
 
+    override fun setMessageAsSeen(id: Long) {
+        service?.getCurrentContract()?.createSeenMessage(id)?.let { message ->
+            service?.sendMessage(message)
+        }
+    }
 }

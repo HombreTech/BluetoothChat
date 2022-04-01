@@ -154,6 +154,9 @@ class ChatPresenter(
 
         override fun onMessageSent(message: ChatMessage) {
             view.showSentMessage(converter.transform(message))
+            launch(bgContext) {
+                messagesStorage.setMessageAsSeenHere(message.uid)
+            }
         }
 
         override fun onMessageSendingFailed() {
@@ -161,12 +164,15 @@ class ChatPresenter(
         }
 
         override fun onMessageDelivered(id: Long) {
+            view.onMessageDelivered(id)
         }
 
         override fun onMessageNotDelivered(id: Long) {
+            view.onMessageNotDelivered(id)
         }
 
         override fun onMessageSeen(id: Long) {
+            view.onMessageSeen(id)
         }
     }
 
@@ -301,9 +307,9 @@ class ChatPresenter(
     }
 
     private fun displayInfo(messages: List<ChatMessage>, partner: Conversation?) {
-
-        messages.forEach { it.seenHere = true }
-        view.showMessagesHistory(converter.transform(messages))
+        setMessagesAsSeen(messages)
+        //messages.forEach { it.seenHere = true }
+        view.showMessagesHistory(converter.transform(messages).apply { map { it.seenHere = true } })
         if (partner != null) {
             view.showPartnerName(partner.displayName, partner.deviceName)
         }
@@ -520,4 +526,33 @@ class ChatPresenter(
     }
 
     fun isPlayerPauseOnMinimize() = preferences.isPlayerPauseOnMinimizeEnabled()
+
+    private fun setMessagesAsSeen(messages: List<ChatMessage>) {
+        messages.filter { !it.seenHere }.forEach {
+            val uid = it.uid
+            launch(bgContext) {
+                delay(150)
+                messagesStorage.setMessageAsSeenHere(uid)
+                connectionModel.setMessageAsSeen(uid)
+            }
+        }
+    }
+
+    fun setMessageAsSeen(id: Long) {
+        launch(bgContext) {
+            messagesStorage.setMessageAsSeenHere(id)
+        }
+    }
+
+    fun setMessageAsDelivered(id: Long) {
+        launch(bgContext) {
+            messagesStorage.setMessageAsDelivered(id)
+        }
+    }
+
+    fun setMessageAsNotDelivered(id: Long) {
+        launch(bgContext) {
+            messagesStorage.setMessageAsDelivered(id)
+        }
+    }
 }

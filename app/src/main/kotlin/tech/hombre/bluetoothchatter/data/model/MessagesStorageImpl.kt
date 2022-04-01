@@ -57,7 +57,15 @@ class MessagesStorageImpl(db: ChatDatabase) : MessagesStorage {
         dao.setMessageAsDelivered(messageId)
     }
 
+    override suspend fun setMessageAsNotDelivered(messageId: Long) {
+        dao.setMessageAsNotDelivered(messageId)
+    }
+
     override suspend fun setMessageAsSeenThere(messageId: Long) {
         dao.setMessageAsSeenThere(messageId)
+    }
+
+    override suspend fun setMessageAsSeenHere(messageId: Long) {
+        dao.setMessageAsSeenHere(messageId)
     }
 }

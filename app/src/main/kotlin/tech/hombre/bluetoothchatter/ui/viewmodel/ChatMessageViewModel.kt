@@ -12,6 +12,9 @@ data class ChatMessageViewModel(
         val time: String,
         val text: String?,
         val own: Boolean,
+        var seenThere: Boolean,
+        var seenHere: Boolean,
+        var delivered: Boolean,
         val type: PayloadType?,
         val isImageAvailable: Boolean,
         @StringRes

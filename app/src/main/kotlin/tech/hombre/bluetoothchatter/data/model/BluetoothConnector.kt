@@ -35,4 +35,5 @@ interface BluetoothConnector {
     fun rejectConnection()
     fun sendDisconnectRequest()
     fun isFeatureAvailable(feature: Contract.Feature): Boolean
+    fun setMessageAsSeen(id: Long)
 }

@@ -14,5 +14,7 @@ interface MessagesStorage {
     suspend fun removeMessagesByAddress(address: String)
     suspend fun removeMessagesByAddressAndId(address: String, messagesId: List<Long>)
     suspend fun setMessageAsDelivered(messageId: Long)
+    suspend fun setMessageAsNotDelivered(messageId: Long)
     suspend fun setMessageAsSeenThere(messageId: Long)
+    suspend fun setMessageAsSeenHere(messageId: Long)
 }
