@@ -85,7 +85,7 @@ class SendFilePopup(context: Context) : PopupWindow() {
             if (container.isAttachedToWindow) {
                 val animator = ViewAnimationUtils.createCircularReveal(
                     container,
-                    container.width, 0, 0f, container.measuredWidth.toFloat()
+                    container.width, container.height, 0f, container.measuredWidth.toFloat()
                 )
                 container.visibility = View.VISIBLE
                 animator.duration = appearingAnimationDuration
@@ -98,7 +98,7 @@ class SendFilePopup(context: Context) : PopupWindow() {
 
         val animator = ViewAnimationUtils.createCircularReveal(
             container,
-            container.width, 0, container.measuredWidth.toFloat(), 0f
+            container.width, container.height, container.measuredWidth.toFloat(), 0f
         )
         container.visibility = View.VISIBLE
         animator.addListener(object : EmptyAnimatorListener() {
