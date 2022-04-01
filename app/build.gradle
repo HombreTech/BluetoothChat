@@ -17,6 +17,7 @@ android {
         compileSdkVersion 31
         versionCode VERSION_CODE
         versionName VERSION_NAME
+        archivesBaseName = "chatter-$versionName($versionCode)"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         kapt {
             arguments {
@@ -30,16 +31,13 @@ android {
     }
 
     signingConfigs {
-
         release {
-
-            if (project.hasProperty('bluetoothchat.properties') &&
-                    file(project.property('bluetoothchat.properties')).exists()) {
-
-                Properties properties = new Properties()
-                properties.load(
-                        new FileInputStream(file(project.property('bluetoothchat.properties'))))
-
+            def keystorePropertiesFile = rootProject.file('bluetoothchat.properties')
+            if (keystorePropertiesFile.exists()) {
+                def properties = new Properties()
+                keystorePropertiesFile.withReader('UTF-8') { reader ->
+                    properties.load(reader)
+                }
                 storeFile file(properties['keystore'])
                 storePassword properties['keystore.password']
                 keyAlias properties['keyAlias']
@@ -91,7 +89,7 @@ android {
     }
 
     packagingOptions {
-       exclude 'META-INF/atomicfu.kotlin_module'
+        exclude 'META-INF/atomicfu.kotlin_module'
     }
 }
 
