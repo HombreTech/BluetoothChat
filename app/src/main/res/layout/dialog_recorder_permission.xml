@@ -17,6 +17,5 @@
         android:layout_height="wrap_content"
         android:textSize="16sp"
         android:gravity="center"
-        android:textColor="#222222"
         android:text="@string/general__recorder_permission"/>
 </LinearLayout>

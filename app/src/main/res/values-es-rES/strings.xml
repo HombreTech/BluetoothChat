@@ -11,7 +11,8 @@
     <string name="general__no">No</string>
     <string name="general__service_lost">El servicio Bluetooth Chatter ha sido detenido, reinicia el servicio para poder usar la aplicación</string>
     <string name="general__disconnect">Desconectar</string>
-    <string name="general__storage_permission">Bluetooth Chatter te da la opción de compartir imágenes. Esta característica requiere permisos de <b>"Almacenamiento"</b> para funcionar correctamente</string>
+    <string name="general__storage_permission">Bluetooth Chatter te da la opción de compartir archivos. Esta característica requiere permisos de <b>\"Almacenamiento\"</b> para funcionar correctamente</string>
+    <string name="general__recorder_permission">Bluetooth Chatter le brinda la posibilidad de grabar mensajes de voz. Esta función requiere el permiso <b>\"Grabar Audio\"</b> para funcionar correctamente</string>
     <string name="general__no_browser">No se ha encontrado ningún navegador</string>
     <string name="general__time_format">dd/MM/yyyy</string>
     <string name="general__time_unknown">desconocido</string>
@@ -77,6 +78,8 @@
     <string name="chat__receiving_file">Recibiendo archivo</string>
     <string name="chat__partner_unable_to_receive_files">Tu contacto usa una versión antigua de Bluetooth Chatter, la cual no es capaz de recibir archivos.</string>
     <string name="chat__image_message">%s [Image]</string>
+    <string name="chat__image_file">%s [File]</string>
+    <string name="chat__image_audio">%s [Audio]</string>
     <string name="chat__presharing">No estás conectado a este dispositivo, por favor conéctate e intenta de nuevo.</string>
     <string name="chat__presharing_share">Compartir</string>
     <string name="chat__unable_to_pick_image">No se pudo elegir esta imagen, por favor, intenta de nuevo</string>
@@ -148,12 +151,17 @@
     <string name="settings__night_mode_system">System</string>
     <string name="settings__sound">Sonido</string>
     <string name="settings__classification">Mostrar sólo teléfonos o computadores</string>
-    <string name="images__image">Imágen</string>
+    <string name="settings__player">Reproductor de audio</string>
+    <string name="settings__pause_on_hide">Detener la reproducción al minimizar la aplicación</string>
+    <string name="images__image">Imagen</string>
     <string name="images__remove">Eliminar</string>
     <string name="images__removal_confirmation">¿Deseas eliminar esta imagen?</string>
     <string name="images__no_images">No has recibido imágenes aún</string>
     <string name="files__file">Archivos</string>
     <string name="files__open_chooser">Elija una aplicación para abrir con:</string>
+    <string name="files__voice">Mensaje de voz</string>
+    <string name="recorder__recording">Grabando mensaje…</string>
+    <string name="recorder__stop_recording">Toque para detener</string>
     <string name="about__about">Sobre el programa</string>
     <string name="about__description">Bluetooth Chatter es un proyecto \"de código abierto\".  Puede revisar el código fuente, presentar problema (issue) o copiar (fork) el repositorio en una página de GitHub</string>
     <string name="about__go_to_github">Ir a GitHub</string>

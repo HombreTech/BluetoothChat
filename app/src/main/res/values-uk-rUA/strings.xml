@@ -11,7 +11,8 @@
     <string name="general__no">Ні</string>
     <string name="general__service_lost">Bluetooth Chatter сервіс був зупинений, перезапустіть скрвіс для коректної роботи додатку</string>
     <string name="general__disconnect">Відключитись</string>
-    <string name="general__storage_permission">Bluetooth Chatter надає вам можливість ділитися зображеннями. Ця функція потребує дозволу <b>"ЗБЕРІГАННЯ"</b> для корректної роботи</string>
+    <string name="general__storage_permission">Bluetooth Chatter надає вам можливість ділитися файломі. Ця функція потребує дозволу <b>\"ЗБЕРІГАННЯ\"</b> для корректної роботи</string>
+    <string name="general__recorder_permission">Bluetooth Chatter надає вам можливість записувати голосові повідомлення. Для правильної роботи цієї функції потрібен дозвіл <b>\"ЗАПИСЬ АУДІО\"</b> для корректної роботи</string>
     <string name="general__no_browser">Не вдалося знайти додаток браузера</string>
     <string name="general__time_format">dd MMM, yyyy</string>
     <string name="general__time_unknown">невідомо</string>
@@ -83,6 +84,8 @@
     <string name="chat__receiving_file">Отримання файлу</string>
     <string name="chat__partner_unable_to_receive_files">Ваш партнер використовує стару версію Bluetooth Chatter, яка не може приймати файли.</string>
     <string name="chat__image_message">%s [Зображення]</string>
+    <string name="chat__image_file">%s [Файл]</string>
+    <string name="chat__image_audio">%s [Аудіо]</string>
     <string name="chat__presharing">Зараз ви не підєднані до даного пристрою, під\'єднайтесь і спробуйте ще раз.</string>
     <string name="chat__presharing_share">Відправити</string>
     <string name="chat__unable_to_pick_image">Не вдалося отримати це зображення, будь ласка, спробуйте ще раз</string>
@@ -154,12 +157,17 @@
     <string name="settings__night_mode_system">Системный</string>
     <string name="settings__sound">Звук</string>
     <string name="settings__classification">Показувати лиш телефони або комп\'ютери</string>
+    <string name="settings__player">Аудіоплеєр</string>
+    <string name="settings__pause_on_hide">Зупинити відтворення під час згортання програми</string>
     <string name="images__image">Зображення</string>
     <string name="images__remove">Видалити</string>
     <string name="images__removal_confirmation">Ви впевнені, що хочете видалити це зображення?</string>
     <string name="images__no_images">Ви ще не прийняли жодного зображення</string>
     <string name="files__file">Файл</string>
     <string name="files__open_chooser">Виберіть програму для відкриття:</string>
+    <string name="files__voice">Голосове повідомлення</string>
+    <string name="recorder__recording">Запис повідомлення…</string>
+    <string name="recorder__stop_recording">Торкніться, щоб зупинити</string>
     <string name="about__about">Про програму</string>
     <string name="about__description">Bluetooth Chatter це проект з відкритим кодом.  Ви можете переглянути вихідний код, відправити повідомлення про помилку, або форкнути репозиторій на GitHub</string>
     <string name="about__go_to_github">Перейти на GitHub</string>

@@ -18,8 +18,8 @@
     <string name="general__no">No</string>
     <string name="general__service_lost">Bluetooth Chatter service just has been stopped, restart the service to be able to use the app</string>
     <string name="general__disconnect">Disconnect</string>
-    <string name="general__storage_permission">Bluetooth Chatter provides you with an ability to share images. This feature requires <b>\"STORAGE\"</b> permission to work correctly</string>
-    <string name="general__recorder_permission">Bluetooth Chatter provides you with an ability to send voice messages. This feature requires <b>\"RECORD AUDIO\"</b> permission to work correctly</string>
+    <string name="general__storage_permission">Bluetooth Chatter provides you with an ability to share files. This feature requires <b>\"STORAGE\"</b> permission to work correctly</string>
+    <string name="general__recorder_permission">Bluetooth Chatter provides you with an ability to record voice messages. This feature requires <b>\"RECORD AUDIO\"</b> permission to work correctly</string>
     <string name="general__no_browser">Unable to find browser application</string>
 
     <string name="general__time_format">MMM dd, yyyy</string>
