@@ -86,7 +86,7 @@
     <string name="chat__presharing">Сейчас вы не подключены к этому устройству, соединитесь и попробуйте еще раз.</string>
     <string name="chat__presharing_share">Отправить</string>
     <string name="chat__unable_to_pick_image">Не удалось получить это изображение, пожалуйста, попробуйте снова</string>
-    <string name="chat__choose_image">Выберете изображение</string>
+    <string name="chat__choose_image">Выберите изображение</string>
     <string name="chat__date_format_day_of_year">dd MMMM</string>
     <string name="chat__date_format_time">HH:mm</string>
     <string name="chat__received_files">Принятые файлы</string>
@@ -141,7 +141,7 @@
     <string name="notification__me">Я</string>
     <string name="notification__reply">Ответить</string>
     <string name="notification__sent">Отправлено</string>
-    <string name="contact_chooser__title">Выберете Чат</string>
+    <string name="contact_chooser__title">Выберите Чат</string>
     <string name="contact_chooser__no_contacts">Ваш список контактов пуст</string>
     <string name="settings__title">Настройки</string>
     <string name="settings__notifications">Уведомления</string>
