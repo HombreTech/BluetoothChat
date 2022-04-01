@@ -7,6 +7,7 @@ import android.bluetooth.BluetoothSocket
 import android.graphics.BitmapFactory
 import androidx.core.app.NotificationCompat
 import androidx.core.app.Person
+import kotlinx.coroutines.*
 import tech.hombre.bluetoothchatter.R
 import tech.hombre.bluetoothchatter.data.entity.ChatMessage
 import tech.hombre.bluetoothchatter.data.entity.Conversation
@@ -22,22 +23,23 @@ import tech.hombre.bluetoothchatter.ui.view.NotificationView
 import tech.hombre.bluetoothchatter.ui.widget.ShortcutManager
 import tech.hombre.bluetoothchatter.utils.LimitedQueue
 import tech.hombre.bluetoothchatter.utils.Size
-import kotlinx.coroutines.*
 import java.io.File
 import java.io.IOException
 import java.util.*
 import kotlin.coroutines.CoroutineContext
 
-class ConnectionController(private val application: tech.hombre.bluetoothchatter.ChatApplication,
-                           private val subject: ConnectionSubject,
-                           private val view: NotificationView,
-                           private val conversationStorage: ConversationsStorage,
-                           private val messagesStorage: MessagesStorage,
-                           private val preferences: UserPreferences,
-                           private val profileManager: ProfileManager,
-                           private val shortcutManager: ShortcutManager,
-                           private val uiContext: CoroutineDispatcher = Dispatchers.Main,
-                           private val bgContext: CoroutineDispatcher = Dispatchers.IO) : CoroutineScope {
+class ConnectionController(
+    private val application: tech.hombre.bluetoothchatter.ChatApplication,
+    private val subject: ConnectionSubject,
+    private val view: NotificationView,
+    private val conversationStorage: ConversationsStorage,
+    private val messagesStorage: MessagesStorage,
+    private val preferences: UserPreferences,
+    private val profileManager: ProfileManager,
+    private val shortcutManager: ShortcutManager,
+    private val uiContext: CoroutineDispatcher = Dispatchers.Main,
+    private val bgContext: CoroutineDispatcher = Dispatchers.IO
+) : CoroutineScope {
 
     private val blAppName = application.getString(R.string.bl_app_name)
     private val blAppUUID = UUID.fromString(application.getString(R.string.bl_app_uuid))
@@ -48,6 +50,7 @@ class ConnectionController(private val application: tech.hombre.bluetoothchatter
 
     @Volatile
     private var connectionState: ConnectionState = ConnectionState.NOT_CONNECTED
+
     @Volatile
     private var connectionType: ConnectionType? = null
 
@@ -177,12 +180,19 @@ class ConnectionController(private val application: tech.hombre.bluetoothchatter
 
             override fun onConnectionPrepared(type: ConnectionType) {
 
-                onNewForegroundMessage?.invoke(application.getString(R.string.notification__connected_to, socket.remoteDevice.name
-                        ?: "?"))
+                onNewForegroundMessage?.invoke(
+                    application.getString(
+                        R.string.notification__connected_to, socket.remoteDevice.name
+                            ?: "?"
+                    )
+                )
                 connectionState = ConnectionState.PENDING
 
                 if (type == ConnectionType.OUTCOMING) {
-                    contract.createConnectMessage(profileManager.getUserName(), profileManager.getUserColor()).let { message ->
+                    contract.createConnectMessage(
+                        profileManager.getUserName(),
+                        profileManager.getUserColor()
+                    ).let { message ->
                         dataTransferThread?.write(message.getDecodedMessage())
                     }
                 }
@@ -210,8 +220,10 @@ class ConnectionController(private val application: tech.hombre.bluetoothchatter
                     val silently = application.currentChat != null && currentSocket != null &&
                             application.currentChat.equals(currentSocket?.remoteDevice?.address)
 
-                    view.showFileTransferNotification(it.displayName, it.deviceName,
-                            it.deviceAddress, file, 0, silently)
+                    view.showFileTransferNotification(
+                        it.displayName, it.deviceName,
+                        it.deviceAddress, file, 0, silently
+                    )
                 }
             }
 
@@ -235,11 +247,12 @@ class ConnectionController(private val application: tech.hombre.bluetoothchatter
 
                 currentSocket?.let { socket ->
 
-                    val message = ChatMessage(uid, socket.remoteDevice.address, Date(), true, "").apply {
-                        seenHere = true
-                        messageType = type
-                        filePath = path
-                    }
+                    val message =
+                        ChatMessage(uid, socket.remoteDevice.address, Date(), true, "").apply {
+                            seenHere = true
+                            messageType = type
+                            filePath = path
+                        }
 
                     launch(bgContext) {
 
@@ -248,7 +261,13 @@ class ConnectionController(private val application: tech.hombre.bluetoothchatter
                         message.fileExists = true
 
                         messagesStorage.insertMessage(message)
-                        shallowHistory.add(NotificationCompat.MessagingStyle.Message(getTextByType(message.messageType), message.date.time, me))
+                        shallowHistory.add(
+                            NotificationCompat.MessagingStyle.Message(
+                                getTextByType(
+                                    message.messageType
+                                ), message.date.time, me
+                            )
+                        )
 
                         launch(uiContext) {
 
@@ -257,7 +276,11 @@ class ConnectionController(private val application: tech.hombre.bluetoothchatter
 
                             view.dismissFileTransferNotification()
                             currentConversation?.let {
-                                shortcutManager.addConversationShortcut(message.deviceAddress, it.displayName, it.color)
+                                shortcutManager.addConversationShortcut(
+                                    message.deviceAddress,
+                                    it.displayName,
+                                    it.color
+                                )
                             }
                         }
                     }
@@ -283,8 +306,10 @@ class ConnectionController(private val application: tech.hombre.bluetoothchatter
                         val silently = application.currentChat != null && currentSocket != null &&
                                 application.currentChat.equals(currentSocket?.remoteDevice?.address)
 
-                        view.showFileTransferNotification(it.displayName, it.deviceName,
-                                it.deviceAddress, file, 0, silently)
+                        view.showFileTransferNotification(
+                            it.displayName, it.deviceName,
+                            it.deviceAddress, file, 0, silently
+                        )
                     }
                 }
             }
@@ -311,16 +336,31 @@ class ConnectionController(private val application: tech.hombre.bluetoothchatter
                         filePath = path
                     }
 
-                    val partner = Person.Builder().setName(currentConversation?.displayName
-                            ?: "?").build()
-                    shallowHistory.add(NotificationCompat.MessagingStyle.Message(getTextByType(message.messageType), message.date.time, partner))
-                    if (!subject.isAnybodyListeningForMessages() || application.currentChat == null || !application.currentChat.equals(address)) {
+                    val partner = Person.Builder().setName(
+                        currentConversation?.displayName
+                            ?: "?"
+                    ).build()
+                    shallowHistory.add(
+                        NotificationCompat.MessagingStyle.Message(
+                            getTextByType(
+                                message.messageType
+                            ), message.date.time, partner
+                        )
+                    )
+                    if (!subject.isAnybodyListeningForMessages() || application.currentChat == null || !application.currentChat.equals(
+                            address
+                        )
+                    ) {
                         //FIXME: Fixes not appearing notification
                         view.dismissMessageNotification()
-                        view.showNewMessageNotification(getTextByType(message.messageType), currentConversation?.displayName,
-                                device.name, address, shallowHistory, preferences.isSoundEnabled())
+                        view.showNewMessageNotification(
+                            getTextByType(message.messageType), currentConversation?.displayName,
+                            device.name, address, shallowHistory, preferences.isSoundEnabled()
+                        )
                     } else {
                         message.seenHere = true
+                        val seenReport = contract.createSeenMessage(uid)
+                        sendMessage(seenReport)
                     }
 
                     launch(bgContext) {
@@ -336,8 +376,16 @@ class ConnectionController(private val application: tech.hombre.bluetoothchatter
                             subject.handleMessageReceived(message)
 
                             view.dismissFileTransferNotification()
+
+                            val deliveryReport = contract.createSuccessfulDeliveryMessage(uid)
+                            sendMessage(deliveryReport)
+
                             currentConversation?.let {
-                                shortcutManager.addConversationShortcut(address, it.displayName, it.color)
+                                shortcutManager.addConversationShortcut(
+                                    address,
+                                    it.displayName,
+                                    it.color
+                                )
                             }
                         }
                     }
@@ -360,14 +408,23 @@ class ConnectionController(private val application: tech.hombre.bluetoothchatter
         }
 
         val eventsStrategy = TransferEventStrategy()
-        val filesDirectory = application.applicationContext.getExternalFilesDir(application.getString(R.string.app_name)) ?: application.filesDir
+        val filesDirectory =
+            application.applicationContext.getExternalFilesDir(application.getString(R.string.app_name))
+                ?: application.filesDir
 
         dataTransferThread =
-                object : DataTransferThread(socket, type, transferEventsListener, filesDirectory, fileEventsListener, eventsStrategy) {
-                    override fun shouldRun(): Boolean {
-                        return isConnectedOrPending()
-                    }
+            object : DataTransferThread(
+                socket,
+                type,
+                transferEventsListener,
+                filesDirectory,
+                fileEventsListener,
+                eventsStrategy
+            ) {
+                override fun shouldRun(): Boolean {
+                    return isConnectedOrPending()
                 }
+            }
         dataTransferThread?.prepare()
         dataTransferThread?.start()
 
@@ -395,7 +452,8 @@ class ConnectionController(private val application: tech.hombre.bluetoothchatter
 
         if (isConnectedOrPending()) {
 
-            val disconnect = message.type == Contract.MessageType.CONNECTION_REQUEST && !message.flag
+            val disconnect =
+                message.type == Contract.MessageType.CONNECTION_REQUEST && !message.flag
 
             dataTransferThread?.write(message.getDecodedMessage(), disconnect)
 
@@ -427,13 +485,19 @@ class ConnectionController(private val application: tech.hombre.bluetoothchatter
     }
 
     fun approveConnection() {
-        sendMessage(contract.createAcceptConnectionMessage(
-                profileManager.getUserName(), profileManager.getUserColor()))
+        sendMessage(
+            contract.createAcceptConnectionMessage(
+                profileManager.getUserName(), profileManager.getUserColor()
+            )
+        )
     }
 
     fun rejectConnection() {
-        sendMessage(contract.createRejectConnectionMessage(
-                profileManager.getUserName(), profileManager.getUserColor()))
+        sendMessage(
+            contract.createRejectConnectionMessage(
+                profileManager.getUserName(), profileManager.getUserColor()
+            )
+        )
     }
 
     fun getTransferringFile(): TransferringFile? {
@@ -449,7 +513,8 @@ class ConnectionController(private val application: tech.hombre.bluetoothchatter
 
         val device = socket.remoteDevice
         val message = Message(messageBody)
-        val sentMessage = ChatMessage(message.uid, socket.remoteDevice.address, Date(), true, message.body)
+        val sentMessage =
+            ChatMessage(message.uid, socket.remoteDevice.address, Date(), true, message.body)
 
         if (message.type == Contract.MessageType.MESSAGE) {
 
@@ -458,17 +523,32 @@ class ConnectionController(private val application: tech.hombre.bluetoothchatter
             launch(bgContext) {
 
                 messagesStorage.insertMessage(sentMessage)
-                shallowHistory.add(NotificationCompat.MessagingStyle.Message(sentMessage.text, sentMessage.date.time, me))
+                shallowHistory.add(
+                    NotificationCompat.MessagingStyle.Message(
+                        sentMessage.text,
+                        sentMessage.date.time,
+                        me
+                    )
+                )
 
-                if ((!subject.isAnybodyListeningForMessages() || application.currentChat == null || !application.currentChat.equals(device.address)) && justRepliedFromNotification) {
-                    view.showNewMessageNotification(message.body, currentConversation?.displayName,
-                            device.name, device.address, shallowHistory, preferences.isSoundEnabled())
+                if ((!subject.isAnybodyListeningForMessages() || application.currentChat == null || !application.currentChat.equals(
+                        device.address
+                    )) && justRepliedFromNotification
+                ) {
+                    view.showNewMessageNotification(
+                        message.body, currentConversation?.displayName,
+                        device.name, device.address, shallowHistory, preferences.isSoundEnabled()
+                    )
                     justRepliedFromNotification = false
                 }
 
                 launch(uiContext) { subject.handleMessageSent(sentMessage) }
                 currentConversation?.let {
-                    shortcutManager.addConversationShortcut(sentMessage.deviceAddress, it.displayName, it.color)
+                    shortcutManager.addConversationShortcut(
+                        sentMessage.deviceAddress,
+                        it.displayName,
+                        it.color
+                    )
                 }
             }
         }
@@ -486,6 +566,9 @@ class ConnectionController(private val application: tech.hombre.bluetoothchatter
 
             if (message.flag) {
                 subject.handleMessageDelivered(message.uid)
+                launch(bgContext) {
+                    messagesStorage.setMessageAsDelivered(message.uid)
+                }
             } else {
                 subject.handleMessageNotDelivered(message.uid)
             }
@@ -493,6 +576,9 @@ class ConnectionController(private val application: tech.hombre.bluetoothchatter
 
             if (message.flag) {
                 subject.handleMessageSeen(message.uid)
+                launch(bgContext) {
+                    messagesStorage.setMessageAsSeenThere(message.uid)
+                }
             }
         } else if (message.type == Contract.MessageType.CONNECTION_RESPONSE) {
 
@@ -527,18 +613,32 @@ class ConnectionController(private val application: tech.hombre.bluetoothchatter
         val receivedMessage = ChatMessage(uid, device.address, Date(), false, text)
 
         val partner = Person.Builder().setName(currentConversation?.displayName ?: "?").build()
-        shallowHistory.add(NotificationCompat.MessagingStyle.Message(
-                receivedMessage.text, receivedMessage.date.time, partner))
-        if (!subject.isAnybodyListeningForMessages() || application.currentChat == null || !application.currentChat.equals(device.address)) {
-            view.showNewMessageNotification(text, currentConversation?.displayName,
-                    device.name, device.address, shallowHistory, preferences.isSoundEnabled())
+        shallowHistory.add(
+            NotificationCompat.MessagingStyle.Message(
+                receivedMessage.text, receivedMessage.date.time, partner
+            )
+        )
+        if (!subject.isAnybodyListeningForMessages() || application.currentChat == null || !application.currentChat.equals(
+                device.address
+            )
+        ) {
+            view.showNewMessageNotification(
+                text, currentConversation?.displayName,
+                device.name, device.address, shallowHistory, preferences.isSoundEnabled()
+            )
         } else {
             receivedMessage.seenHere = true
+            val seenReport = contract.createSeenMessage(uid)
+            sendMessage(seenReport)
         }
 
         launch(bgContext) {
             messagesStorage.insertMessage(receivedMessage)
-            launch(uiContext) { subject.handleMessageReceived(receivedMessage) }
+            launch(uiContext) {
+                subject.handleMessageReceived(receivedMessage)
+                val deliveryReport = contract.createSuccessfulDeliveryMessage(uid)
+                sendMessage(deliveryReport)
+            }
             currentConversation?.let {
                 shortcutManager.addConversationShortcut(device.address, it.displayName, it.color)
             }
@@ -550,8 +650,10 @@ class ConnectionController(private val application: tech.hombre.bluetoothchatter
         val device: BluetoothDevice = socket.remoteDevice
 
         val parts = message.body.split(Contract.DIVIDER)
-        val conversation = Conversation(device.address, device.name
-                ?: "?", parts[0], parts[1].toInt())
+        val conversation = Conversation(
+            device.address, device.name
+                ?: "?", parts[0], parts[1].toInt()
+        )
 
         launch(bgContext) { conversationStorage.insertConversation(conversation) }
 
@@ -560,9 +662,15 @@ class ConnectionController(private val application: tech.hombre.bluetoothchatter
 
         subject.handleConnectedIn(conversation)
 
-        if (!application.isConversationsOpened && !(application.currentChat != null && application.currentChat.equals(device.address))) {
+        if (!application.isConversationsOpened && !(application.currentChat != null && application.currentChat.equals(
+                device.address
+            ))
+        ) {
             view.showConnectionRequestNotification(
-                    "${conversation.displayName} (${conversation.deviceName})", conversation.deviceAddress, preferences.isSoundEnabled())
+                "${conversation.displayName} (${conversation.deviceName})",
+                conversation.deviceAddress,
+                preferences.isSoundEnabled()
+            )
         }
     }
 
@@ -571,8 +679,10 @@ class ConnectionController(private val application: tech.hombre.bluetoothchatter
         val device: BluetoothDevice = socket.remoteDevice
 
         val parts = message.body.split(Contract.DIVIDER)
-        val conversation = Conversation(device.address, device.name
-                ?: "?", parts[0], parts[1].toInt())
+        val conversation = Conversation(
+            device.address, device.name
+                ?: "?", parts[0], parts[1].toInt()
+        )
 
         launch(bgContext) { conversationStorage.insertConversation(conversation) }
 
@@ -613,7 +723,7 @@ class ConnectionController(private val application: tech.hombre.bluetoothchatter
     }
 
     private fun getTextByType(messageType: PayloadType?): String {
-        return when(messageType) {
+        return when (messageType) {
             PayloadType.IMAGE ->
                 application.getString(R.string.chat__image_message, "\uD83D\uDDBC")
             PayloadType.FILE ->
@@ -633,7 +743,7 @@ class ConnectionController(private val application: tech.hombre.bluetoothchatter
         init {
             try {
                 serverSocket = BluetoothAdapter.getDefaultAdapter()
-                        ?.listenUsingRfcommWithServiceRecord(blAppName, blAppUUID)
+                    ?.listenUsingRfcommWithServiceRecord(blAppName, blAppUUID)
             } catch (e: IOException) {
                 e.printStackTrace()
             }

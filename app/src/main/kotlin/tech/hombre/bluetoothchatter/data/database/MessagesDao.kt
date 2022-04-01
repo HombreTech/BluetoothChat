@@ -47,6 +47,12 @@ interface MessagesDao {
     @Query("UPDATE message SET delivered = 1 WHERE uid = :messageId")
     fun setMessageAsDelivered(messageId: Long)
 
+    @Query("UPDATE message SET delivered = 0 WHERE uid = :messageId")
+    fun setMessageAsNotDelivered(messageId: Long)
+
     @Query("UPDATE message SET seenThere = 1 WHERE uid = :messageId")
     fun setMessageAsSeenThere(messageId: Long)
+
+    @Query("UPDATE message SET seenHere = 1 WHERE uid = :messageId")
+    fun setMessageAsSeenHere(messageId: Long)
 }

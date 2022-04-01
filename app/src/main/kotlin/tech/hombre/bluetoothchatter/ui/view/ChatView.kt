@@ -56,6 +56,10 @@ interface ChatView {
     fun showFileTransferCanceled()
     fun showFileTransferFailure()
 
+    fun onMessageDelivered(id: Long)
+    fun onMessageNotDelivered(id: Long)
+    fun onMessageSeen(id: Long)
+
     enum class FileTransferType {
         SENDING,
         RECEIVING

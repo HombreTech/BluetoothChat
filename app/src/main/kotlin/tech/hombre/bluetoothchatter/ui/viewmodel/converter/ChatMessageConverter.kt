@@ -13,9 +13,13 @@ import java.util.*
 
 class ChatMessageConverter(context: Context) {
 
-    private val dayOfYearFormat = SimpleDateFormat(context.getString(R.string.chat__date_format_day_of_year), Locale.getDefault())
+    private val dayOfYearFormat = SimpleDateFormat(
+        context.getString(R.string.chat__date_format_day_of_year),
+        Locale.getDefault()
+    )
     private val dayOfYearRawFormat = SimpleDateFormat("MMdd", Locale.getDefault())
-    private val timeFormat = SimpleDateFormat(context.getString(R.string.chat__date_format_time), Locale.getDefault())
+    private val timeFormat =
+        SimpleDateFormat(context.getString(R.string.chat__date_format_time), Locale.getDefault())
     private val displayMetrics = context.getDisplayMetrics()
 
     fun transform(message: ChatMessage): ChatMessageViewModel {
@@ -43,19 +47,22 @@ class ChatMessageConverter(context: Context) {
         }
 
         return ChatMessageViewModel(
-                message.uid,
-                dayOfYearFormat.format(message.date),
-                dayOfYearRawFormat.format(message.date).toLong(),
-                timeFormat.format(message.date),
-                message.text,
-                message.own,
-                message.messageType,
-                isImageAvailable,
-                problemString,
-                Size(width, height),
-                FileSize(fileSize),
-                message.filePath,
-                "file://${message.filePath}"
+            message.uid,
+            dayOfYearFormat.format(message.date),
+            dayOfYearRawFormat.format(message.date).toLong(),
+            timeFormat.format(message.date),
+            message.text,
+            message.own,
+            message.seenThere,
+            message.seenHere,
+            message.delivered,
+            message.messageType,
+            isImageAvailable,
+            problemString,
+            Size(width, height),
+            FileSize(fileSize),
+            message.filePath,
+            "file://${message.filePath}"
         )
     }
 

@@ -31,6 +31,8 @@ class Contract {
 
     fun createSuccessfulDeliveryMessage(id: Long) = Message(id, true, MessageType.DELIVERY)
 
+    fun createSeenMessage(id: Long) = Message(id, true, MessageType.SEEING)
+
     fun createFileStartMessage(file: File, type: PayloadType): Message {
         val uid = generateUniqueId()
         return Message(uid, "${file.name.replace(DIVIDER, "")}$DIVIDER${file.length()}$DIVIDER${type.value}", false, MessageType.FILE_START)
