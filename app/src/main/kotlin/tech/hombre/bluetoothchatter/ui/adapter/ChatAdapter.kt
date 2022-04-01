@@ -245,7 +245,7 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean = false) :
                 holder.text.setText(spannableMessage, TextView.BufferType.SPANNABLE)
                 holder.date.text = message.time
 
-                holder.text.setOnClickListener {
+                holder.itemView.setOnClickListener {
                     if (!isSelectableMode && !isAlwaysSelectable) {
                         return@setOnClickListener
                     } else {

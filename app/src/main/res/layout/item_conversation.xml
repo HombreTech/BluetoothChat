@@ -40,8 +40,8 @@
                 android:layout_marginEnd="4dp"
                 android:layout_weight="0"
                 android:contentDescription="@string/conversations__cd__connected_indicator"
-                android:tint="@color/colorAccent"
-                app:srcCompat="@drawable/ic_link_black_24dp" />
+                app:srcCompat="@drawable/ic_link_black_24dp"
+                app:tint="@color/colorAccent" />
 
             <TextView
                 android:id="@+id/tv_name"
