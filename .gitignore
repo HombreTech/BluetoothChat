@@ -12,3 +12,5 @@ captures/
 local.properties
 gradle.properties
 fabric.properties
+*.jks
+bluetoothchat.properties
