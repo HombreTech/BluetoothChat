@@ -36,6 +36,10 @@ class FilesAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 holder.itemView.setOnClickListener { clickListener?.invoke(null, file) }
                 holder.filename.text = file.filePath?.substringAfterLast("/")
             }
+            is AudioViewHolder -> {
+                holder.itemView.setOnClickListener { clickListener?.invoke(null, file) }
+                holder.filename.text = file.filePath?.substringAfterLast("/")
+            }
         }
 
     }
@@ -49,6 +53,7 @@ class FilesAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         return when (message.messageType) {
             1 -> VIEW_TYPE_IMAGE
             2 -> VIEW_TYPE_FILE
+            3 -> VIEW_TYPE_AUDIO
             else -> VIEW_TYPE_IMAGE
         }
     }
@@ -57,6 +62,7 @@ class FilesAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         val layoutId = when(viewType) {
             VIEW_TYPE_IMAGE -> R.layout.item_image_grid
             VIEW_TYPE_FILE-> R.layout.item_file_grid
+            VIEW_TYPE_AUDIO-> R.layout.item_audio_grid
             else -> 0
         }
         val view = LayoutInflater.from(parent.context)
@@ -64,6 +70,7 @@ class FilesAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         return when(viewType){
             VIEW_TYPE_IMAGE -> ImageViewHolder(view)
             VIEW_TYPE_FILE -> FileViewHolder(view)
+            VIEW_TYPE_AUDIO -> AudioViewHolder(view)
             else -> ImageViewHolder(view)
         }
     }
@@ -76,8 +83,13 @@ class FilesAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         val filename: TextView = itemView.findViewById(R.id.tv_filename)
     }
 
+    class AudioViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val filename: TextView = itemView.findViewById(R.id.tv_filename)
+    }
+
     companion object {
         private const val VIEW_TYPE_IMAGE = 1
         private const val VIEW_TYPE_FILE = 2
+        private const val VIEW_TYPE_AUDIO = 3
     }
 }

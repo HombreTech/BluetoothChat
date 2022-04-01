@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="@dimen/thumbnail_width"
     android:layout_height="@dimen/thumbnail_width"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="4dp">
 
@@ -14,7 +15,8 @@
         android:background="@color/background_file"
         android:padding="8dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_file" />
+        app:tint="@color/text_dark"
+        android:src="@drawable/ic_play_arrow_white_24dp" />
 
     <TextView
         android:id="@+id/tv_filename"
