@@ -10,7 +10,7 @@
 
     <TextView
         android:id="@+id/tv_text"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@drawable/inner_message"
         android:minWidth="128dp"
@@ -21,7 +21,6 @@
         android:textColor="@color/text_text_message"
         android:textIsSelectable="true"
         app:layout_constrainedWidth="true"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -39,7 +38,7 @@
         android:maxLines="1"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/tv_text"
         tools:text="14:42" />
 
     <ImageView

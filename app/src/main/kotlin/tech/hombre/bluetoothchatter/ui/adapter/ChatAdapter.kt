@@ -110,7 +110,8 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean = false) :
                         .error(R.color.background_image)
                         .placeholder(R.color.background_image)
                         .tag(picassoTag)
-                        .resize(size.width, size.height)
+                        .centerCrop()
+                        .fit()
                         .into(holder.image)
                 }
 
