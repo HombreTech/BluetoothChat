@@ -4,8 +4,6 @@ def final VERSION_NAME = '1.0.0'
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'com.google.gms.google-services'
-apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'androidx.navigation.safeargs.kotlin'
 
 android {
@@ -24,10 +22,6 @@ android {
                 arg('room.schemaLocation', "$projectDir/schemas".toString())
             }
         }
-    }
-
-    getSourceSets().each {
-        it.java.srcDirs += "src/$it.name/kotlin"
     }
 
     signingConfigs {
@@ -78,6 +72,30 @@ android {
         }
     }
 
+    flavorDimensions "store"
+
+    productFlavors {
+        google {
+            dimension "store"
+            versionNameSuffix "-google"
+        }
+        huawei {
+            dimension "store"
+            versionNameSuffix "-huawei"
+        }
+    }
+
+    getSourceSets().each {
+        it.java.srcDirs += "src/$it.name/kotlin"
+    }
+
+    sourceSets {
+        google.java.srcDirs += 'src/google/kotlin'
+        google.res.srcDirs += 'src/google/res'
+        huawei.java.srcDirs += 'src/huawei/kotlin'
+        huawei.res.srcDirs += 'src/huawei/res'
+    }
+
     buildFeatures {
         viewBinding true
         dataBinding true
@@ -93,6 +111,13 @@ android {
     }
 }
 
+if (getGradle().getStartParameter().getTaskNames().toString().toLowerCase().contains("google")) {
+    apply plugin: 'com.google.gms.google-services'
+    apply plugin: 'com.google.firebase.crashlytics'
+} else {
+    apply plugin: 'com.huawei.agconnect'
+}
+
 dependencies {
 
     def final ROOM_VERSION = '2.4.2'
@@ -103,7 +128,7 @@ dependencies {
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation platform('com.google.firebase:firebase-bom:29.2.0')
+    googleImplementation platform('com.google.firebase:firebase-bom:29.2.0')
 
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
@@ -129,8 +154,11 @@ dependencies {
     implementation "io.insert-koin:koin-core:$KOIN_VERSION"
     implementation "io.insert-koin:koin-android:$KOIN_VERSION"
 
-    implementation 'com.google.firebase:firebase-crashlytics-ktx'
-    implementation 'com.google.firebase:firebase-analytics-ktx'
+    googleImplementation 'com.google.firebase:firebase-crashlytics-ktx'
+    googleImplementation 'com.google.firebase:firebase-analytics-ktx'
+
+    huaweiImplementation 'com.huawei.agconnect:agconnect-core:1.3.1.300'
+    huaweiImplementation 'com.huawei.hms:hianalytics:5.0.0.301'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$KOTLIN_VERSION"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$COROUTINES_VERSION"

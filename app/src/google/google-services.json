@@ -7,35 +7,6 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:383393054416:android:763dc846a754f8fe0c28d5",
-        "android_client_info": {
-          "package_name": "tech.hombre.bluetoothchatter"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "383393054416-pi3m6vl3tovleac0k32qcbuq8jbvrttm.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyB3jNE_3X1zJMYa3nAEV4WcRBX96RcCeMg"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "383393054416-pi3m6vl3tovleac0k32qcbuq8jbvrttm.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:383393054416:android:1b8bfe1ac9440c840c28d5",
         "android_client_info": {
           "package_name": "tech.hombre.bluetoothchatter.dev"

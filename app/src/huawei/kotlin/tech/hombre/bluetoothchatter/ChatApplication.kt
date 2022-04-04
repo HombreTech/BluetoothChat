@@ -1,0 +1,118 @@
+package tech.hombre.bluetoothchatter
+
+import android.app.Application
+import android.content.res.Configuration
+import android.os.StrictMode
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.app.AppCompatDelegate.NightMode
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.ProcessLifecycleOwner
+import com.huawei.hianalytics.hms.HiAnalyticsTools
+import com.huawei.hms.analytics.HiAnalytics
+import org.koin.android.ext.android.getKoin
+import org.koin.android.ext.android.inject
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
+import org.koin.core.qualifier.named
+import org.koin.core.scope.Scope
+import tech.hombre.bluetoothchatter.data.model.BluetoothConnector
+import tech.hombre.bluetoothchatter.data.model.ProfileManager
+import tech.hombre.bluetoothchatter.data.model.UserPreferences
+import tech.hombre.bluetoothchatter.di.*
+import tech.hombre.bluetoothchatter.ui.util.ThemeHolder
+import com.huawei.hms.analytics.HiAnalyticsInstance
+
+
+
+
+class ChatApplication : Application(), LifecycleObserver, ThemeHolder {
+
+    var isConversationsOpened = false
+    var currentChat: String? = null
+
+    @NightMode
+    private var nightMode: Int = AppCompatDelegate.MODE_NIGHT_NO
+
+    private val connector: BluetoothConnector by inject()
+    private val profileManager: ProfileManager by inject()
+    private val preferences: UserPreferences by inject()
+
+    private lateinit var localeSession: Scope
+
+    override fun onCreate() {
+        super.onCreate()
+
+        if (!BuildConfig.DEBUG) {
+            HiAnalyticsTools.enableLog()
+            val instance: HiAnalyticsInstance = HiAnalytics.getInstance(this)
+        }
+
+        startKoin {
+            androidContext(this@ChatApplication)
+            modules(
+                listOf(
+                    applicationModule,
+                    bluetoothConnectionModule,
+                    databaseModule,
+                    localStorageModule,
+                    recorderModule,
+                    viewModule,
+                )
+            )
+        }
+
+        localeSession = getKoin().createScope(localeScope, named(localeScope))
+
+        nightMode = preferences.getNightMode()
+
+        ProcessLifecycleOwner.get().lifecycle.addObserver(this)
+
+        ProcessLifecycleOwner.get().lifecycle.addObserver(lifecycleEventObserver)
+
+        if (BuildConfig.DEBUG) {
+
+            StrictMode.setThreadPolicy(
+                StrictMode.ThreadPolicy.Builder()
+                    .detectAll()
+                    .penaltyLog()
+                    .build()
+            )
+            StrictMode.setVmPolicy(
+                StrictMode.VmPolicy.Builder()
+                    .detectAll()
+                    .penaltyLog()
+                    .build()
+            )
+        }
+
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        localeSession.close()
+        localeSession = getKoin().createScope(localeScope, named(localeScope))
+    }
+
+
+    private val lifecycleEventObserver = LifecycleEventObserver { _, event ->
+        when (event) {
+            Lifecycle.Event.ON_START -> {
+                if (profileManager.getUserName().isNotEmpty()) {
+                    connector.prepare()
+                }
+            }
+            Lifecycle.Event.ON_STOP -> {
+                connector.release()
+            }
+            else -> {}
+        }
+    }
+
+    override fun setNightMode(@NightMode nightMode: Int) {
+        this.nightMode = nightMode
+    }
+
+    override fun getNightMode() = nightMode
+}
