@@ -186,4 +186,5 @@
     <string name="conversations__cd__partners_avatar">Avatar de contacto</string>
     <string name="conversations__cd__connected_indicator">Indicador conectado</string>
     <string name="conversations__cd__users_avatar">Avatar de usuario</string>
+    <string name="scan__permission_bluetooth_connect">Esta aplicación requiere permiso \"BLUETOOTH\" para funcionar con BLUETOOTH</string>
 </resources>

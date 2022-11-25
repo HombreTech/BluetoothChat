@@ -11,6 +11,7 @@ interface BluetoothConnector {
 
     fun prepare()
     fun release()
+    fun restartIfNeeded()
     fun stop()
     fun disconnect()
     fun addOnConnectListener(listener: OnConnectionListener)

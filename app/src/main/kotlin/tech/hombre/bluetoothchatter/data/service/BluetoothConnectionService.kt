@@ -111,18 +111,27 @@ class BluetoothConnectionService : Service(), ConnectionSubject {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 
         if (intent?.action == ACTION_STOP) {
-
-            isRunning = false
-            controller.stop()
-            connectionListener?.onConnectionDestroyed()
-
-            stopSelf()
+            stopService()
             return START_NOT_STICKY
         }
 
-        controller.prepareForAccept()
         showNotification(getString(R.string.notification__ready_to_connect))
-        return Service.START_STICKY
+
+        try {
+            controller.prepareForAccept()
+        } catch (e: SecurityException) {
+            stopService()
+            return START_NOT_STICKY
+        }
+        return START_STICKY
+    }
+
+    private fun stopService() {
+        isRunning = false
+        controller.stop()
+        connectionListener?.onConnectionDestroyed()
+
+        stopSelf()
     }
 
     private fun showNotification(message: String) {
