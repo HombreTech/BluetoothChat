@@ -183,4 +183,5 @@
     <string name="conversations__cd__partners_avatar">好友的头像</string>
     <string name="conversations__cd__connected_indicator">连接指示</string>
     <string name="conversations__cd__users_avatar">用户头像</string>
+    <string name="scan__permission_bluetooth_connect">此应用程序需要“BLUETOOTH”许可才能使用 BLUETOOTH</string>
 </resources>

@@ -40,7 +40,11 @@ class NotificationViewImpl(private val context: Context) : NotificationView {
         val stopIntent = Intent(context, BluetoothConnectionService::class.java).apply {
             action = BluetoothConnectionService.ACTION_STOP
         }
-        val stopPendingIntent = PendingIntent.getService(context, generateCode(), stopIntent, 0)
+        val stopPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PendingIntent.getService(context, generateCode(), stopIntent, PendingIntent.FLAG_IMMUTABLE)
+        } else {
+            PendingIntent.getService(context, generateCode(), stopIntent, 0)
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(

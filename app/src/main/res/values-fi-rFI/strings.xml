@@ -186,4 +186,5 @@
     <string name="conversations__cd__partners_avatar">Partner\'s avatar</string>
     <string name="conversations__cd__connected_indicator">Connected indicator</string>
     <string name="conversations__cd__users_avatar">User\'s avatar</string>
+    <string name="scan__permission_bluetooth_connect">Tämä sovellus vaatii \"BLUETOOTH\"-luvan toimiakseen BLUETOOTHin kanssa</string>
 </resources>

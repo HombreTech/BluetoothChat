@@ -259,6 +259,12 @@ class BluetoothConnectorImpl(private val context: Context) : BluetoothConnector 
         }
     }
 
+    override fun restartIfNeeded() {
+        if (BluetoothConnectionService.isRunning) return
+        release()
+        prepare()
+    }
+
     override fun prepare() {
 
         if (isPreparing) return
@@ -277,6 +283,7 @@ class BluetoothConnectorImpl(private val context: Context) : BluetoothConnector 
             context.unbindService(connection)
         }
 
+        isPreparing = false
         bound = false
         service = null
         proxy = null
