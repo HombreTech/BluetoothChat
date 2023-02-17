@@ -1,6 +1,10 @@
 package tech.hombre.bluetoothchatter.ui.view
 
-import android.app.*
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.app.TaskStackBuilder
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -16,7 +20,7 @@ import tech.hombre.bluetoothchatter.data.service.message.TransferringFile
 import tech.hombre.bluetoothchatter.ui.activity.MainActivity
 import tech.hombre.bluetoothchatter.utils.getNotificationManager
 import tech.hombre.bluetoothchatter.utils.toReadableFileSize
-import java.util.*
+import java.util.Random
 
 class NotificationViewImpl(private val context: Context) : NotificationView {
 
@@ -31,20 +35,20 @@ class NotificationViewImpl(private val context: Context) : NotificationView {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
 
-        val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         } else {
-            PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-        }
+            PendingIntent.FLAG_UPDATE_CURRENT
+        })
 
         val stopIntent = Intent(context, BluetoothConnectionService::class.java).apply {
             action = BluetoothConnectionService.ACTION_STOP
         }
-        val stopPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            PendingIntent.getService(context, generateCode(), stopIntent, PendingIntent.FLAG_IMMUTABLE)
+        val stopPendingIntent = PendingIntent.getService(context, generateCode(), stopIntent, if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PendingIntent.FLAG_IMMUTABLE
         } else {
-            PendingIntent.getService(context, generateCode(), stopIntent, 0)
-        }
+            0
+        })
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
@@ -95,7 +99,14 @@ class NotificationViewImpl(private val context: Context) : NotificationView {
         }
 
         val pendingIntent =
-            stackBuilder.getPendingIntent(generateCode(), PendingIntent.FLAG_UPDATE_CURRENT)
+            stackBuilder.getPendingIntent(
+                generateCode(),
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+                } else {
+                    PendingIntent.FLAG_UPDATE_CURRENT
+                }
+            )
 
         val name = when {
             deviceName == null -> "?"
@@ -184,14 +195,22 @@ class NotificationViewImpl(private val context: Context) : NotificationView {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
         val pendingIntent =
-            PendingIntent.getActivity(context, generateCode(), notificationIntent, 0)
+            PendingIntent.getActivity(context, generateCode(), notificationIntent, if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                PendingIntent.FLAG_IMMUTABLE
+            } else {
+                0
+            })
 
         val approveIntent = Intent(NotificationView.ACTION_CONNECTION).apply {
             putExtra(NotificationView.EXTRA_APPROVED, true)
             putExtra(NotificationView.EXTRA_ADDRESS, address)
         }
         val approvePendingIntent =
-            PendingIntent.getBroadcast(context, generateCode(), approveIntent, 0)
+            PendingIntent.getBroadcast(context, generateCode(), approveIntent, if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                PendingIntent.FLAG_IMMUTABLE
+            } else {
+                0
+            })
         val approveAction = NotificationCompat.Action(
             R.drawable.ic_start_chat,
             context.getString(R.string.general__start_chat),
@@ -202,7 +221,11 @@ class NotificationViewImpl(private val context: Context) : NotificationView {
             putExtra(NotificationView.EXTRA_APPROVED, false)
         }
         val rejectPendingIntent =
-            PendingIntent.getBroadcast(context, generateCode(), rejectIntent, 0)
+            PendingIntent.getBroadcast(context, generateCode(), rejectIntent, if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                PendingIntent.FLAG_IMMUTABLE
+            } else {
+                0
+            })
         val rejectAction = NotificationCompat.Action(
             R.drawable.ic_cancel,
             context.getString(R.string.chat__disconnect),
@@ -284,7 +307,11 @@ class NotificationViewImpl(private val context: Context) : NotificationView {
         }
 
         val pendingIntent =
-            stackBuilder.getPendingIntent(generateCode(), PendingIntent.FLAG_UPDATE_CURRENT)
+            stackBuilder.getPendingIntent(generateCode(), if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            } else {
+                PendingIntent.FLAG_UPDATE_CURRENT
+            })
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
