@@ -59,7 +59,7 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean = false) :
         when (holder) {
             is ImageMessageViewHolder -> {
 
-                holder.container.setViewBackgroundWithoutResettingPadding(
+                holder.messageView.setViewBackgroundWithoutResettingPadding(
                     getBackground(
                         message.own,
                         position
@@ -80,7 +80,7 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean = false) :
                     ViewCompat.setTransitionName(holder.image, message.uid.toString())
 
                     val size = message.imageSize
-                    holder.image.layoutParams = FrameLayout.LayoutParams(size.width, size.height)
+                    //holder.image.layoutParams = FrameLayout.LayoutParams(size.width, size.height)
                     holder.itemView.setOnClickListener {
                         if (!isSelectableMode && !isAlwaysSelectable) {
                             return@setOnClickListener
@@ -110,8 +110,6 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean = false) :
                         .error(R.color.background_image)
                         .placeholder(R.color.background_image)
                         .tag(picassoTag)
-                        .centerCrop()
-                        .fit()
                         .into(holder.image)
                 }
 
@@ -433,6 +431,7 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean = false) :
         val image: ImageView = itemView.findViewById(R.id.iv_image)
         val missingLabel: TextView = itemView.findViewById(R.id.tv_missing_file)
         val container: FrameLayout = itemView.findViewById(R.id.container)
+        val messageView: View = itemView.findViewById(R.id.messageView)
         val state: ImageView = itemView.findViewById(R.id.state)
     }
 
@@ -442,6 +441,7 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean = false) :
         val missingLabel: TextView = itemView.findViewById(R.id.tv_missing_file)
         val label: TextView = itemView.findViewById(R.id.tv_label_file)
         val container: FrameLayout = itemView.findViewById(R.id.container)
+        val messageView: View = itemView.findViewById(R.id.messageView)
         val state: ImageView = itemView.findViewById(R.id.state)
     }
 
@@ -450,6 +450,7 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean = false) :
         val missingLabel: TextView = itemView.findViewById(R.id.tv_missing_file)
         val playerView: VoicePlayerView = itemView.findViewById(R.id.audioPlayerView)
         val container: FrameLayout = itemView.findViewById(R.id.container)
+        val messageView: View = itemView.findViewById(R.id.messageView)
         val state: ImageView = itemView.findViewById(R.id.state)
     }
 }
