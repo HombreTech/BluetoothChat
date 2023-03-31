@@ -19,6 +19,9 @@ class MessagesStorageImpl(db: ChatDatabase) : MessagesStorage {
             if (it.filePath != null) {
                 it.fileExists = File(it.filePath).exists()
             }
+            if (it.replyMessageUid != null) {
+                it.replyMessage = dao.getMessageByDevice(address, it.replyMessageUid!!)
+            }
         }
         return messages
     }

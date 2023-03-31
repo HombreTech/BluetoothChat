@@ -11,8 +11,11 @@ import tech.hombre.bluetoothchatter.data.entity.MessageFile
 @Dao
 interface MessagesDao {
 
-    @Query("SELECT * FROM message WHERE deviceAddress = :address ORDER BY date DESC")
+    @Query("SELECT * FROM message WHERE deviceAddress = :address ORDER BY date DESC ")
     fun getMessagesByDevice(address: String): List<ChatMessage>
+
+    @Query("SELECT * FROM message WHERE deviceAddress = :address AND uid = :replyMessageUid ORDER BY date DESC ")
+    fun getMessageByDevice(address: String, replyMessageUid: Long): ChatMessage
 
     @Query("SELECT uid, filePath, own, messageType FROM message WHERE deviceAddress = :address AND (messageType = 1 OR messageType = 2 OR messageType = 3) AND own = 0 AND filePath IS NOT NULL ORDER BY date DESC")
     fun getFileMessagesByDevice(address: String): List<MessageFile>

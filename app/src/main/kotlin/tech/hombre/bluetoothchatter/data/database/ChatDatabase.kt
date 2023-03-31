@@ -6,7 +6,7 @@ import androidx.room.TypeConverters
 import tech.hombre.bluetoothchatter.data.entity.ChatMessage
 import tech.hombre.bluetoothchatter.data.entity.Conversation
 
-@Database(entities = [(ChatMessage::class), (Conversation::class)], version = 3)
+@Database(entities = [(ChatMessage::class), (Conversation::class)], version = 4)
 @TypeConverters(Converter::class)
 abstract class ChatDatabase: RoomDatabase() {
     abstract fun conversationsDao(): ConversationsDao

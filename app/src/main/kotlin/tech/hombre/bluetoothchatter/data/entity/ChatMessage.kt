@@ -13,7 +13,8 @@ data class ChatMessage(
         var deviceAddress: String,
         var date: Date,
         var own: Boolean,
-        var text: String
+        var text: String,
+        var replyMessageUid: Long? = null
 ) {
 
     var seenHere: Boolean = false
@@ -27,4 +28,7 @@ data class ChatMessage(
 
     @Ignore
     var fileExists: Boolean = false
+
+    @Ignore
+    var replyMessage: ChatMessage? = null
 }
