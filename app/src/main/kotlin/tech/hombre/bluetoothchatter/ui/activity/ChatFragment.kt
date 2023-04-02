@@ -22,10 +22,12 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.view.doOnPreDraw
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
@@ -33,6 +35,7 @@ import com.squareup.picasso.Target
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.bind
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 import pl.aprilapps.easyphotopicker.DefaultCallback
@@ -40,6 +43,7 @@ import pl.aprilapps.easyphotopicker.EasyImage
 import pl.aprilapps.easyphotopicker.MediaFile
 import pl.aprilapps.easyphotopicker.MediaSource
 import tech.hombre.bluetoothchatter.R
+import tech.hombre.bluetoothchatter.data.entity.ChatMessage
 import tech.hombre.bluetoothchatter.data.service.message.PayloadType
 import tech.hombre.bluetoothchatter.databinding.FragmentChatBinding
 import tech.hombre.bluetoothchatter.databinding.MenuItemChatSelectionBinding
@@ -53,7 +57,9 @@ import tech.hombre.bluetoothchatter.ui.view.ChatView
 import tech.hombre.bluetoothchatter.ui.view.NotificationView
 import tech.hombre.bluetoothchatter.ui.viewmodel.ChatMessageViewModel
 import tech.hombre.bluetoothchatter.ui.widget.ActionView
+import tech.hombre.bluetoothchatter.ui.widget.MessageSwipeController
 import tech.hombre.bluetoothchatter.ui.widget.SendFilePopup
+import tech.hombre.bluetoothchatter.ui.widget.SwipeControllerInterface
 import tech.hombre.bluetoothchatter.utils.getNotificationManager
 import tech.hombre.bluetoothchatter.utils.navigateWithResult
 import tech.hombre.bluetoothchatter.utils.onEnd
@@ -95,6 +101,46 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat), 
             .allowMultiple(false)
             .build()
     }
+
+    private val messageSwipeController by lazy {
+        MessageSwipeController(requireContext(), object : SwipeControllerInterface {
+            override fun onReplyMessage(position: Int) {
+                viewLifecycleOwner.lifecycleScope.launch {
+                    delay(250)
+                    try {
+                        val message = chatAdapter.messages[position]
+                        onMessageReply(message)
+                    } catch (ex: Exception) {
+                        ex.printStackTrace()
+                    }
+                }
+            }
+        })
+    }
+
+    private fun onMessageReply(message: ChatMessageViewModel) {
+        binding.apply {
+            presenter.setReplyMessage(message.uid)
+            val text = when (message.type) {
+                PayloadType.FILE -> {
+                    getString(R.string.chat__image_file, "\uD83D\uDCCE")
+                }
+                PayloadType.AUDIO -> {
+                    getString(R.string.chat__image_audio, "\uD83C\uDFA7")
+                }
+                PayloadType.IMAGE -> {
+                    getString(R.string.chat__image_message, "\uD83D\uDDBC")
+                }
+                else -> {
+                    message.text
+                }
+            }
+            replyNickname.text = args.nickname
+            replyMessage.text = text
+            replyLayout.isVisible = true
+        }
+    }
+
 
     private var disconnectedDialog: AlertDialog? = null
     private var lostConnectionDialog: AlertDialog? = null
@@ -172,6 +218,15 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat), 
             presenter.cancelPresharing()
         }
 
+        binding.closeReply.setOnClickListener {
+            presenter.cancelReply()
+            binding.replyLayout.isVisible = false
+        }
+
+        binding.replyLayout.setOnClickListener {
+            scrollToMessage(presenter.getReplyMessage())
+        }
+
         binding.gdbGoDown.setOnClickListener {
             chatLayoutManager.scrollToPosition(0)
             scrollBehavior.hideChild()
@@ -192,7 +247,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat), 
             }, 100)
         }
 
-        chatAdapter = ChatAdapter().apply {
+        chatAdapter = ChatAdapter(args.nickname).apply {
             imageClickListener = { view, message ->
                 if (message.type == PayloadType.IMAGE) {
                     val extras = FragmentNavigatorExtras(
@@ -235,6 +290,10 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat), 
                 }
                 item.isVisible = isSelectionMode
             }
+
+            replyClickListener = { uid ->
+                scrollToMessage(uid)
+            }
         }
 
         binding.rvChat.apply {
@@ -261,6 +320,9 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat), 
                     }
                 }
             })
+
+            val itemTouchHelper = ItemTouchHelper(messageSwipeController)
+            itemTouchHelper.attachToRecyclerView(this)
         }
 
         presenter.onViewCreated(requireContext())
@@ -336,6 +398,9 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat), 
         ).show()
 
     override fun afterMessageSent() {
+        presenter.cancelReply()
+        binding.replyLayout.isVisible = false
+        binding.replyMessage.text = ""
         binding.etMessage.text = null
     }
 
@@ -392,7 +457,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat), 
     }
 
     override fun updateHistoryRemoved(messagesRemoved: List<Long>) {
-        chatAdapter.messages.removeAll { it.uid in messagesRemoved}
+        chatAdapter.messages.removeAll { it.uid in messagesRemoved }
         chatAdapter.notifyDataSetChanged()
     }
 
@@ -648,6 +713,24 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat), 
             .setMessage(R.string.chat__partner_unable_to_receive_files)
             .setPositiveButton(R.string.general__ok, null)
             .show()
+    }
+
+    override fun showReceiverUnableToReplyMessage() = doIfStarted {
+        AlertDialog.Builder(requireActivity())
+            .setMessage(R.string.chat__partner_unable_to_reply_to_message)
+            .setPositiveButton(R.string.general__ok, null)
+            .setOnDismissListener {
+                binding.replyLayout.isVisible = false
+                binding.replyMessage.text = ""
+            }
+            .show()
+    }
+
+    override fun scrollToMessage(uid: Long) {
+        val position = chatAdapter.getMessagePositionById(uid)
+        if (position != -1) {
+            binding.rvChat.smoothScrollToPosition(position)
+        }
     }
 
     override fun onMessageDelivered(id: Long) {

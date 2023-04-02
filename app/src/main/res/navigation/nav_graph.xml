@@ -10,6 +10,9 @@
         android:label="ChatFragment"
         tools:layout="@layout/fragment_chat">
         <argument
+            android:name="nickname"
+            app:argType="string"/>
+        <argument
             android:name="address"
             app:argType="string"
             app:nullable="true" />
@@ -31,7 +34,7 @@
             app:destination="@id/receivedFilesFragment" />
         <deepLink
             android:id="@+id/deepLink2"
-            app:uri="bluetoothchatter://conversations/{address}" />
+            app:uri="bluetoothchatter://conversations/{address}/{nickname}" />
         <action
             android:id="@+id/action_chatFragment_to_scanFragment"
             app:destination="@id/scanFragment" />

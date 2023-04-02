@@ -23,8 +23,8 @@ interface BluetoothConnector {
     fun removeOnMessageListener(listener: OnMessageListener)
     fun removeOnFileListener(listener: OnFileListener)
     fun connect(device: BluetoothDevice)
-    fun sendMessage(messageText: String)
-    fun sendFile(file: File, type: PayloadType)
+    fun sendMessage(messageText: String, replyMessageUid: Long?)
+    fun sendFile(file: File, type: PayloadType, replyMessageUid: Long?)
     fun cancelFileTransfer()
     fun isConnected(): Boolean
     fun isConnectedOrPending(): Boolean

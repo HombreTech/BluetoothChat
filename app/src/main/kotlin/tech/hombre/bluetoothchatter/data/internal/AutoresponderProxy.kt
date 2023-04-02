@@ -80,14 +80,14 @@ class AutoresponderProxy(private val service: BluetoothConnectionService?) : Com
 
                 when {
                     message.text == COMMAND_SEND_TEXT -> {
-                        val chatMessage = contract.createChatMessage(RESPONSE_RECEIVED)
+                        val chatMessage = contract.createChatMessage(RESPONSE_RECEIVED, null)
                         it.sendMessage(chatMessage)
                     }
                     message.text == COMMAND_SEND_FILE -> {
-                        it.sendFile(file, PayloadType.IMAGE)
+                        it.sendFile(file, PayloadType.IMAGE, null)
                     }
                     message.text == COMMAND_SEND_FILE_AND_CANCEL -> {
-                        it.sendFile(file, PayloadType.IMAGE)
+                        it.sendFile(file, PayloadType.IMAGE, null)
                         runWithDelay(2000) {
                             it.cancelFileTransfer()
                         }

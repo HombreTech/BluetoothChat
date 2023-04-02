@@ -5,6 +5,7 @@ import tech.hombre.bluetoothchatter.data.entity.MessageFile
 
 interface MessagesStorage {
     suspend fun getMessagesByDevice(address: String): List<ChatMessage>
+    suspend fun getMessageByDevice(address: String, uid: Long): ChatMessage
     suspend fun getFileMessageById(uid: Long): MessageFile?
     suspend fun getFileMessagesByDevice(address: String): List<MessageFile>
     suspend fun insertMessage(message: ChatMessage)

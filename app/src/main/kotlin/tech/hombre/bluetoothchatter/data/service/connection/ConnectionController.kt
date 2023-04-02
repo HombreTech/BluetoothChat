@@ -240,7 +240,7 @@ class ConnectionController(
                 }
             }
 
-            override fun onFileSendingFinished(uid: Long, path: String, type: PayloadType) {
+            override fun onFileSendingFinished(uid: Long, replyMessageUid: Long?, path: String, type: PayloadType) {
 
                 contract.createFileEndMessage().let { message ->
                     dataTransferThread?.write(message.getDecodedMessage())
@@ -249,7 +249,7 @@ class ConnectionController(
                 currentSocket?.let { socket ->
 
                     val message =
-                        ChatMessage(uid, socket.remoteDevice.address, Date(), true, "").apply {
+                        ChatMessage(uid, socket.remoteDevice.address, Date(), true, "", replyMessageUid).apply {
                             seenHere = true
                             messageType = type
                             filePath = path
@@ -292,7 +292,7 @@ class ConnectionController(
             override fun onFileReceivingStarted(file: TransferringFile, type: PayloadType) {
 
                 launch {
-
+println("onFileReceivingStarted $type")
                     subject.handleFileReceivingStarted(file.size, type)
 
                     currentConversation?.let {
@@ -320,12 +320,12 @@ class ConnectionController(
                 }
             }
 
-            override fun onFileReceivingFinished(uid: Long, path: String, type: PayloadType) {
+            override fun onFileReceivingFinished(uid: Long, replyMessageUid: Long?, path: String, type: PayloadType) {
 
                 currentSocket?.remoteDevice?.let { device ->
 
                     val address = device.address
-                    val message = ChatMessage(uid, address, Date(), false, "").apply {
+                    val message = ChatMessage(uid, address, Date(), false, "", replyMessageUid).apply {
                         messageType = type
                         filePath = path
                     }
@@ -444,7 +444,7 @@ class ConnectionController(
     fun isConnectedOrPending() = isConnected() || isPending()
 
     fun replyFromNotification(text: String) {
-        contract.createChatMessage(text).let { message ->
+        contract.createChatMessage(text, null).let { message ->
             justRepliedFromNotification = true
             sendMessage(message)
         }
@@ -480,12 +480,12 @@ class ConnectionController(
         }
     }
 
-    fun sendFile(file: File, type: PayloadType) {
+    fun sendFile(file: File, type: PayloadType, replyMessageUid: Long?) {
 
         if (isConnected()) {
-            contract.createFileStartMessage(file, type).let { message ->
+            contract.createFileStartMessage(file, replyMessageUid, type).let { message ->
                 dataTransferThread?.write(message.getDecodedMessage())
-                dataTransferThread?.writeFile(message.uid, file, type)
+                dataTransferThread?.writeFile(message.uid, message.replyMessageUid, file, type)
             }
         }
     }
@@ -563,7 +563,7 @@ class ConnectionController(
 
         if (message.type == Contract.MessageType.MESSAGE && currentSocket != null) {
 
-            handleReceivedMessage(message.uid, message.body)
+            handleReceivedMessage(message.uid, message.body, message.replyMessageUid)
 
         } else if (message.type == Contract.MessageType.DELIVERY) {
 
@@ -609,11 +609,11 @@ class ConnectionController(
         subject.handleMessageSendingFailed()
     }
 
-    private fun handleReceivedMessage(uid: Long, text: String) = currentSocket?.let { socket ->
+    private fun handleReceivedMessage(uid: Long, text: String, replyMessageUid: Long?) = currentSocket?.let { socket ->
 
         val device: BluetoothDevice = socket.remoteDevice
 
-        val receivedMessage = ChatMessage(uid, device.address, Date(), false, text)
+        val receivedMessage = ChatMessage(uid, device.address, Date(), false, text, replyMessageUid)
 
         val partner = Person.Builder().setName(currentConversation?.displayName ?: "?").build()
         shallowHistory.add(
@@ -644,6 +644,13 @@ class ConnectionController(
         }
 
         launch(bgContext) {
+            if (receivedMessage.replyMessageUid != null) {
+                val replyMessage = messagesStorage.getMessageByDevice(
+                    address = receivedMessage.deviceAddress,
+                    uid = receivedMessage.replyMessageUid!!
+                )
+                receivedMessage.replyMessage = replyMessage
+            }
             messagesStorage.insertMessage(receivedMessage)
             launch(uiContext) {
                 subject.handleMessageReceived(receivedMessage)
@@ -680,6 +687,7 @@ class ConnectionController(
             view.showConnectionRequestNotification(
                 "${conversation.displayName} (${conversation.deviceName})",
                 conversation.deviceAddress,
+                conversation.displayName,
                 preferences.isSoundEnabled()
             )
         }

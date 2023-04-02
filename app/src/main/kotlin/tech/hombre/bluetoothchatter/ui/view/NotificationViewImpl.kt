@@ -86,7 +86,7 @@ class NotificationViewImpl(private val context: Context) : NotificationView {
 
         val resultIntent = Intent(
             Intent.ACTION_VIEW,
-            "bluetoothchatter://conversations/$address".toUri(),
+            "bluetoothchatter://conversations/$address/$displayName".toUri(),
             context,
             MainActivity::class.java
         ).apply {
@@ -183,6 +183,7 @@ class NotificationViewImpl(private val context: Context) : NotificationView {
     override fun showConnectionRequestNotification(
         deviceName: String,
         address: String,
+        nickname: String,
         soundEnabled: Boolean
     ) {
 
@@ -203,6 +204,7 @@ class NotificationViewImpl(private val context: Context) : NotificationView {
 
         val approveIntent = Intent(NotificationView.ACTION_CONNECTION).apply {
             putExtra(NotificationView.EXTRA_APPROVED, true)
+            putExtra(NotificationView.EXTRA_NICKNAME, nickname)
             putExtra(NotificationView.EXTRA_ADDRESS, address)
         }
         val approvePendingIntent =
@@ -289,7 +291,7 @@ class NotificationViewImpl(private val context: Context) : NotificationView {
 
         val resultIntent = Intent(
             Intent.ACTION_VIEW,
-            "bluetoothchatter://conversations/$address".toUri(),
+            "bluetoothchatter://conversations/$address/$displayName".toUri(),
             context,
             MainActivity::class.java
         )

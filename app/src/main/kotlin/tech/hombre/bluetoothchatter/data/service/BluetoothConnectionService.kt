@@ -51,9 +51,10 @@ class BluetoothConnectionService : Service(), ConnectionSubject {
                     controller.approveConnection()
 
                     val address = intent.getStringExtra(NotificationView.EXTRA_ADDRESS)
+                    val nickname = intent.getStringExtra(NotificationView.EXTRA_NICKNAME)
                     val chatIntent = Intent(
                         Intent.ACTION_VIEW,
-                        "bluetoothchatter://conversations/$address".toUri(),
+                        "bluetoothchatter://conversations/$address/$nickname".toUri(),
                         context,
                         MainActivity::class.java
                     )
@@ -167,8 +168,8 @@ class BluetoothConnectionService : Service(), ConnectionSubject {
         controller.sendMessage(message)
     }
 
-    fun sendFile(file: File, type: PayloadType) {
-        controller.sendFile(file, type)
+    fun sendFile(file: File, type: PayloadType, replyMessageUid: Long?) {
+        controller.sendFile(file, type, replyMessageUid)
     }
 
     fun approveConnection() {

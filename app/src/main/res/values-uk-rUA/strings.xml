@@ -83,6 +83,7 @@
     <string name="chat__receiving_images">Отримання зображення</string>
     <string name="chat__receiving_file">Отримання файлу</string>
     <string name="chat__partner_unable_to_receive_files">Ваш партнер використовує стару версію Bluetooth Chatter, яка не може приймати файли.</string>
+    <string name="chat__partner_unable_to_reply_to_message">Ваш партнер використовує стару версію Bluetooth Chatter, яка не може приймати відповіді на повідомлення.</string>
     <string name="chat__image_message">%s [Зображення]</string>
     <string name="chat__image_file">%s [Файл]</string>
     <string name="chat__image_audio">%s [Аудіо]</string>

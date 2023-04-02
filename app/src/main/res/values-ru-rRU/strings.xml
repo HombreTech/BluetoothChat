@@ -83,6 +83,7 @@
     <string name="chat__receiving_images">Прием изображения</string>
     <string name="chat__receiving_file">Прием файла</string>
     <string name="chat__partner_unable_to_receive_files">Ваш партнер изпользует старую версию Bluetooth Chatter, которая не может принимать файлы.</string>
+    <string name="chat__partner_unable_to_reply_to_message">Ваш партнер изпользует старую версию Bluetooth Chatter, которая не может принимать ответы на сообщения.</string>
     <string name="chat__image_message">%s [Изображение]</string>
     <string name="chat__image_file">%s [Файл]</string>
     <string name="chat__image_audio">%s [Аудио]</string>
@@ -132,7 +133,7 @@
     <string name="scan__no_discoverable_activity">Не удается сделать устройство видимым, пожалуйста, сделайте это вручную</string>
     <string name="initial_setup__initial_setup">Первоначальная настройка</string>
     <string name="notification__ready_to_connect">Готов к подключению</string>
-    <string name="notification__connected_to">Соединение с %s</string>
+    <string name="notification__connected_to">Подключен к %s</string>
     <string name="notification__connection_request">Запрос на соединение</string>
     <string name="notification__connection_request_body">%s хочет подключиться к вам</string>
     <string name="notification__file_sending">Отправка файла к %s</string>

@@ -13,6 +13,10 @@ class MessagesStorageImpl(db: ChatDatabase) : MessagesStorage {
         dao.insert(message)
     }
 
+    override suspend fun getMessageByDevice(address: String, uid: Long): ChatMessage {
+        return dao.getMessageByDevice(address, uid)
+    }
+
     override suspend fun getMessagesByDevice(address: String): List<ChatMessage> {
         val messages = dao.getMessagesByDevice(address)
         messages.forEach {

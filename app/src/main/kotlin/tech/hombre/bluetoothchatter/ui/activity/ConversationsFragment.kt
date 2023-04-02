@@ -79,7 +79,8 @@ class ConversationsFragment :
         conversationsAdapter.clickListener = {
             findNavController().navigate(
                 ConversationsFragmentDirections.actionConversationsFragmentToChatFragment(
-                    address = it.address
+                    address = it.address,
+                    nickname = it.displayName,
                 )
             )
         }
@@ -141,7 +142,8 @@ class ConversationsFragment :
                 if (device != null) {
                     findNavController().navigate(
                         ConversationsFragmentDirections.actionConversationsFragmentToChatFragment(
-                            address = device.address
+                            address = device.address,
+                            nickname = device.name,
                         )
                     )
                 }
@@ -287,7 +289,8 @@ class ConversationsFragment :
     override fun redirectToChat(conversation: ConversationViewModel) {
         findNavController().navigate(
             ConversationsFragmentDirections.actionConversationsFragmentToChatFragment(
-                address = conversation.address
+                address = conversation.address,
+                nickname = conversation.displayName,
             )
         )
     }

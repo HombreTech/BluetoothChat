@@ -14,8 +14,8 @@ class TransferEventStrategy : DataTransferThread.EventsStrategy {
         message != null && generalMessageRegex.containsMatchIn(message)
 
     override fun isFileStart(message: String?): DataTransferThread.FileInfo? =
-
         if (message != null && fileStartRegex.containsMatchIn(message)) {
+            val dividersCount = message.count { it == divider.first() }
             val messageBody = "6$divider" + message.substringAfter("6$divider")
 
             val info = fileStartRegex.replace(messageBody, "")
@@ -25,7 +25,11 @@ class TransferEventStrategy : DataTransferThread.EventsStrategy {
                 null
             } else {
                 val size = info.substringAfter(divider).substringBefore(divider)
-                val typeValue = messageBody.substringAfterLast(divider).take(1).toInt()
+                val typeValue: Int = if (dividersCount >= 6) {
+                    info.substringBeforeLast(divider).substringAfterLast(divider).take(1).toInt()
+                } else {
+                    messageBody.substringAfterLast(divider).take(1).toInt()
+                }
                 val type = PayloadType.from(typeValue)
                 if (size.isNumber()) {
                     DataTransferThread.FileInfo(

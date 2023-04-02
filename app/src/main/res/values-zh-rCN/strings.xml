@@ -74,6 +74,7 @@
     <string name="chat__receiving_images">正在接收图像</string>
     <string name="chat__receiving_file">接收文件</string>
     <string name="chat__partner_unable_to_receive_files">对方使用的是旧版本的“蓝牙聊天”，无法接收文件。</string>
+    <string name="chat__partner_unable_to_reply_to_message">您的伙伴使用旧版本的 Bluetooth Chatter，它无法接收回复的消息。</string>
     <string name="chat__image_message">%s [图片]</string>
     <string name="chat__image_file">%s [文件]</string>
     <string name="chat__image_audio">%s [声音的]</string>

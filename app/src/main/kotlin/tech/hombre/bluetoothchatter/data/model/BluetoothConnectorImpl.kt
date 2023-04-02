@@ -354,15 +354,15 @@ class BluetoothConnectorImpl(private val context: Context) : BluetoothConnector 
         service?.stop()
     }
 
-    override fun sendMessage(messageText: String) {
+    override fun sendMessage(messageText: String, replyMessageUid: Long?) {
 
-        service?.getCurrentContract()?.createChatMessage(messageText)?.let { message ->
+        service?.getCurrentContract()?.createChatMessage(messageText, replyMessageUid)?.let { message ->
             service?.sendMessage(message)
         }
     }
 
-    override fun sendFile(file: File, type: PayloadType) {
-        service?.sendFile(file, type)
+    override fun sendFile(file: File, type: PayloadType, replyMessageUid: Long?) {
+        service?.sendFile(file, type, replyMessageUid)
     }
 
     override fun getTransferringFile() = service?.getTransferringFile()

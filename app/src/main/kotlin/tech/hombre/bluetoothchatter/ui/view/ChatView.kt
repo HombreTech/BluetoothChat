@@ -1,6 +1,7 @@
 package tech.hombre.bluetoothchatter.ui.view
 
 import androidx.annotation.ColorInt
+import tech.hombre.bluetoothchatter.data.entity.ChatMessage
 import tech.hombre.bluetoothchatter.data.service.message.PayloadType
 import tech.hombre.bluetoothchatter.ui.viewmodel.ChatMessageViewModel
 
@@ -24,6 +25,8 @@ interface ChatView {
     fun showNotValidMessage()
     fun showNotConnectedToSend()
     fun showReceiverUnableToReceiveFiles()
+    fun showReceiverUnableToReplyMessage()
+    fun scrollToMessage(uid: Long)
     fun showDeviceIsNotAvailable()
     fun showWainingForOpponent()
     fun hideActions()

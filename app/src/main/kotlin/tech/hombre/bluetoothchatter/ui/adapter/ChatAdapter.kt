@@ -11,6 +11,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.text.util.LinkifyCompat
 import androidx.core.view.ViewCompat
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter
@@ -23,7 +24,7 @@ import tech.hombre.bluetoothchatter.ui.widget.voiceplayerview.VoicePlayerView
 import tech.hombre.bluetoothchatter.utils.setViewBackgroundWithoutResettingPadding
 import java.util.*
 
-class ChatAdapter(private val isAlwaysSelectable: Boolean = false) :
+class ChatAdapter(private val nickname: String, private val isAlwaysSelectable: Boolean = false) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>(),
     StickyRecyclerHeadersAdapter<RecyclerView.ViewHolder> {
 
@@ -47,6 +48,9 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean = false) :
     var messageSelectionListener: ((selectedItemPositions: Set<Int>, isSelectableMode: Boolean) -> Unit)? =
         null
 
+    var replyClickListener: ((uid: Long) -> Unit)? =
+        null
+
     private var isSelectableMode = isAlwaysSelectable
 
     private val selectedItemPositions = mutableSetOf<Int>()
@@ -65,6 +69,18 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean = false) :
                         position
                     )
                 )
+
+                if (message.replyMessage != null) {
+                    holder.replyNickname.text = nickname
+                    holder.replyText.text = holder.itemView.context.getString(R.string.chat__image_message, "\uD83D\uDDBC")
+                    holder.replyLayout.setOnClickListener {
+                        replyClickListener?.invoke(message.replyMessage.uid)
+                    }
+                    holder.replyLayout.isVisible = true
+                } else {
+                    holder.replyLayout.setOnClickListener(null)
+                    holder.replyLayout.isVisible = false
+                }
 
                 if (!message.isImageAvailable) {
 
@@ -127,12 +143,24 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean = false) :
             }
             is FileMessageViewHolder -> {
 
-                holder.container.setViewBackgroundWithoutResettingPadding(
+                holder.messageView.setViewBackgroundWithoutResettingPadding(
                     getBackground(
                         message.own,
                         position
                     )
                 )
+
+                if (message.replyMessage != null) {
+                    holder.replyNickname.text = nickname
+                    holder.replyText.text = holder.itemView.context.getString(R.string.chat__image_file, "\uD83D\uDCCE")
+                    holder.replyLayout.setOnClickListener {
+                        replyClickListener?.invoke(message.replyMessage.uid)
+                    }
+                    holder.replyLayout.isVisible = true
+                } else {
+                    holder.replyLayout.setOnClickListener(null)
+                    holder.replyLayout.isVisible = false
+                }
 
                 if (!message.isImageAvailable) {
                     holder.image.visibility = View.GONE
@@ -170,12 +198,24 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean = false) :
             }
             is AudioMessageViewHolder -> {
 
-                holder.container.setViewBackgroundWithoutResettingPadding(
+                holder.messageView.setViewBackgroundWithoutResettingPadding(
                     getBackground(
                         message.own,
                         position
                     )
                 )
+
+                if (message.replyMessage != null) {
+                    holder.replyNickname.text = nickname
+                    holder.replyText.text = holder.itemView.context.getString(R.string.chat__image_audio, "\uD83C\uDFA7")
+                    holder.replyLayout.setOnClickListener {
+                        replyClickListener?.invoke(message.replyMessage.uid)
+                    }
+                    holder.replyLayout.isVisible = true
+                } else {
+                    holder.replyLayout.setOnClickListener(null)
+                    holder.replyLayout.isVisible = false
+                }
 
                 if (!message.isImageAvailable) {
                     holder.playerView.visibility = View.GONE
@@ -227,12 +267,38 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean = false) :
             }
             is TextMessageViewHolder -> {
 
-                holder.text.setViewBackgroundWithoutResettingPadding(
+                holder.messageView.setViewBackgroundWithoutResettingPadding(
                     getBackground(
                         message.own,
                         position
                     )
                 )
+
+                if (message.replyMessage != null) {
+                    holder.replyNickname.text = nickname
+                    val text = when (message.replyMessage.messageType) {
+                        PayloadType.FILE -> {
+                            holder.itemView.context.getString(R.string.chat__image_file, "\uD83D\uDCCE")
+                        }
+                        PayloadType.AUDIO -> {
+                            holder.itemView.context.getString(R.string.chat__image_audio, "\uD83C\uDFA7")
+                        }
+                        PayloadType.IMAGE -> {
+                            holder.itemView.context.getString(R.string.chat__image_message, "\uD83D\uDDBC")
+                        }
+                        else -> {
+                            message.replyMessage.text
+                        }
+                    }
+                    holder.replyText.text = text
+                    holder.replyLayout.setOnClickListener {
+                        replyClickListener?.invoke(message.replyMessage.uid)
+                    }
+                    holder.replyLayout.isVisible = true
+                } else {
+                    holder.replyLayout.setOnClickListener(null)
+                    holder.replyLayout.isVisible = false
+                }
 
                 val spannableMessage = SpannableString(message.text)
                 LinkifyCompat.addLinks(
@@ -416,6 +482,15 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean = false) :
         notifyItemChanged(position, 0)
     }
 
+    fun getMessagePositionById(uid: Long): Int {
+        val message = messages.find { it.uid == uid }
+        return if (message == null) {
+            -1
+        } else {
+            messages.indexOf(message)
+        }
+    }
+
     class DateDividerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val date: TextView = itemView.findViewById(R.id.tv_date)
     }
@@ -423,7 +498,11 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean = false) :
     class TextMessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val date: TextView = itemView.findViewById(R.id.tv_date)
         val text: TextView = itemView.findViewById(R.id.tv_text)
+        val messageView: View = itemView.findViewById(R.id.messageView)
         val state: ImageView = itemView.findViewById(R.id.state)
+        val replyLayout: View = itemView.findViewById(R.id.reply_layout)
+        val replyNickname: TextView = itemView.findViewById(R.id.reply_nickname)
+        val replyText: TextView = itemView.findViewById(R.id.reply_text)
     }
 
     class ImageMessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -433,6 +512,9 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean = false) :
         val container: FrameLayout = itemView.findViewById(R.id.container)
         val messageView: View = itemView.findViewById(R.id.messageView)
         val state: ImageView = itemView.findViewById(R.id.state)
+        val replyLayout: View = itemView.findViewById(R.id.reply_layout)
+        val replyNickname: TextView = itemView.findViewById(R.id.reply_nickname)
+        val replyText: TextView = itemView.findViewById(R.id.reply_text)
     }
 
     class FileMessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -443,6 +525,9 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean = false) :
         val container: FrameLayout = itemView.findViewById(R.id.container)
         val messageView: View = itemView.findViewById(R.id.messageView)
         val state: ImageView = itemView.findViewById(R.id.state)
+        val replyLayout: View = itemView.findViewById(R.id.reply_layout)
+        val replyNickname: TextView = itemView.findViewById(R.id.reply_nickname)
+        val replyText: TextView = itemView.findViewById(R.id.reply_text)
     }
 
     class AudioMessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -452,5 +537,8 @@ class ChatAdapter(private val isAlwaysSelectable: Boolean = false) :
         val container: FrameLayout = itemView.findViewById(R.id.container)
         val messageView: View = itemView.findViewById(R.id.messageView)
         val state: ImageView = itemView.findViewById(R.id.state)
+        val replyLayout: View = itemView.findViewById(R.id.reply_layout)
+        val replyNickname: TextView = itemView.findViewById(R.id.reply_nickname)
+        val replyText: TextView = itemView.findViewById(R.id.reply_text)
     }
 }

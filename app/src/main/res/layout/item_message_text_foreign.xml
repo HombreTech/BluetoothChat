@@ -89,35 +89,32 @@
 
     <TextView
         android:id="@+id/tv_text"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:maxWidth="238dp"
         android:paddingStart="16dp"
         android:paddingTop="8dp"
-        android:minWidth="96dp"
         android:paddingEnd="8dp"
         android:paddingBottom="8dp"
         android:textColor="@color/text_text_message"
         android:textIsSelectable="true"
-        app:layout_constrainedWidth="true"
-        app:layout_constraintHorizontal_bias="0"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintStart_toStartOf="@id/messageView"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toStartOf="@id/reply_layout"
         app:layout_constraintTop_toBottomOf="@id/reply_layout"
+        app:layout_constraintEnd_toStartOf="@id/tv_date"
         tools:text="@tools:sample/lorem" />
 
     <TextView
         android:id="@+id/tv_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
         android:layout_marginBottom="3dp"
         android:fontFamily="sans-serif-light"
         android:maxLines="1"
+        android:paddingEnd="8dp"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@id/barrier"
         app:layout_constraintEnd_toEndOf="@id/barrier"
-        app:layout_constraintHorizontal_bias="1"
         app:layout_constraintStart_toEndOf="@id/tv_text"
         tools:text="14:42" />
 

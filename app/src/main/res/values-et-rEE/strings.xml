@@ -77,6 +77,7 @@
     <string name="chat__receiving_images">Receiving image</string>
     <string name="chat__receiving_file">Receiving file</string>
     <string name="chat__partner_unable_to_receive_files">Your partner uses an old version of Bluetooth Chatter which is not able to receive files.</string>
+    <string name="chat__partner_unable_to_reply_to_message">Your partner uses an old version of Bluetooth Chatter which is not able to receive replied messages.</string>
     <string name="chat__image_message">%s [Image]</string>
     <string name="chat__image_file">%s [File]</string>
     <string name="chat__image_audio">%s [Audio]</string>

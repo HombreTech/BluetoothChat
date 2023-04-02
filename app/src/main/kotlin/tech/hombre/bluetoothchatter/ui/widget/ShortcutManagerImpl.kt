@@ -119,7 +119,7 @@ class ShortcutManagerImpl(private val context: Context) : ShortcutManager {
                     ).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK),
                     Intent(
                         Intent.ACTION_VIEW,
-                        "bluetoothchatter://conversations/$address".toUri(),
+                        "bluetoothchatter://conversations/$address/$name".toUri(),
                         context,
                         MainActivity::class.java
                     )

@@ -15,10 +15,10 @@ class Contract {
         partnerVersion = MESSAGE_CONTRACT_VERSION
     }
 
-    fun createChatMessage(message: String) = Message(generateUniqueId(), message, MessageType.MESSAGE)
+    fun createChatMessage(message: String, replyMessageUid: Long?) = Message(generateUniqueId(), message, replyMessageUid, MessageType.MESSAGE)
 
     fun createConnectMessage(name: String, @ColorInt color: Int) =
-            Message(0, "$name$DIVIDER$color$DIVIDER$MESSAGE_CONTRACT_VERSION", true, MessageType.CONNECTION_REQUEST)
+            Message(0, "$name$DIVIDER$color$DIVIDER$MESSAGE_CONTRACT_VERSION", null,true, MessageType.CONNECTION_REQUEST)
 
     fun createDisconnectMessage() = Message(false, MessageType.CONNECTION_REQUEST)
 
@@ -33,9 +33,9 @@ class Contract {
 
     fun createSeenMessage(id: Long) = Message(id, true, MessageType.SEEING)
 
-    fun createFileStartMessage(file: File, type: PayloadType): Message {
+    fun createFileStartMessage(file: File, replyMessageUid: Long?, type: PayloadType): Message {
         val uid = generateUniqueId()
-        return Message(uid, "${file.name.replace(DIVIDER, "")}$DIVIDER${file.length()}$DIVIDER${type.value}", false, MessageType.FILE_START)
+        return Message(uid, "${file.name.replace(DIVIDER, "")}$DIVIDER${file.length()}$DIVIDER${type.value}", replyMessageUid, false, MessageType.FILE_START)
     }
 
     fun createFileEndMessage() = Message(false, MessageType.FILE_END)
@@ -44,6 +44,7 @@ class Contract {
         Feature.IMAGE_SHARING -> partnerVersion >= 1
         Feature.FILE_SHARING -> partnerVersion >= 1
         Feature.VOICE_RECORDING -> partnerVersion >= 1
+        Feature.REPLY_TO_MESSAGE -> partnerVersion >= 2
     }
 
     enum class MessageType(val value: Int) {
@@ -67,13 +68,14 @@ class Contract {
     enum class Feature {
         IMAGE_SHARING,
         FILE_SHARING,
-        VOICE_RECORDING;
+        VOICE_RECORDING,
+        REPLY_TO_MESSAGE;
     }
 
     companion object {
 
         const val DIVIDER = "¯"
-        const val MESSAGE_CONTRACT_VERSION = 1
+        const val MESSAGE_CONTRACT_VERSION = 2
 
         fun generateUniqueId() = System.nanoTime()
     }

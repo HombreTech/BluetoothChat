@@ -6,6 +6,7 @@ class Message() {
 
     var type: Contract.MessageType = Contract.MessageType.MESSAGE
     var uid: Long = 0
+    var replyMessageUid: Long? = null
     var flag: Boolean = false
     var body: String = ""
 
@@ -29,11 +30,20 @@ class Message() {
         flag = messageText.substring(0, messageText.indexOf(Contract.DIVIDER)).toInt() == 1
         messageText = messageText.substring(messageText.indexOf(Contract.DIVIDER) + 1, messageText.length)
 
-        body = messageText
+
+        if (type == Contract.MessageType.MESSAGE && messageText.contains(Contract.DIVIDER)) {
+            println("messageText $messageText")
+            body = messageText.substring(0, messageText.indexOf(Contract.DIVIDER))
+            messageText = messageText.substring(messageText.indexOf(Contract.DIVIDER) + 1, messageText.length)
+            replyMessageUid = messageText.toLongOrNull()
+        } else {
+            body = messageText
+        }
     }
 
-    constructor(uid: Long, body: String, flag: Boolean, type: Contract.MessageType) : this() {
+    constructor(uid: Long, body: String, replyMessageUid: Long?, flag: Boolean, type: Contract.MessageType) : this() {
         this.uid = uid
+        this.replyMessageUid = replyMessageUid
         this.body = body
         this.type = type
         this.flag = flag
@@ -45,8 +55,9 @@ class Message() {
         this.flag = flag
     }
 
-    constructor(uid: Long, body: String, type: Contract.MessageType) : this() {
+    constructor(uid: Long, body: String, replyMessageUid: Long?, type: Contract.MessageType) : this() {
         this.uid = uid
+        this.replyMessageUid = replyMessageUid
         this.body = body
         this.type = type
     }
@@ -64,6 +75,8 @@ class Message() {
 
     fun getDecodedMessage(): String {
         val flag = if (this.flag) 1 else 0
-        return "${type.value}${Contract.DIVIDER}$uid${Contract.DIVIDER}$flag${Contract.DIVIDER}$body"
+        var message = "${type.value}${Contract.DIVIDER}$uid${Contract.DIVIDER}$flag${Contract.DIVIDER}$body"
+        if (replyMessageUid != null) message += "${Contract.DIVIDER}$replyMessageUid"
+        return message
     }
 }

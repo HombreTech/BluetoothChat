@@ -62,7 +62,8 @@ class ChatMessageConverter(context: Context) {
             Size(width, height),
             FileSize(fileSize),
             message.filePath,
-            "file://${message.filePath}"
+            "file://${message.filePath}",
+            message.replyMessage,
         )
     }
 

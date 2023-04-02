@@ -40,7 +40,8 @@ class ContactChooserFragment :
                 ContactChooserFragmentDirections.actionContactChooserFragmentToChatFragment(
                     address = it.address,
                     message = message,
-                    filepath = filePath
+                    filepath = filePath,
+                    nickname = it.name,
                 )
             )
         }

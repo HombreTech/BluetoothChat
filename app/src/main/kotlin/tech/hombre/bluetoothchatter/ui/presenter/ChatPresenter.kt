@@ -35,6 +35,7 @@ class ChatPresenter(
     private var fileToSend: File? = null
     private var filePresharing: File? = null
     private var type = PayloadType.TEXT
+    private var replyMessageUid: Long? = null
 
     private val prepareListener = object : OnPrepareListener {
 
@@ -66,7 +67,7 @@ class ChatPresenter(
                     if (file.length() > maxFileSize) {
                         view.showFileTooBig(maxFileSize.toLong())
                     } else {
-                        connectionModel.sendFile(file, type)
+                        connectionModel.sendFile(file, type, replyMessageUid)
                     }
                     fileToSend = null
                     filePresharing = null
@@ -292,7 +293,7 @@ class ChatPresenter(
             if (file.length() > maxFileSize) {
                 view.showFileTooBig(maxFileSize.toLong())
             } else {
-                connectionModel.sendFile(file, type)
+                connectionModel.sendFile(file, type, replyMessageUid)
             }
             fileToSend = null
             filePresharing = null
@@ -356,7 +357,7 @@ class ChatPresenter(
         if (message.isEmpty()) {
             view.showNotValidMessage()
         } else {
-            connectionModel.sendMessage(message)
+            connectionModel.sendMessage(message, replyMessageUid)
             view.afterMessageSent()
         }
     }
@@ -409,6 +410,21 @@ class ChatPresenter(
         filePresharing = null
     }
 
+    fun cancelReply() {
+        replyMessageUid = null
+    }
+
+    fun setReplyMessage(messageUid: Long) {
+        if (connectionModel.isFeatureAvailable(Contract.Feature.REPLY_TO_MESSAGE)) {
+            replyMessageUid = messageUid
+        } else {
+            replyMessageUid = null
+            view.showReceiverUnableToReplyMessage()
+        }
+    }
+
+    fun getReplyMessage() = replyMessageUid ?: -1
+
     fun proceedPresharing() {
 
         filePresharing?.let {
@@ -422,7 +438,7 @@ class ChatPresenter(
             } else if (it.length() > maxFileSize) {
                 view.showFileTooBig(maxFileSize.toLong())
             } else {
-                connectionModel.sendFile(it, type)
+                connectionModel.sendFile(it, type, replyMessageUid)
                 fileToSend = null
                 filePresharing = null
             }
