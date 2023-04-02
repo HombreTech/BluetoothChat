@@ -720,6 +720,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat), 
             .setMessage(R.string.chat__partner_unable_to_reply_to_message)
             .setPositiveButton(R.string.general__ok, null)
             .setOnDismissListener {
+                presenter.cancelReply()
                 binding.replyLayout.isVisible = false
                 binding.replyMessage.text = ""
             }
