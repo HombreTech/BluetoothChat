@@ -66,7 +66,6 @@ abstract class DataTransferThread(private val socket: BluetoothSocket,
             try {
 
                 readString()?.let { message ->
-println("message $message")
                     val potentialFile = eventsStrategy.isFileStart(message)
                     if (potentialFile != null) {
 
@@ -158,7 +157,7 @@ println("message $message")
             sleep(1000)
 
             val fileStream = FileInputStream(file)
-            BufferedInputStream(fileStream).use {
+                BufferedInputStream(fileStream).use {
 
                 val bufferedOutputStream = BufferedOutputStream(outputStream)
 

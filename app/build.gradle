@@ -12,7 +12,7 @@ android {
         applicationId 'tech.hombre.bluetoothchatter'
         minSdkVersion 21
         targetSdkVersion 33
-        compileSdkVersion 31
+        compileSdkVersion 33
         versionCode VERSION_CODE
         versionName VERSION_NAME
         archivesBaseName = "chatter-$versionName($versionCode)"

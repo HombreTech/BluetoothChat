@@ -125,12 +125,15 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat), 
                 PayloadType.FILE -> {
                     getString(R.string.chat__image_file, "\uD83D\uDCCE")
                 }
+
                 PayloadType.AUDIO -> {
                     getString(R.string.chat__image_audio, "\uD83C\uDFA7")
                 }
+
                 PayloadType.IMAGE -> {
                     getString(R.string.chat__image_message, "\uD83D\uDDBC")
                 }
+
                 else -> {
                     message.text
                 }
@@ -182,8 +185,10 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat), 
                 when (it) {
                     SendFilePopup.Option.IMAGES ->
                         presenter.performImagePicking()
+
                     SendFilePopup.Option.FILES ->
                         presenter.performFilePicking()
+
                     SendFilePopup.Option.VOICE ->
                         presenter.performVoiceRecorder()
                 }
@@ -281,11 +286,17 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat), 
             messageSelectionListener = { selectedItems: Set<Int>, isSelectionMode: Boolean ->
                 val item = optionsMenu.findItem(R.id.action_delete)
                 if (isSelectionMode) {
-                    val menuViewBinding = MenuItemChatSelectionBinding.bind(item.actionView)
-                    menuViewBinding.root.text = selectedItems.size.toString()
-                    menuViewBinding.root.setOnClickListener {
-                        chatAdapter.resetSelections()
-                        presenter.removeMessages(chatAdapter.messages, selectedItems, deviceAddress)
+                    if (item.actionView != null) {
+                        val menuViewBinding = MenuItemChatSelectionBinding.bind(item.actionView!!)
+                        menuViewBinding.root.text = selectedItems.size.toString()
+                        menuViewBinding.root.setOnClickListener {
+                            chatAdapter.resetSelections()
+                            presenter.removeMessages(
+                                chatAdapter.messages,
+                                selectedItems,
+                                deviceAddress
+                            )
+                        }
                     }
                 }
                 item.isVisible = isSelectionMode
@@ -766,6 +777,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat), 
                     presenter.onBluetoothEnablingFailed()
                 }
             }
+
             REQUEST_FILE -> {
                 if (data != null && data.data != null) {
                     val uri = data.data
@@ -773,9 +785,11 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat), 
                     presenter.sendFile(File(path), path.getFileType())
                 }
             }
+
             REQUEST_RECORDER_PERMISSION -> {
                 findNavController().navigate(ChatFragmentDirections.actionChatFragmentToAudioRecorderDialog())
             }
+
             else -> {
 
                 easyImage.handleActivityResult(
@@ -820,10 +834,12 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat), 
                 )
                 true
             }
+
             R.id.action_disconnect -> {
                 presenter.disconnect()
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }

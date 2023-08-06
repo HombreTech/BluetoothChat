@@ -103,11 +103,11 @@ class SendFilePopup(context: Context) : PopupWindow() {
         container.visibility = View.VISIBLE
         animator.addListener(object : EmptyAnimatorListener() {
 
-            override fun onAnimationStart(animation: Animator?) {
+            override fun onAnimationStart(animation: Animator) {
                 isDismissing = true
             }
 
-            override fun onAnimationEnd(animation: Animator?) {
+            override fun onAnimationEnd(animation: Animator) {
                 container.visibility = View.INVISIBLE
                 actualDismiss()
             }
