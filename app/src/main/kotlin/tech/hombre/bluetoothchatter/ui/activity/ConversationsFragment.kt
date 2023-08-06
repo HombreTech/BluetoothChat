@@ -10,9 +10,8 @@ import android.os.Bundle
 import android.provider.Settings
 import android.text.Html
 import android.view.View
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.amulyakhare.textdrawable.TextDrawable
@@ -32,6 +31,7 @@ import tech.hombre.bluetoothchatter.utils.getFilePath
 import tech.hombre.bluetoothchatter.utils.getFirstLetter
 import tech.hombre.bluetoothchatter.utils.getNotificationManager
 import tech.hombre.bluetoothchatter.utils.navigateWithResult
+
 
 class ConversationsFragment :
     BaseFragment<FragmentConversationsBinding>(R.layout.fragment_conversations), ConversationsView {
@@ -62,14 +62,17 @@ class ConversationsFragment :
                                 editMode = true
                             )
                         )
+
                     SettingsPopup.Option.IMAGES ->
                         findNavController().navigate(
                             ConversationsFragmentDirections.actionConversationsFragmentToReceivedImagesFragment(
                                 address = null
                             )
                         )
+
                     SettingsPopup.Option.SETTINGS ->
                         findNavController().navigate(ConversationsFragmentDirections.actionConversationsFragmentToSettingsFragment())
+
                     SettingsPopup.Option.ABOUT ->
                         findNavController().navigate(ConversationsFragmentDirections.actionConversationsFragmentToAboutFragment())
                 }
@@ -124,7 +127,7 @@ class ConversationsFragment :
         storagePermissionDialog = AlertDialog.Builder(requireContext())
             .setView(R.layout.dialog_storage_permission)
             .setPositiveButton(R.string.general__ok) { _, _ ->
-                requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_STORAGE_PERMISSION)
+                requestPermissions(getPermissions(), REQUEST_STORAGE_PERMISSION)
             }
             .setNegativeButton(R.string.general__exit) { _, _ -> findNavController().navigateUp() }
             .setCancelable(false)
@@ -168,6 +171,7 @@ class ConversationsFragment :
                     0 -> {
                         confirmRemoval(conversation.address)
                     }
+
                     1 -> {
                         if (isCurrent) {
                             presenter.disconnect()
@@ -175,6 +179,7 @@ class ConversationsFragment :
                             requestPinShortcut(conversation)
                         }
                     }
+
                     2 -> {
                         requestPinShortcut(conversation)
                     }
@@ -204,14 +209,10 @@ class ConversationsFragment :
 
     override fun onStart() {
         super.onStart()
-
-        if (ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ) != PackageManager.PERMISSION_GRANTED && !storagePermissionDialog.isShowing
-        ) {
-            storagePermissionDialog.show()
-        }
+        requestPermissions(
+            getPermissions(),
+            REQUEST_STORAGE_PERMISSION
+        )
     }
 
     override fun dismissConversationNotification() {
@@ -342,7 +343,23 @@ class ConversationsFragment :
     companion object {
 
         private const val REQUEST_STORAGE_PERMISSION = 101
-        private const val REQUEST_SCAN = 102
+
+        @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
+        private val storagePermissionsTiramisu = arrayOf(
+            Manifest.permission.READ_MEDIA_IMAGES,
+            Manifest.permission.READ_MEDIA_AUDIO,
+            Manifest.permission.READ_MEDIA_VIDEO
+        )
+
+        private val storagePermissions = arrayOf(
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        )
+
+        fun getPermissions() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            storagePermissionsTiramisu
+        } else {
+            storagePermissions
+        }
 
     }
 }

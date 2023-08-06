@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import androidx.core.content.FileProvider
+import tech.hombre.bluetoothchatter.BuildConfig
 import tech.hombre.bluetoothchatter.R
 import java.io.*
 import java.util.zip.ZipEntry
@@ -16,7 +17,7 @@ class FileManagerImpl(private val context: Context) : FileManager {
     override suspend fun extractApkFile(): Uri? {
 
         val application = context.packageManager
-                .getPackageInfo(tech.hombre.bluetoothchatter.BuildConfig.APPLICATION_ID, PackageManager.GET_SHARED_LIBRARY_FILES)
+                .getPackageInfo(BuildConfig.APPLICATION_ID, PackageManager.GET_SHARED_LIBRARY_FILES)
         ?: return null
 
         val directory = context.externalCacheDir
@@ -24,7 +25,7 @@ class FileManagerImpl(private val context: Context) : FileManager {
         val file = File(application.applicationInfo.publicSourceDir)
 
         try {
-            val newFile = copyAndZip(file, directory, "BluetoothChatter")
+            val newFile = copyAndZip(file, directory, "BluetoothChatter(${BuildConfig.VERSION_NAME})")
 
             return if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
                 try {

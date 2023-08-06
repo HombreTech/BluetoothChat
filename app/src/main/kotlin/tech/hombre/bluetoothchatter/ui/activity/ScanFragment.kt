@@ -5,21 +5,17 @@ import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.content.ActivityNotFoundException
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
-import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.android.ext.android.inject
@@ -92,7 +88,7 @@ class ScanFragment : BaseFragment<FragmentScanBinding>(R.layout.fragment_scan), 
             if (ContextCompat.checkSelfPermission(
                     requireContext(),
                     Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ) == PackageManager.PERMISSION_GRANTED
+                ) == PackageManager.PERMISSION_GRANTED || Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
             ) {
                 presenter.shareApk()
             } else {
@@ -120,7 +116,7 @@ class ScanFragment : BaseFragment<FragmentScanBinding>(R.layout.fragment_scan), 
 
         val sharingIntent = Intent(Intent.ACTION_SEND).apply {
             type = "*/*"
-            `package` = "com.android.bluetooth"
+            //`package` = "com.android.bluetooth"
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             putExtra(Intent.EXTRA_STREAM, uri)
         }
@@ -184,7 +180,7 @@ class ScanFragment : BaseFragment<FragmentScanBinding>(R.layout.fragment_scan), 
             .show()
     }
 
-    override fun showBluetoothIsNotAvailableMessage() = doIfStarted {
+    override fun showBluetoothIsNotAvailableMessage() {
         AlertDialog.Builder(requireContext())
             .setMessage(R.string.scan__no_access_to_bluetooth)
             .setPositiveButton(R.string.general__ok) { _, _ -> findNavController().navigateUp() }
@@ -309,7 +305,10 @@ class ScanFragment : BaseFragment<FragmentScanBinding>(R.layout.fragment_scan), 
         AlertDialog.Builder(requireContext())
             .setMessage(R.string.scan__permission_explanation_location)
             .setPositiveButton(R.string.general__ok) { _, _ ->
-                requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_LOCATION_PERMISSION)
+                requestPermissions(
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                    REQUEST_LOCATION_PERMISSION
+                )
             }
             .show()
     }
